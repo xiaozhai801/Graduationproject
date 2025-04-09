@@ -1,0 +1,30 @@
+package com.zpq.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.zpq.pojo.User;
+import com.zpq.utils.DBUtil;
+
+public class UserAddDaoImpl implements UserAddDao {
+
+	@Override
+	public User addUser(String name, String password) throws SQLException {
+		// TODO Auto-generated method stub
+		User user = new User();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "select * from s_user where name=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ResultSet rs = ps.executeQuery();
+		rs.next();
+		if (name.equals(rs.getString("name"))) {
+			return null;
+		}
+		return user;
+
+		return null;
+	}
+
+}

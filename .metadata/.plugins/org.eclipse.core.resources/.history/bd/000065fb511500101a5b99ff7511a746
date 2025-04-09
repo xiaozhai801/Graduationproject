@@ -1,0 +1,41 @@
+package com.zpq.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.zpq.utils.DBUtil;
+
+public class UserAddDaoImpl implements UserAddDao {
+
+	@Override
+	public String addUser(String name, String password) throws SQLException {
+		DBUtil dbUtil = new DBUtil();
+		String sql = "select * from s_user where name=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ResultSet rs = ps.executeQuery();
+
+		// 检查结果集是否有记录
+		if (rs.next()) {
+			// name 存在返回 null
+			return null;
+		}
+
+		// 重新初始化 SQL 语句和 PreparedStatement
+		sql = "INSERT INTO s_user (NAME, PASSWORD, userId) VALUES(?,?,(SELECT userId FROM(SELECT userId,ROW_NUMBER () OVER (ORDER BY id DESC) AS row_num FROM s_user) subquery WHERE row_num = 1)+1);";
+		ps = dbUtil.getPreparedStatement(sql); // 重新获取 PreparedStatement
+		ps.setString(1, name);
+		ps.setString(2, password);
+
+		// 执行插入操作，对于插入语句使用 executeUpdate
+		int rowsAffected = ps.executeUpdate();
+
+		// 检查是否插入成功
+		if (rowsAffected > 0) {
+			return "success";
+		} else {
+			return null;
+		}
+	}
+}

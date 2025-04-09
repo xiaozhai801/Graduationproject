@@ -1,0 +1,69 @@
+package com.zpq.controller;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zpq.service.RegisterService;
+import com.zpq.service.RegisterServiceImpl;
+
+/**
+ * Servlet implementation class CheckRegisterServlet
+ */
+@WebServlet("/CheckRegisterServlet")
+public class CheckRegisterServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private RegisterService registerService = new RegisterServiceImpl();
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public CheckRegisterServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+//		String entity = request.getParameter("entity");
+		String user;
+		try {
+			user = registerService.addUser(name, password);
+			if (user != null) {
+				if (user == "user exists") {
+					response.getWriter().write("user exists");
+				} else {
+					response.getWriter().write("success");
+				}
+			} else {
+				response.getWriter().write("fail");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
