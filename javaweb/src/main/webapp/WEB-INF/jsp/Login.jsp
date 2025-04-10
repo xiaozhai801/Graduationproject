@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Demo</title>
+<title>登录</title>
 <link href=".//layui/css/layui.css" rel="stylesheet">
 <script src=".//layui/layui.js"></script>
 <script src=".//js/jquery-3.6.0.min.js"></script>
@@ -54,6 +54,7 @@
 					<input type="radio" name="entity" value="用户" title="用户">
 				</div>
 			</div>
+			<!--忘记密码未做  -->
 			<div class="layui-form-item">
 				<input type="checkbox" name="remember" lay-skin="primary"
 					title="记住密码"> <a href="#forget"
@@ -98,7 +99,11 @@
 								window.location.href = "ViewMainFormServlet";
 							});
 						} else {
-							layer.alert("操作失败");
+							layer.msg('用户名或密码错误', {
+								icon : 2, // 显示成功图标
+								time : 2000
+							// 提示信息显示 2 秒
+							});
 						}
 					}
 				})

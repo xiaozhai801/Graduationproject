@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Demo</title>
+<title>注册</title>
 <link href=".//layui/css/layui.css" rel="stylesheet">
 <script src=".//layui/layui.js"></script>
 </head>
@@ -68,7 +68,7 @@
 			</div>
 			<div class="layui-form-item">
 				<input type="checkbox" name="agreement" lay-verify="required"
-					lay-skin="primary" title="同意"> <a href="#terms"
+					lay-skin="primary" title="同意"> <a href="###"
 					target="_blank" style="position: relative; top: 6px; left: -15px;">
 					<ins>用户协议</ins>
 				</a>
@@ -123,11 +123,25 @@
 					dataType : "text",//接收到的数据的类型可以是json或者text
 					success : function(res) {
 						if (res === "success") {
-							layer.alert("操作成功");
+							layer.msg('注册成功,2秒后跳转到登录页面', {
+								icon : 1, // 显示成功图标
+								time : 2000
+							// 提示信息显示 2 秒
+							}, function() {
+								window.location.href = "LoginServlet";
+							});
 						} else if (res === "user exists") {
-							layer.alert("用户已存在");
+							layer.msg('用户已存在', {
+								icon : 2, // 显示成功图标
+								time : 2000
+							// 提示信息显示 2 秒
+							});
 						} else {
-							layer.alert("操作失败");
+							layer.msg('操作失败', {
+								icon : 2, // 显示成功图标
+								time : 2000
+							// 提示信息显示 2 秒
+							});
 						}
 					}
 				});

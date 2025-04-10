@@ -60,7 +60,6 @@ public class CheckLoginServlet extends HttpServlet {
                 if (admin != null) {
                     response.getWriter().write("success");
                 } else {
-                    System.out.println("fail");
                     response.getWriter().write("fail");
                 }
             } catch (SQLException e) {
