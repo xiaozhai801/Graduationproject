@@ -1,0 +1,62 @@
+package com.zpq.controller;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zpq.dao.UserDao;
+import com.zpq.dao.UserDaoImpl;
+import com.zpq.pojo.Vo;
+
+/**
+ * Servlet implementation class SelectAllUser
+ */
+@WebServlet("/SelectAllUser")
+public class SelectAllUser extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public SelectAllUser() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		UserDao userDao=new UserDaoImpl();
+		try {
+			List<Object> userList=userDao.SelectAllUserLsit();
+			response.setContentType("text/html;charset=UTF-8");
+			Vo vo=new Vo();
+			vo.setCode(0);
+			vo.setMsg("success");
+			vo.setCount(userList.size());
+			vo.setData(userList);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

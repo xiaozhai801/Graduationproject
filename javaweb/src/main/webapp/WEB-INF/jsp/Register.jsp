@@ -62,7 +62,7 @@
 						<i class="layui-icon layui-icon-username"></i>
 					</div>
 					<input type="text" name="name" value="" lay-verify="required"
-						placeholder="昵称" autocomplete="off" class="layui-input"
+						placeholder="账号" autocomplete="off" class="layui-input"
 						lay-affix="clear">
 				</div>
 			</div>
@@ -114,7 +114,7 @@
 					return false;
 				}
 				$.ajax({
-					url : '/javaweb/CheckRegisterServlet',//通讯地址
+					url : 'CheckRegisterServlet',//通讯地址
 					type : 'post',//get或者post 
 					data : {
 						'name' : name,

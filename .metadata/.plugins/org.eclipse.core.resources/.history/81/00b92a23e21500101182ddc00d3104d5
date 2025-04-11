@@ -1,0 +1,62 @@
+package com.zpq.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import com.mysql.cj.xdevapi.Statement;
+import com.zpq.pojo.Admin;
+import com.zpq.pojo.User;
+import com.zpq.utils.DBUtil;
+
+public class UserDaoImpl implements UserDao {
+
+	@Override
+	public Admin selectAdmin(String name, String password) throws SQLException {
+		// TODO Auto-generated method stub
+		Admin admin=new Admin();
+		DBUtil dbUtil=new DBUtil();
+		String sql = "SELECT * FROM s_admin WHERE name =? AND `password` =?";
+		PreparedStatement ps=dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ps.setString(2, password);
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			admin.setName(rs.getString("name"));
+			admin.setPassword(rs.getString("password"));
+			return admin;
+		}
+		return null;
+	}
+
+	@Override
+	public User selectUser(String name, String password) throws SQLException {
+		// TODO Auto-generated method stub
+		User user=new User();
+		DBUtil dbUtil=new DBUtil();
+		String sql="select * from s_user where name=? and `password`=?";
+		PreparedStatement ps=dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ps.setString(2, password);
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			user.setName(rs.getString("name"));
+			user.setPassword(rs.getString("password"));
+			return user;
+		}
+		return null;
+	}
+
+	@Override
+	public List<Object> SelectAllUserLsit() {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil=new DBUtil();
+		String sql = "SELECT * FROM v_userinfo";
+		Statement st=(Statement) dbUtil.getStatement();
+		
+		return null;
+	}
+
+}

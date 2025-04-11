@@ -23,7 +23,7 @@ public class UserAddDaoImpl implements UserAddDao {
 		}
 
 		// 重新初始化 SQL 语句和 PreparedStatement
-		sql = "INSERT INTO s_user (NAME, PASSWORD, userId) VALUES(?,?,(SELECT userId FROM(SELECT userId,ROW_NUMBER () OVER (ORDER BY id DESC) AS row_num FROM s_user) subquery WHERE row_num = 1)+1);";
+		sql = "INSERT INTO s_user (NAME, PASSWORD, id) VALUES(?,?,(SELECT id FROM(SELECT id,ROW_NUMBER () OVER (ORDER BY id DESC) AS row_num FROM s_user) subquery WHERE row_num = 1)+1);";
 		ps = dbUtil.getPreparedStatement(sql); // 重新获取 PreparedStatement
 		ps.setString(1, name);
 		ps.setString(2, password);

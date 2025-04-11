@@ -1,0 +1,71 @@
+package com.zpq.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zpq.pojo.Admin;
+import com.zpq.pojo.User;
+import com.zpq.utils.DBUtil;
+
+public class UserDaoImpl implements UserDao {
+
+	@Override
+	public Admin selectAdmin(String name, String password) throws SQLException {
+		Admin admin = new Admin();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM s_admin WHERE name =? AND `password` =?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ps.setString(2, password);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			admin.setName(rs.getString("name"));
+			admin.setPassword(rs.getString("password"));
+			return admin;
+		}
+		return null;
+	}
+
+	@Override
+	public User selectUser(String name, String password) throws SQLException {
+		User user = new User();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "select * from s_user where name=? and `password`=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ps.setString(2, password);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			user.setName(rs.getString("name"));
+			user.setPassword(rs.getString("password"));
+			return user;
+		}
+		return null;
+	}
+
+	@Override
+	public List<Object> SelectAllUserLsit() throws SQLException {
+		List<Object> userList = new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM v_userinfo";
+		Connection conn = dbUtil.getConnection();
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		while (rs.next()) {
+			User user = new User();
+			// 查询user信息
+			user.setUserId(Integer.parseInt(rs.getString("userId")));
+			user.setName(rs.getString("name"));
+			user.setSex(rs.getString("sex"));
+			user.setAge(Integer.parseInt(rs.getString("age")));
+			user.setEmail(rs.getString("email"));
+			userList.add(user);
+		}
+		return userList;
+	}
+}

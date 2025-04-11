@@ -9,9 +9,7 @@
 <link href=".//layui/css/layui.css" rel="stylesheet">
 <script src=".//layui/layui.js"></script>
 <script src=".//js/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-	<style>
+<style>
 .demo-login-container {
 	width: 320px;
 	margin: 21px auto 0;
@@ -25,6 +23,9 @@
 	font-size: 26px;
 }
 </style>
+</head>
+<body>
+
 	<form class="layui-form">
 		<div class="demo-login-container">
 			<div class="layui-form-item">
@@ -81,7 +82,7 @@
 				var password = data.field.password;
 				var entity = data.field.entity;
 				$.ajax({
-					url : '/javaweb/CheckLoginServlet',//通讯地址
+					url : 'CheckLoginServlet',//通讯地址
 					type : 'post',//get或者post 
 					data : {
 						'name' : name,

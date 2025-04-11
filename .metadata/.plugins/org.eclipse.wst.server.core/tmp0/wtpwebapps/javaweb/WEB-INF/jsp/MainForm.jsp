@@ -10,11 +10,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href=".//layui/css/layui.css" rel="stylesheet">
 <script src=".//layui/layui.js"></script>
+<script src=".//js/jquery-3.6.0.min.js"></script>
+<style>
+  /* 隐藏横向滚动条 */
+  body {
+    overflow-x: hidden;
+  }
+</style>
 </head>
 <body>
 	<div class="layui-layout layui-layout-admin">
 	  <div class="layui-header">
-	    <div class="layui-logo layui-hide-xs layui-bg-black">layout demo</div>
+	    <div class="layui-logo layui-hide-xs layui-bg-black">修复</div>
 	    <!-- 头部区域（可配合layui 已有的水平导航） -->
 	    <ul class="layui-nav layui-layout-left">
 	      <!-- 移动端显示 -->
@@ -37,12 +44,12 @@
 	      <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
 	        <a href="javascript:;">
 	          <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
-	          tester
+	          用户名
 	        </a>
 	        <dl class="layui-nav-child">
-	          <dd><a href="javascript:;">Your Profile</a></dd>
-	          <dd><a href="javascript:;">Settings</a></dd>
-	          <dd><a href="javascript:;">Sign out</a></dd>
+	          <dd><a href="javascript:;">个人信息</a></dd>
+	          <dd><a href="javascript:;">设置</a></dd>
+	          <dd><a href="javascript:;">退出登录</a></dd>
 	        </dl>
 	      </li>
 	      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
@@ -56,13 +63,14 @@
 	    <div class="layui-side-scroll">
 	      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
 	      <ul class="layui-nav layui-nav-tree" lay-filter="test">
-	        <li class="layui-nav-item layui-nav-itemed">
-	          <a class="" href="javascript:;">menu group 1</a>
+	        <li class="layui-nav-item">
+	          <a class="" href="javascript:;">你需要修理什么？</a>
 	          <dl class="layui-nav-child">
-	            <dd><a href="javascript:;">menu 1</a></dd>
-	            <dd><a href="javascript:;">menu 2</a></dd>
-	            <dd><a href="javascript:;">menu 3</a></dd>
-	            <dd><a href="javascript:;">the links</a></dd>
+	            <dd><a href="javascript:;">手机</a></dd>
+	            <dd><a href="javascript:;">笔记本电脑</a></dd>
+	            <dd><a href="javascript:;">游戏主机</a></dd>
+	            <dd><a href="javascript:;">家用电器</a></dd>
+	            <dd><a href="javascript:;">汽车和卡车</a></dd>
 	          </dl>
 	        </li>
 	        <li class="layui-nav-item">
@@ -73,41 +81,36 @@
 	            <dd><a href="javascript:;">超链接</a></dd>
 	          </dl>
 	        </li>
-	        <li class="layui-nav-item"><a href="javascript:;">click menu item</a></li>
-	        <li class="layui-nav-item"><a href="javascript:;">the links</a></li>
+	        <li class="layui-nav-item">
+	          <a href="javascript:;">menu group 2</a>
+	          <dl class="layui-nav-child">
+	            <dd><a href="javascript:;">list 1</a></dd>
+	            <dd><a href="javascript:;">list 2</a></dd>
+	            <dd><a href="javascript:;">超链接</a></dd>
+	          </dl>
+	        </li>
+	        <li class="layui-nav-item"><a href="AllUser.html">用户信息</a></li>
+	        <li class="layui-nav-item"><a href="javascript:;">个人中心</a></li>
 	      </ul>
 	    </div>
 	  </div>
 	  <div class="layui-body">
 	    <!-- 内容主体区域 -->
-	    <div style="padding: 15px;">
-	      <blockquote class="layui-elem-quote layui-text">
-	        Layui 框体布局内容主体区域
-	      </blockquote>
-	      <div class="layui-card layui-panel">
-	        <div class="layui-card-header">
-	          下面是充数内容，为的是出现滚动条
-	        </div>
-	        <div class="layui-card-body">
-	        充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>充数内容<br>你还真滑到了底部呀
-	        </div>
-	      </div>
-	      <br><br>
-	    </div>
-	  </div>
-	  <div class="layui-footer">
+	    <div style="width: 100%; height: 85vh; padding: 10px;">
+	    	<iframe src="zhanwei.html" id="main" height="100%" width="100%" scrolling="no" style="border: none; "></iframe>
+	  	</div>
+	  <div class="layui-footer" >
 	    <!-- 底部固定区域 -->
 	    底部固定区域
 	  </div>
 	</div>
-
 
 <script>
 	layui.use([ 'element', 'layer', 'util' ], function() {
 		var element = layui.element;
 		var layer = layui.layer;
 		var util = layui.util;
-		var $ = layui.$;
+		var $ = layui.jquery;
 
 		//头部事件
 		util.event('lay-header-event', {
@@ -129,6 +132,14 @@
 				});
 			}
 		});
+		
+		//main主iframe窗口
+		$(document).ready(function(){
+			$("dd>a, li.layui-nav-item a").click(function (e){
+				e.preventDefault();
+				$('#main').attr("src",$(this).attr("href"));
+			})
+		})
 	});
 </script>
 </body>

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="java.lang.Object"/>
     <fullyQualifiedTypeName name="lombok.Data"/>
     <fullyQualifiedTypeName name="javax.lang.model.element.NestingKind"/>
-    <fullyQualifiedTypeName name="com.zpq.utils.DBUtil"/>
-    <fullyQualifiedTypeName name="java.sql.Connection"/>
     <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
     <fullyQualifiedTypeName name="com.mysql.cj.xdevapi.Result"/>
     <fullyQualifiedTypeName name="java.sql.ResultSet"/>
@@ -13,15 +9,28 @@
     <fullyQualifiedTypeName name="com.zpq.dao.userDao"/>
     <fullyQualifiedTypeName name="com.zpq.service.LoginService"/>
     <fullyQualifiedTypeName name="com.zpq.service.LoginServletImpl"/>
-    <fullyQualifiedTypeName name="com.zpq.dao.UserDao"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.Admin"/>
-    <fullyQualifiedTypeName name="com.zpq.dao.UserDaoImpl"/>
     <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
-    <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
     <fullyQualifiedTypeName name="java.security.spec.ECField"/>
     <fullyQualifiedTypeName name="com.zpq.dao.UserAddDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.UserAddDaoImpl"/>
     <fullyQualifiedTypeName name="com.zpq.service.RegisterService"/>
     <fullyQualifiedTypeName name="com.zpq.service.RegisterServiceImpl"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.UserDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.UserDaoImpl"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="com.mysql.cj.xdevapi.Statement"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.lang.Override"/>
+    <fullyQualifiedTypeName name="java.lang.Object"/>
+    <fullyQualifiedTypeName name="com.zpq.pojo.Vo"/>
+    <fullyQualifiedTypeName name="com.alibaba.fastjson.JSONObject"/>
+    <fullyQualifiedTypeName name="com.mysql.cj.QueryReturnType"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
+    <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.EditUserDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.EditUserDaoImpl"/>
+    <fullyQualifiedTypeName name="com.zpq.controller.EditUser"/>
+    <fullyQualifiedTypeName name="com.zpq.utils.DBUtil"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
 </qualifiedTypeNameHistroy>
