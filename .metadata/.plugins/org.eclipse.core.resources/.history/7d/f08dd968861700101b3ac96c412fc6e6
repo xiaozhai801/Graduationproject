@@ -1,0 +1,109 @@
+package com.zpq.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zpq.pojo.Article;
+import com.zpq.utils.DBUtil;
+
+public class ArticleDaoImpl implements ArticleDao {
+	// 分页显示所有文章
+	@Override
+	public List<Object> selectArticle(int page, int limit) throws SQLException {
+		// TODO Auto-generated method stub
+		List<Object> articleList = new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM v_articleinfo LIMIT ?,?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, (page - 1) * limit);
+		ps.setInt(2, limit);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			Article article = new Article();
+			article.setTitleId(rs.getInt("titleId"));
+			article.setUserId(rs.getInt("userId"));
+			article.setName(rs.getString("name"));
+			article.setTopic(rs.getString("topic"));
+			article.setModel(rs.getString("model"));
+			;
+			article.setUploadTime(rs.getString("uploadTime"));
+			article.setRelease(rs.getInt("release"));
+			article.setViews(rs.getInt("views"));
+			article.setLikes(rs.getInt("likes"));
+			articleList.add(article);
+		}
+		return articleList;
+	}
+
+	// 所有文章数量
+	@Override
+	public int countArticle() throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT count(*) as sum FROM v_articleinfo";
+		Connection conn = dbUtil.getConnection();
+		// 没有?占位符，用Statement
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		return 0;
+	}
+
+	// 根据关键词搜索
+	@Override
+	public List<Object> searchArticle(Article article, int page, int limit) throws SQLException {
+		// TODO Auto-generated method stub
+		List<Object> searchArticleList = new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM v_articleinfo where ";
+		int titleId = article.getTitleId();
+		String topic = article.getTopic();
+		String name = article.getName();
+		String model = article.getModel();
+		if (titleId != -1) {
+			sql += "like %" + titleId + "% ";
+		}
+		if (topic != null) {
+			sql += "like %" + topic + "% ";
+		}
+		if (name != null) {
+			sql += "like %" + name + "% ";
+		}
+		if (model != null) {
+			sql += "like %" + model + "% ";
+		}
+		if (titleId == -1 && topic == null && name == null && model == null) {
+			sql = "SELECT * FROM v_articleinfo ";
+		}
+		sql+="LIMIT ?,?";
+		System.out.println(sql);
+		
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, (page - 1) * limit);
+		ps.setInt(2, limit);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			Article searchArticle = new Article();
+			searchArticle.setTitleId(rs.getInt("titleId"));
+			searchArticle.setUserId(rs.getInt("userId"));
+			searchArticle.setName(rs.getString("name"));
+			searchArticle.setTopic(rs.getString("topic"));
+			searchArticle.setModel(rs.getString("model"));
+			;
+			searchArticle.setUploadTime(rs.getString("uploadTime"));
+			searchArticle.setRelease(rs.getInt("release"));
+			searchArticle.setViews(rs.getInt("views"));
+			searchArticle.setLikes(rs.getInt("likes"));
+			searchArticleList.add(searchArticle);
+		}
+		return searchArticleList;
+	}
+
+}

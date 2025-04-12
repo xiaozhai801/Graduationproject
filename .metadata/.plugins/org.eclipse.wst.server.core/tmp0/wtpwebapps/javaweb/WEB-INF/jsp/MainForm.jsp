@@ -44,7 +44,7 @@
 	      <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
 	        <a href="javascript:;">
 	          <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
-	          用户名
+	          管理员
 	        </a>
 	        <dl class="layui-nav-child">
 	          <dd><a href="javascript:;">个人信息</a></dd>
@@ -64,7 +64,7 @@
 	      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
 	      <ul class="layui-nav layui-nav-tree" lay-filter="test">
 	        <li class="layui-nav-item">
-	          <a class="" href="javascript:;">你需要修理什么？</a>
+	          <a class="" href="javascript:;">主页</a>
 	          <dl class="layui-nav-child">
 	            <dd><a href="javascript:;">手机</a></dd>
 	            <dd><a href="javascript:;">笔记本电脑</a></dd>
@@ -90,7 +90,7 @@
 	          </dl>
 	        </li>
 	        <li class="layui-nav-item"><a href="AllUser.html">用户信息</a></li>
-	        <li class="layui-nav-item"><a href="javascript:;">个人中心</a></li>
+	        <li class="layui-nav-item"><a href="javascript:;">个人信息</a></li>
 	      </ul>
 	    </div>
 	  </div>

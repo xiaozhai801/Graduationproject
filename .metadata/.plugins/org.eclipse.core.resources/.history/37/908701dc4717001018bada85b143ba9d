@@ -1,0 +1,13 @@
+package com.zpq.pojo;
+
+import lombok.Data;
+
+@Data
+public class Article {
+	private int userId;
+	private int titleId;
+	private String title;
+	private String uploadTime;
+	private int views;
+	private int likes;
+}

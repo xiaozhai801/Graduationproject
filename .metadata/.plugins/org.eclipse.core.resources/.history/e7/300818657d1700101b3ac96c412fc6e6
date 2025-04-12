@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>所有文章</title>
+<link href=".//layui/css/layui.css" rel="stylesheet">
+<script src=".//layui/layui.js"></script>
+<script src=".//js/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<form class="layui-form layui-row layui-col-space16">
+		<div class="layui-form-item">
+			<div class="layui-input-inline">
+				<div class="layui-inline">
+					<input type="text" name="titleId" value="" placeholder="文章ID"
+						class="layui-input" lay-affix="clear" style="width: 150px;">
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-inline">
+					<input type="text" name="topic" placeholder="标题" lay-affix="clear"
+						class="layui-input" style="width: 150px;">
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-inline">
+					<input type="text" name="name" placeholder="作者" lay-affix="clear"
+						class="layui-input" style="width: 150px;">
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-btn-container">
+					<button class="layui-btn demo-dropdown-base" style="width: 120px;">
+						<span>机型</span> <i
+							class="layui-icon layui-icon-down layui-font-12"></i>
+					</button>
+				</div>
+				<!-- 添加隐藏的 input 字段用于保存机型值 -->
+				<input type="hidden" name="model" id="modelInput">
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-btn-container layui-col-xs12">
+					<button class="layui-btn" lay-submit lay-filter="demo-table-search">
+						<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<table class="layui-hide" id="ID-table-demo-search"></table>
+
+
+	<script>
+        layui.use(function () {
+            var table = layui.table;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var dropdown = layui.dropdown;
+            // 创建表格实例
+            table.render({
+                elem: '#ID-table-demo-search',
+                url: 'SelectAllArticleServlet', // 此处为静态模拟数据，实际使用时需换成真实接口
+                page: true,
+                cols: [
+                    [
+                        {
+                            field: 'titleId',
+                            title: '文章ID',
+                            width: 150,
+                            sort: true,
+                            fixed: true
+                        },
+                        {
+                            field: 'topic',
+                            title: '标题',
+                            width: 800
+                        },
+                        {
+                            field: 'name',
+                            title: '作者',
+                            width: 150,
+                            sort: true
+                        },
+                        {
+                            field: 'uploadTime',
+                            title: '发布日期',
+                            width: 200,
+                            sort: true
+                        },
+                        {
+                            field:'model',
+                            title: '机型',
+                            width: 150
+                        },
+                        {
+                            field:'release',
+                            title: '发布状态',
+                            width: 100
+                        },
+                        {
+                            field: 'views',
+                            title: '浏览量',
+                            width: 100
+                        }
+                    ]
+                ],
+                height: 'full-55'
+            });
+            // 日期
+            laydate.render({
+                elem: '.demo-table-search-date'
+            });
+            // 自定义事件
+            dropdown.render({
+                elem: '.demo-dropdown-base', // 绑定元素选择器，此处指向 class 可同时绑定多个元素
+                data: [
+                    {
+                        title: '手机',
+                        id: 100
+                    },
+                    {
+                        title: '笔记本电脑',
+                        id: 101
+                    },
+                    {
+                        title: '游戏主机',
+                        id: 102
+                    },
+                    {
+                        title: '家用电器',
+                        id: 103
+                    },
+                    {
+                        title: '汽车和卡车',
+                        id: 104
+                    }
+                ],
+                click: function (obj) {
+                    this.elem.find('span').text(obj.title);
+                    // 更新隐藏 input 字段的值
+                    $('#modelInput').val(obj.title);
+                }
+            });
+            // 搜索提交
+            form.on('submit(demo-table-search)', function (data) {
+                var field = data.field; // 获得表单字段
+                // 执行搜索重载
+                table.reload('ID-table-demo-search', {
+                    page: {
+                        curr: 1
+                        // 重新从第 1 页开始
+                    },
+                    where: field
+                    // 搜索的字段
+                });
+ 				$.ajax({
+                    url : 'SearchArticleServlet',//通讯地址
+                    type : 'post',//get或者post 
+                    contentType : "application/json;charset=UTF-8",
+                    data : {
+                        'titleId' : field.titleId,
+                        'topic' : field.topic,
+                        'name' : field.name,
+                        'model' : field.model
+                    },//发送到服务端的数据K-V形式
+                    dataType : "text",//接收到的数据的类型可以是json或者text
+                    success : function(res) {
+                        if (res == "success") {
+                            layer.msg('查询成功', {
+                                icon : 1, // 显示成功图标
+                                time : 2000
+                            // 提示信息显示 2 秒
+                            });
+                        } else {
+                            layer.msg('查询失败', {
+                                icon : 2, // 显示成功图标
+                                time : 2000
+                            // 提示信息显示 2 秒
+                            });
+                        }
+                    }
+                });
+
+                // 在提示信息中添加机型字段
+                layer.msg(field.titleId +' '+ field.topic +' '+ field.name +' '+ field.model);
+                return false; // 阻止默认 form 跳转
+            })
+        });
+    </script>
+
+</body>
+</html>

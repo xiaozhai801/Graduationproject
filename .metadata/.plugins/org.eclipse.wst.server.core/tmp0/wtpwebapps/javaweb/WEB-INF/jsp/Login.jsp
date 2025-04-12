@@ -51,8 +51,8 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">您将作为</label>
 				<div class="layui-input-block">
-					<input type="radio" name="entity" value="管理员" title="管理员" checked>
-					<input type="radio" name="entity" value="用户" title="用户">
+					<input type="radio" name="entity" value="用户" title="用户" checked>
+					<input type="radio" name="entity" value="管理员" title="管理员">
 				</div>
 			</div>
 			<!--忘记密码未做  -->
@@ -92,12 +92,17 @@
 					dataType : "text",//接收到的数据的类型可以是json或者text
 					success : function(res) {
 						if (res == "success") {
-							layer.msg('登录成功', {
+							layer.msg(entity+'登录成功', {
 								icon : 1, // 显示成功图标
 								time : 2000
 							// 提示信息显示 2 秒
 							}, function() {
-								window.location.href = "ViewMainFormServlet";
+								//根据不同选择进入不同Servlet
+								if(entity == "管理员"){
+									window.location.href = "ViewMainFormServlet";
+								}else{
+									window.location.href = "ViewUserFormServlet";
+								}
 							});
 						} else {
 							layer.msg('用户名或密码错误', {

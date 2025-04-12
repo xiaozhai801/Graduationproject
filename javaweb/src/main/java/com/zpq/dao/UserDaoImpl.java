@@ -78,12 +78,10 @@ public class UserDaoImpl implements UserDao {
 		while (rs.next()) {
 			User user = new User();
 			// 查询user信息
-			// 获取userId的值并转换成整型
-			user.setUserId(Integer.parseInt(rs.getString("userId")));
+			user.setUserId(rs.getInt("userId"));
 			user.setName(rs.getString("name"));
 			user.setSex(rs.getString("sex"));
-			// 获取age的值并转换成整型
-			user.setAge(Integer.parseInt(rs.getString("age")));
+			user.setAge(rs.getInt("age"));
 			user.setEmail(rs.getString("email"));
 			userList.add(user);
 		}

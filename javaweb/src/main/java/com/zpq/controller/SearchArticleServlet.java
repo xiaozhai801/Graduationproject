@@ -1,0 +1,109 @@
+package com.zpq.controller;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONObject;
+import com.zpq.dao.ArticleDao;
+import com.zpq.dao.ArticleDaoImpl;
+import com.zpq.pojo.Article;
+import com.zpq.pojo.Vo;
+
+/**
+ * Servlet implementation class SearchArticleServlet
+ */
+@WebServlet("/SearchArticleServlet")
+public class SearchArticleServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public SearchArticleServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
+//		request.setCharacterEncoding("UTF-8");
+//		response.setContentType("text/html;charset=UTF-8");
+		int page = Integer.parseInt(request.getParameter("page"));
+		int limit = Integer.parseInt(request.getParameter("limit"));
+		// 获取页面元素值
+		int titleId;
+		String topic;
+		String name;
+		String model;
+		if (request.getParameter("titleId") != "") {
+			titleId = Integer.parseInt(request.getParameter("titleId"));
+		} else {
+			titleId = -1;
+		}
+		if (request.getParameter("topic") != "") {
+			topic = request.getParameter("topic");
+		} else {
+			topic = null;
+		}
+		if (request.getParameter("name") != "") {
+			name = request.getParameter("name");
+		} else {
+			name = null;
+		}
+		if (request.getParameter("model") != "") {
+			model = request.getParameter("model");
+		} else {
+			model = null;
+		}
+
+		System.out.println(titleId+"   "+topic+"    "+name+"    "+model);
+
+		Article article = new Article();
+		article.setTitleId(titleId);
+		article.setTopic(topic);
+		article.setName(name);
+		article.setModel(model);
+
+		ArticleDao articleDao = new ArticleDaoImpl();
+		try {
+			List<Object> articleList=articleDao.searchArticle(article, page, limit);
+            // 设置网页格式和编码
+            response.setContentType("text/html;charset=UTF-8");
+            Vo vo = new Vo();
+            vo.setCode(0);
+            vo.setMsg("success");
+            vo.setCount(articleDao.countArticle());
+            vo.setData(articleList);
+            response.getWriter().write(JSONObject.toJSON(vo).toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

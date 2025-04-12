@@ -10,6 +10,7 @@ public interface UserDao {
 	public Admin selectAdmin(String name, String password) throws SQLException;
 	public User selectUser(String name, String password) throws SQLException;
 //    public List<Object> SelectAllUserLsit() throws SQLException;
+	//带分页查询
     public List<Object> SelectAllUserLsit(int page,int limit) throws SQLException;
     public int countUser() throws SQLException;
 }

@@ -1,0 +1,5 @@
+package com.zpq.dao;
+
+public interface ArticleDao {
+	public Article selectArticle();
+}

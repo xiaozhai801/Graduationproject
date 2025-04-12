@@ -1,0 +1,8 @@
+package com.zpq.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public interface ArticleDao {
+	public List<Object> selectArticle(int page,int limit) throws SQLException;
+}

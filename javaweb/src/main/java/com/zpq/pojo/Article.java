@@ -4,8 +4,15 @@ import lombok.Data;
 
 @Data
 public class Article {
+	private int titleId;
 	private int userId;
-	private String title;
+	private String name;
+	private String topic;
+	private String model;
+	private String uploadTime;
+	//0未发布 1已发布
+	private int release;
 	private int views;
 	private int likes;
+
 }
