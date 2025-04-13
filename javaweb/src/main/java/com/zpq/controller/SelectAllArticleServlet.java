@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zpq.dao.ArticleDao;
 import com.zpq.dao.ArticleDaoImpl;
 import com.zpq.pojo.Vo;
-
+//显示所有文章
 /**
  * Servlet implementation class SelectAllArticleServlet
  */

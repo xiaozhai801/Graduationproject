@@ -13,8 +13,10 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="layui-btn-container"/>
+		<item key="selection" value="System.out.println"/>
 		<list key="findhistory">
+			<item value="System.out.println"/>
+			<item value="ID-table-demo-search"/>
 			<item value="layui-btn-container"/>
 			<item value="layui-input-wrap"/>
 			<item value="layui-col-md4"/>
@@ -28,8 +30,6 @@
 			<item value="test"/>
 			<item value="layui-table"/>
 			<item value="layui-table-total"/>
-			<item value="获取选中行数据"/>
-			<item value="获取选中行中数据"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

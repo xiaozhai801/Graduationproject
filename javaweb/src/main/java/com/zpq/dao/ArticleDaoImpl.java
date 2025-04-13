@@ -33,7 +33,7 @@ public class ArticleDaoImpl implements ArticleDao {
         while (rs.next()) {
             Article article = new Article();
             article.setTitleId(rs.getInt("titleId"));
-            article.setUserId(rs.getInt("userId"));
+            article.setUserId(rs.getString("userId"));
             article.setName(rs.getString("name"));
             article.setTopic(rs.getString("topic"));
             article.setModel(rs.getString("model"));
@@ -77,15 +77,10 @@ public class ArticleDaoImpl implements ArticleDao {
         DBUtil dbUtil = new DBUtil();
         // 使用StringBuilder构建SQL查询语句，初始语句为查询所有记录的基础部分，并添加WHERE 1=1方便后续拼接条件
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM v_articleinfo WHERE 1=1");
-        // 从传入的Article对象中获取文章ID
         int titleId = article.getTitleId();
-        // 从传入的Article对象中获取文章标题
         String topic = article.getTopic();
-        // 从传入的Article对象中获取文章作者
         String name = article.getName();
-        // 从传入的Article对象中获取文章机型
         String model = article.getModel();
-        // 用于存储SQL语句中占位符对应的参数值的列表
         List<Object> params = new ArrayList<>();
 
         // 如果文章ID不为-1，说明有文章ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
@@ -130,7 +125,7 @@ public class ArticleDaoImpl implements ArticleDao {
         while (rs.next()) {
             Article searchArticle = new Article();
             searchArticle.setTitleId(rs.getInt("titleId"));
-            searchArticle.setUserId(rs.getInt("userId"));
+            searchArticle.setUserId(rs.getString("userId"));
             searchArticle.setName(rs.getString("name"));
             searchArticle.setTopic(rs.getString("topic"));
             searchArticle.setModel(rs.getString("model"));

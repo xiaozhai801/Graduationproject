@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Article {
 	private int titleId;
-	private int userId;
+	private String userId;
 	private String name;
 	private String topic;
 	private String model;

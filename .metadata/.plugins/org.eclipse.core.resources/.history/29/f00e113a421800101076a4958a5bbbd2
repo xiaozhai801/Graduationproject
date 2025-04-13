@@ -1,0 +1,88 @@
+package com.zpq.controller;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONObject;
+import com.zpq.dao.PersonalInfoDao;
+import com.zpq.dao.PersonalInfoDaoImpl;
+import com.zpq.pojo.Vo;
+
+/**
+ * Servlet implementation class SelectPersonalInfoServlet
+ */
+@WebServlet("/SelectPersonalInfoServlet")
+public class SelectPersonalInfoServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public SelectPersonalInfoServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
+		// 获取请求中的所有 Cookie
+		Cookie[] cookies = request.getCookies();
+		String name = null;
+		String role = null;
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("username".equals(cookie.getName())) {
+					name = cookie.getValue();
+				} else if ("role".equals(cookie.getName())) {
+					role = cookie.getValue();
+				}
+			}
+		}
+
+		System.out.println(name+" "+role);
+		
+		PersonalInfoDao personalInfoDao=new PersonalInfoDaoImpl();
+		List<Object> userList;
+		try {
+			userList = personalInfoDao.SelectPerSonalInfo(name);
+			System.out.println(userList);
+			// 设置网页格式和编码
+			response.setContentType("text/html;charset=UTF-8");
+			Vo vo = new Vo();
+			vo.setCode(0);
+			vo.setMsg("success");
+			vo.setCount(1);
+			vo.setData(userList);
+			response.getWriter().write(JSONObject.toJSON(vo).toString());		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

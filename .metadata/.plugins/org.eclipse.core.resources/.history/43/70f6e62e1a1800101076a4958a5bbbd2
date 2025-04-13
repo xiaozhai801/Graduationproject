@@ -1,0 +1,70 @@
+package com.zpq.filter;
+
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet Filter implementation class CookieAuthenticationFilter
+ */
+@WebFilter(urlPatterns = "*/javaweb/*")
+public class CookieAuthenticationFilter extends HttpFilter implements Filter {
+    private static final long serialVersionUID = 1L;
+
+    public CookieAuthenticationFilter() {
+        super();
+    }
+
+    public void destroy() {
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        // 检查请求的 URL 是否以 javaweb/ 开头
+        String requestURI = httpRequest.getRequestURI();
+        if (requestURI.startsWith("/javaweb/")) {
+            // 检查 Cookie 中是否包含认证信息
+            boolean isAuthenticated = false;
+            Cookie[] cookies = httpRequest.getCookies();
+            String username = null;
+            String role = null;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("username".equals(cookie.getName())) {
+                        username = cookie.getValue();
+                    } else if ("role".equals(cookie.getName())) {
+                        role = cookie.getValue();
+                    }
+                }
+                // 如果 username 和 role 都存在，则认为用户已认证
+                if (username != null && !username.isEmpty() && role != null && !role.isEmpty()) {
+                    isAuthenticated = true;
+                }
+            }
+
+            if (!isAuthenticated) {
+                // 如果未认证，重定向到登录页面
+                httpResponse.sendRedirect("/LoginServlet");
+                return;
+            }
+        }
+
+        // 继续处理请求
+        chain.doFilter(request, response);
+    }
+
+    public void init(FilterConfig fConfig) throws ServletException {
+    }
+}

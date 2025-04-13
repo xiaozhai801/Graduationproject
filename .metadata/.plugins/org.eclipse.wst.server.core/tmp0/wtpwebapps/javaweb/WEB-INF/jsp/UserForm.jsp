@@ -46,8 +46,7 @@
 	          <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img" id="top-username">
 	        </a>
 	        <dl class="layui-nav-child">
-	          <dd><a href="javascript:;">个人信息</a></dd>
-	          <dd><a href="javascript:;">设置</a></dd>
+	          <dd><a href="PersonalInfo.html">个人信息</a></dd>
 	          <dd><a href="javascript:;">退出登录</a></dd>
 	        </dl>
 	      </li>
@@ -75,19 +74,19 @@
 	        <li class="layui-nav-item">
 	          <a href="javascript:;">文章</a>
 	          <dl class="layui-nav-child">
-	            <dd><a href="javascript:;">所有文章</a></dd>
+	            <dd><a href="AllArticle.html">所有文章</a></dd>
 	            <dd><a href="javascript:;">我的文章</a></dd>
 	          </dl>
 	        </li>
 	        <li class="layui-nav-item"><a href="javascript:;">占位</a></li>
-	        <li class="layui-nav-item"><a href="javascript:;">个人信息</a></li>
+	        <li class="layui-nav-item"><a href="PersonalInfo.html">个人信息</a></li>
 	      </ul>
 	    </div>
 	  </div>
 	  <div class="layui-body">
 	    <!-- 内容主体区域 -->
 	    <div style="width: 100%; height: 85vh; padding: 10px;">
-	    	<iframe src="AllArticle.html" id="main" height="100%" width="100%" scrolling="no" style="border: none; "></iframe>
+	    	<iframe src="zhanwei.html" id="main" height="100%" width="100%" scrolling="no" style="border: none; "></iframe>
 	  	</div>
 	  <div class="layui-footer" >
 	    <!-- 底部固定区域 -->

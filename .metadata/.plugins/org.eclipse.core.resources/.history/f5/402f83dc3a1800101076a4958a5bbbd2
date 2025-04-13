@@ -1,0 +1,13 @@
+package com.zpq.dao;
+
+import java.util.List;
+
+public class PersonalInfoDaoImpl implements PersonalInfoDao {
+
+	@Override
+	public List<Object> SelectPerSonalInfo(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

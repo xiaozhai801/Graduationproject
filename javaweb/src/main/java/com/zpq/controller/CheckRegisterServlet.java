@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zpq.service.RegisterService;
 import com.zpq.service.RegisterServiceImpl;
-
+//注册信息检查
 /**
  * Servlet implementation class CheckRegisterServlet
  */

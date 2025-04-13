@@ -1,0 +1,75 @@
+package com.zpq.controller;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.zpq.pojo.Admin;
+import com.zpq.pojo.User;
+import com.zpq.service.LoginService;
+import com.zpq.service.LoginServletImpl;
+
+@WebServlet("/CheckLoginServlet")
+public class CheckLoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private LoginService loginService = new LoginServletImpl();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String password = request.getParameter("password");
+        String entity = request.getParameter("entity");
+        if (entity.equals("管理员")) {
+            Admin admin;
+            try {
+                admin = loginService.selectAdmin(name, password);
+                if (admin != null) {
+                    // 设置管理员用户名的 Cookie
+                    Cookie usernameCookie = new Cookie("username", name);
+                    usernameCookie.setPath("/");
+                    response.addCookie(usernameCookie);
+                    // 设置管理员身份的 Cookie
+                    Cookie roleCookie = new Cookie("role", "admin");
+                    roleCookie.setPath("/");
+                    response.addCookie(roleCookie);
+                    response.sendRedirect("mainform.jsp"); // 重定向到管理员页面
+                } else {
+                    response.getWriter().write("fail");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (entity.equals("用户")) {
+            User user;
+            try {
+                user = loginService.selectUser(name, password);
+                if (user != null) {
+                    // 设置用户用户名的 Cookie
+                    Cookie usernameCookie = new Cookie("username", name);
+                    usernameCookie.setPath("/");
+                    response.addCookie(usernameCookie);
+                    // 设置用户身份的 Cookie
+                    Cookie roleCookie = new Cookie("role", "user");
+                    roleCookie.setPath("/");
+                    response.addCookie(roleCookie);
+                    response.sendRedirect("userform.jsp"); // 重定向到用户页面
+                } else {
+                    response.getWriter().write("fail");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

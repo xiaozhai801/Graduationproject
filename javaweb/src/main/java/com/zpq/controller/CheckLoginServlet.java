@@ -2,83 +2,68 @@ package com.zpq.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.zpq.pojo.Admin;
 import com.zpq.pojo.User;
 import com.zpq.service.LoginService;
 import com.zpq.service.LoginServletImpl;
-
-/**
- * Servlet implementation class CheckLoginServlet
- */
+//登录信息检查
 @WebServlet("/CheckLoginServlet")
 public class CheckLoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private LoginService loginService = new LoginServletImpl();
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CheckLoginServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        // response.getWriter().append("Served at: ").append(request.getContextPath());
         doPost(request, response);
     }
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String entity = request.getParameter("entity");
-        if (entity.equals("管理员")) {
-            Admin admin;
-            try {
-                admin = loginService.selectAdmin(name, password);
-                if (admin != null) {
-                    response.getWriter().write("success");
-                } else {
-                    response.getWriter().write("fail");
-                }
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        try {
+            boolean isAuthenticated = false;
+            String role = null;
+
+            if ("管理员".equals(entity)) {
+                Admin admin = loginService.selectAdmin(name, password);
+                isAuthenticated = admin != null;
+                role = "admin";
+            } else if ("用户".equals(entity)) {
+                User user = loginService.selectUser(name, password);
+                isAuthenticated = user != null;
+                role = "user";
             }
-        } else if (entity.equals("用户")) {
-            User user;
-            try {
-                user = loginService.selectUser(name, password);
-                if (user != null) {
-                    response.getWriter().write("success");
-                } else {
-                    response.getWriter().write("fail");
-                }
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+            if (isAuthenticated) {
+                // 设置用户名的 Cookie
+                Cookie usernameCookie = new Cookie("username", name);
+                usernameCookie.setPath("/");
+                // 设置 Cookie 有效期，1 小时
+                usernameCookie.setMaxAge(3600); 
+                response.addCookie(usernameCookie);
+
+                // 设置角色的 Cookie
+                Cookie roleCookie = new Cookie("role", role);
+                roleCookie.setPath("/");
+                roleCookie.setMaxAge(3600); 
+                response.addCookie(roleCookie);
+
+                response.getWriter().write("success");
+            } else {
+                response.getWriter().write("fail");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

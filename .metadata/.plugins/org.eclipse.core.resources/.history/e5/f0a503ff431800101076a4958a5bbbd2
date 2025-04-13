@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>个人信息</title>
+    <link href=".//layui/css/layui.css" rel="stylesheet">
+    <script src=".//layui/layui.js"></script>
+    <script src=".//js/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">我的角色</label>
+            <div class="layui-input-inline">
+                <select name="role" lay-verify="">
+                    <option value="1">用户</option>
+                    <option value="2">管理员</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" readonly="" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">不可修改</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="nickname" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">你在网站中显示的名称</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女">
+                <input type="radio" name="sex" value="不透露" title="不透露">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit lay-filter="demo2">确认</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+
+    <script>
+        layui.use(['form', 'layer'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+
+            // 通过 AJAX 获取数据
+            $.ajax({
+                url: 'SelectPersonalInfoServlet',
+                type: 'get',
+                success: function (res) {
+                    console.log("获取到的数据:", res);
+                    // 假设数据在 data 数组的第一个元素中，根据实际情况调整
+                    var userData = res.data[0];
+
+                    // 填充角色，这里假设角色没有在数据中返回，可根据实际情况处理
+                    // $('select[name="role"]').val(userData.role); 
+                    form.render('select'); 
+
+                    // 填充用户名
+                    $('input[name="name"]').val(userData.name);
+
+                    // 填充昵称，假设没有返回 nickname 字段，可根据实际情况处理
+                    // $('input[name="nickname"]').val(userData.nickname); 
+
+                    // 填充性别
+                    $('input[name="sex"][value="' + userData.sex + '"]').prop('checked', true);
+                    form.render('radio'); 
+
+                    // 填充邮箱
+                    $('input[name="email"]').val(userData.email);
+
+                    form.render(); 
+                },
+                error: function (xhr, status, error) {
+                    console.log("AJAX 请求错误:", xhr.responseText);
+                    layer.msg('获取数据失败', {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+
+            // 提交事件
+            form.on('submit(demo2)', function (data) {
+                var field = data.field; 
+                // 显示填写结果，仅作演示用
+                layer.alert(JSON.stringify(field), {
+                    title: '当前填写的字段值'
+                });
+
+                return false; 
+            });
+        });
+    </script>
+</body>
+</html>

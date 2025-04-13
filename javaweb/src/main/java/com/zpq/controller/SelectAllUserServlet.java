@@ -18,7 +18,7 @@ import com.zpq.dao.UserDao;
 import com.zpq.dao.UserDaoImpl;
 import com.zpq.pojo.User;
 import com.zpq.pojo.Vo;
-
+//显示所有用户
 /**
  * Servlet implementation class SelectAllUser
  */

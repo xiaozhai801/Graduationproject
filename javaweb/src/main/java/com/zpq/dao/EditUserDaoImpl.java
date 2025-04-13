@@ -14,12 +14,12 @@ public class EditUserDaoImpl implements EditUserDao {
 		DBUtil dbUtil=new DBUtil();
 		String sql="UPDATE v_userinfo SET userId = ?, `name` = ?, sex = ?, age = ?, email = ? WHERE userId = ?;";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
-		ps.setInt(1, user.getUserId());
+		ps.setString(1, user.getUserId());
 		ps.setString(2, user.getName());
 		ps.setString(3, user.getSex());
 		ps.setInt(4, user.getAge());
 		ps.setString(5, user.getEmail());
-		ps.setInt(6, user.getUserId());
+		ps.setString(6, user.getUserId());
 		int rs = ps.executeUpdate();
 		while (rs==1) {
 			return 1;

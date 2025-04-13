@@ -28,12 +28,16 @@
     <fullyQualifiedTypeName name="com.zpq.dao.EditUserDaoImpl"/>
     <fullyQualifiedTypeName name="com.zpq.controller.EditUser"/>
     <fullyQualifiedTypeName name="com.zpq.utils.DBUtil"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
+    <fullyQualifiedTypeName name="javax.print.MultiDocPrintService"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
+    <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.ArticleDaoImpl"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.mysql.cj.x.protobuf.MysqlxCursor.Open.OneOfMessage"/>
     <fullyQualifiedTypeName name="java.lang.Object"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
-    <fullyQualifiedTypeName name="java.lang.Integer"/>
-    <fullyQualifiedTypeName name="java.sql.ResultSet"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.Cookie"/>
 </qualifiedTypeNameHistroy>

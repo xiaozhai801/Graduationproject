@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.zpq.dao.EditUserDao;
 import com.zpq.dao.EditUserDaoImpl;
 import com.zpq.pojo.User;
-
+//管理员修改用户信息
 /**
  * Servlet implementation class EditUser
  */
@@ -45,7 +45,7 @@ public class EditUserServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		//获取页面元素值
-		int userId=Integer.parseInt(request.getParameter("userId"));
+		String userId=request.getParameter("userId");
 		String name=request.getParameter("name");
 		String sex=request.getParameter("sex");
 		int age=Integer.parseInt(request.getParameter("age"));

@@ -78,7 +78,7 @@ public class UserDaoImpl implements UserDao {
 		while (rs.next()) {
 			User user = new User();
 			// 查询user信息
-			user.setUserId(rs.getInt("userId"));
+			user.setUserId(rs.getString("userId"));
 			user.setName(rs.getString("name"));
 			user.setSex(rs.getString("sex"));
 			user.setAge(rs.getInt("age"));

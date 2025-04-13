@@ -1,0 +1,72 @@
+package com.zpq.filter;
+
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet Filter implementation class CookieAuthenticationFilter
+ */
+@WebFilter(urlPatterns = "/javaweb/*")
+public class CookieAuthenticationFilter extends HttpFilter implements Filter {
+    private static final long serialVersionUID = 1L;
+
+    public CookieAuthenticationFilter() {
+        super();
+    }
+
+    public void destroy() {
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        String requestURI = httpRequest.getRequestURI();
+        System.out.println("Request URI: " + requestURI);
+
+        if (requestURI.startsWith("/javaweb/")) {
+            boolean isAuthenticated = false;
+            Cookie[] cookies = httpRequest.getCookies();
+            String username = null;
+            String role = null;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    System.out.println("Cookie name: " + cookie.getName() + ", value: " + cookie.getValue());
+                    if ("username".equals(cookie.getName())) {
+                        username = cookie.getValue();
+                    } else if ("role".equals(cookie.getName())) {
+                        role = cookie.getValue();
+                    }
+                }
+                if (username != null && !username.isEmpty() && role != null && !role.isEmpty()) {
+                    isAuthenticated = true;
+                }
+            }
+
+            System.out.println("Is authenticated: " + isAuthenticated);
+
+            if (!isAuthenticated) {
+                System.out.println("Not authenticated, redirecting to login page.");
+                httpResponse.sendRedirect("/LoginServlet");
+                return;
+            }
+        }
+
+        // 继续处理请求
+        chain.doFilter(request, response);
+    }
+
+    public void init(FilterConfig fConfig) throws ServletException {
+    }
+}
