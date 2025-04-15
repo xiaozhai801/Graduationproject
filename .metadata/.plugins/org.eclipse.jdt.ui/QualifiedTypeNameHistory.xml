@@ -9,7 +9,6 @@
     <fullyQualifiedTypeName name="com.zpq.service.LoginService"/>
     <fullyQualifiedTypeName name="com.zpq.service.LoginServletImpl"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.Admin"/>
-    <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
     <fullyQualifiedTypeName name="java.security.spec.ECField"/>
     <fullyQualifiedTypeName name="com.zpq.dao.UserAddDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.UserAddDaoImpl"/>
@@ -23,7 +22,6 @@
     <fullyQualifiedTypeName name="com.zpq.pojo.Vo"/>
     <fullyQualifiedTypeName name="com.alibaba.fastjson.JSONObject"/>
     <fullyQualifiedTypeName name="com.mysql.cj.QueryReturnType"/>
-    <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditUserDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditUserDaoImpl"/>
     <fullyQualifiedTypeName name="com.zpq.controller.EditUser"/>
@@ -31,13 +29,19 @@
     <fullyQualifiedTypeName name="java.sql.ResultSet"/>
     <fullyQualifiedTypeName name="javax.print.MultiDocPrintService"/>
     <fullyQualifiedTypeName name="java.lang.Integer"/>
-    <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDaoImpl"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="com.mysql.cj.x.protobuf.MysqlxCursor.Open.OneOfMessage"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.Cookie"/>
+    <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
+    <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDaoImpl"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.lang.Object"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
-    <fullyQualifiedTypeName name="javax.servlet.http.Cookie"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDaoImpl"/>
+    <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
 </qualifiedTypeNameHistroy>

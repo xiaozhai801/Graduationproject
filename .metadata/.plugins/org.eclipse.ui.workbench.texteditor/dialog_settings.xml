@@ -13,14 +13,15 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="System.out.println"/>
+		<item key="selection" value="userId"/>
 		<list key="findhistory">
+			<item value="userId"/>
+			<item value="demo-table-search"/>
 			<item value="System.out.println"/>
 			<item value="ID-table-demo-search"/>
 			<item value="layui-btn-container"/>
 			<item value="layui-input-wrap"/>
 			<item value="layui-col-md4"/>
-			<item value="demo-table-search"/>
 			<item value="layui-nav-img"/>
 			<item value="Field"/>
 			<item value="File"/>
@@ -29,7 +30,6 @@
 			<item value="demo-table-search-date"/>
 			<item value="test"/>
 			<item value="layui-table"/>
-			<item value="layui-table-total"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

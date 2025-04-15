@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>所有文章</title>
+    <link href=".//layui/css/layui.css" rel="stylesheet">
+    <script src=".//layui/layui.js"></script>
+    <script src=".//js/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <form class="layui-form layui-row layui-col-space16">
+        <div class="layui-form-item layui-row">
+            <div class="layui-col-xs6">
+                <div class="layui-input-inline">
+                    <input type="text" name="titleId" value="" placeholder="文章ID" class="layui-input" lay-affix="clear"
+                        style="width: 150px;">
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" name="topic" placeholder="标题" lay-affix="clear" class="layui-input"
+                        style="width: 150px;">
+                </div>
+                <div class="layui-input-inline">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn demo-dropdown-base" style="width: 120px;">
+                            <span>机型</span> <i class="layui-icon layui-icon-down layui-font-12"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" name="model" id="modelInput">
+                </div>
+                <div class="layui-input-inline">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn" lay-submit lay-filter="demo-table-search">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-form-item" style="text-align: right;">
+                <div class="layui-btn-container">
+                    <a href="zhanwei.html" class="layui-btn layui-bg-red">前往创作中心</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="layui-hide" id="ID-table-demo-search"></table>
+
+    <script>
+        layui.use(function () {
+            var table = layui.table;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var dropdown = layui.dropdown;
+            table.render({
+                elem: '#ID-table-demo-search',
+                url: 'SelectMyArticleServlet',
+                page: true,
+                cols: [
+                    [
+                        {
+                            field: 'titleId',
+                            title: '文章ID',
+                            width: 150,
+                            sort: true,
+                            fixed: true
+                        },
+                        {
+                            field: 'topic',
+                            title: '标题',
+                            width: 800
+                        },
+                        {
+                            field: 'name',
+                            title: '作者',
+                            width: 120,
+                            sort: true
+                        },
+                        {
+                            field: 'uploadTime',
+                            title: '发布日期',
+                            width: 200,
+                            sort: true
+                        },
+                        {
+                            field:'model',
+                            title: '机型',
+                            width: 100
+                        },
+                        {
+                            field:'release',
+                            title: '发布状态',
+                            width: 105,
+                            sort: true,
+                            templet: function (d) {
+                                return d.release === 1 ? '已发布' : '未审核';
+                            }
+                        },
+                        {
+                            field: 'views',
+                            title: '浏览量',
+                            width: 100
+                        },
+                        {
+                            field: 'likes',
+                            title: '点赞量',
+                            width: 100
+                        }
+                    ]
+                ],
+                height: 'full-55'
+            });
+            laydate.render({
+                elem: '.demo-table-search-date'
+            });
+            dropdown.render({
+                elem: '.demo-dropdown-base',
+                data: [
+                    {
+                        title: '手机',
+                        id: 100
+                    },
+                    {
+                        title: '笔记本电脑',
+                        id: 101
+                    },
+                    {
+                        title: '游戏主机',
+                        id: 102
+                    },
+                    {
+                        title: '家用电器',
+                        id: 103
+                    },
+                    {
+                        title: '汽车和卡车',
+                        id: 104
+                    }
+                ],
+                click: function (obj) {
+                    this.elem.find('span').text(obj.title);
+                    $('#modelInput').val(obj.title);
+                }
+            });
+            form.on('submit(demo-table-search)', function (data) {
+                var field = data.field;
+                table.reload('ID-table-demo-search', {
+                    page: {
+                        curr: 1
+                    },
+                    url: 'SearchMyArticleServlet',
+                    where: field
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>    

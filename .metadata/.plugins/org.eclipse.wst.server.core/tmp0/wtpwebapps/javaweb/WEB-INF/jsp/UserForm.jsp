@@ -68,17 +68,16 @@
 	            <dd><a href="javascript:;">笔记本电脑</a></dd>
 	            <dd><a href="javascript:;">游戏主机</a></dd>
 	            <dd><a href="javascript:;">家用电器</a></dd>
-	            <dd><a href="javascript:;">汽车和卡车</a></dd>
 	          </dl>
 	        </li>
 	        <li class="layui-nav-item">
 	          <a href="javascript:;">文章</a>
 	          <dl class="layui-nav-child">
 	            <dd><a href="AllArticle.html">所有文章</a></dd>
-	            <dd><a href="javascript:;">我的文章</a></dd>
+	            <dd><a href="MyArticle.html">我的文章</a></dd>
 	          </dl>
 	        </li>
-	        <li class="layui-nav-item"><a href="javascript:;">占位</a></li>
+	        <li class="layui-nav-item"><a href="javascript:;">创作中心</a></li>
 	        <li class="layui-nav-item"><a href="PersonalInfo.html">个人信息</a></li>
 	      </ul>
 	    </div>
