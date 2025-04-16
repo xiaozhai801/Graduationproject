@@ -12,88 +12,108 @@
 <script src=".//layui/layui.js"></script>
 <script src=".//js/jquery-3.6.0.min.js"></script>
 <style>
-  /* 隐藏横向滚动条 */
-  body {
-    overflow-x: hidden;
-  }
+/* 隐藏横向滚动条 */
+body {
+	overflow-x: hidden;
+}
 </style>
 </head>
 <body>
 	<div class="layui-layout layui-layout-admin">
-	  <div class="layui-header">
-	    <div class="layui-logo layui-hide-xs layui-bg-black">修复</div>
-	    <!-- 头部区域（可配合layui 已有的水平导航） -->
-	    <ul class="layui-nav layui-layout-left">
-	      <!-- 移动端显示 -->
-	      <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
-	        <i class="layui-icon layui-icon-spread-left"></i>
-	      </li>
-	      <li class="layui-nav-item layui-hide-xs"><a href="javascript:;">nav 1</a></li>
-	      <li class="layui-nav-item layui-hide-xs"><a href="javascript:;">nav 2</a></li>
-	      <li class="layui-nav-item layui-hide-xs"><a href="javascript:;">nav 3</a></li>
-	      <li class="layui-nav-item">
-	        <a href="javascript:;">nav groups</a>
-	        <dl class="layui-nav-child">
-	          <dd><a href="javascript:;">menu 11</a></dd>
-	          <dd><a href="javascript:;">menu 22</a></dd>
-	          <dd><a href="javascript:;">menu 33</a></dd>
-	        </dl>
-	      </li>
-	    </ul>
-	    <ul class="layui-nav layui-layout-right">
-	      <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
-	        <a href="javascript:;">
-	          <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img" id="top-username">
-	        </a>
-	        <dl class="layui-nav-child">
-	          <dd><a href="PersonalInfo.html">个人信息</a></dd>
-	          <dd><a href="javascript:;">退出登录</a></dd>
-	        </dl>
-	      </li>
-	      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
-	        <a href="javascript:;">
-	          <i class="layui-icon layui-icon-more-vertical"></i>
-	        </a>
-	      </li>
-	    </ul>
-	  </div>
-	  <div class="layui-side layui-bg-black">
-	    <div class="layui-side-scroll">
-	      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-	      <ul class="layui-nav layui-nav-tree" lay-filter="test">
-	        <li class="layui-nav-item">
-	          <a class="" href="javascript:;">主页</a>
-	          <dl class="layui-nav-child">
-	            <dd><a href="javascript:;">手机</a></dd>
-	            <dd><a href="javascript:;">笔记本电脑</a></dd>
-	            <dd><a href="javascript:;">游戏主机</a></dd>
-	            <dd><a href="javascript:;">家用电器</a></dd>
-	          </dl>
-	        </li>
-	        <li class="layui-nav-item">
-	          <a href="javascript:;">文章</a>
-	          <dl class="layui-nav-child">
-	            <dd><a href="AllArticle.html">所有文章</a></dd>
-	            <dd><a href="MyArticle.html">我的文章</a></dd>
-	          </dl>
-	        </li>
-	        <li class="layui-nav-item"><a href="javascript:;">创作中心</a></li>
-	        <li class="layui-nav-item"><a href="PersonalInfo.html">个人信息</a></li>
-	      </ul>
-	    </div>
-	  </div>
-	  <div class="layui-body">
-	    <!-- 内容主体区域 -->
-	    <div style="width: 100%; height: 85vh; padding: 10px;">
-	    	<iframe src="zhanwei.html" id="main" height="100%" width="100%" scrolling="no" style="border: none; "></iframe>
-	  	</div>
-	  <div class="layui-footer" >
-	    <!-- 底部固定区域 -->
-	    底部固定区域
-	  </div>
-	</div>
+		<div class="layui-header">
+			<div class="layui-logo layui-hide-xs layui-bg-black">修复</div>
+			<!-- 头部区域（可配合layui 已有的水平导航） -->
+			<ul class="layui-nav layui-layout-left">
+				<!-- 移动端显示 -->
+				<li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm"
+					lay-header-event="menuLeft"><i
+					class="layui-icon layui-icon-spread-left"></i></li>
+				<li class="layui-nav-item layui-hide-xs"><a href="javascript:;">nav
+						1</a></li>
+				<li class="layui-nav-item layui-hide-xs"><a href="javascript:;">nav
+						2</a></li>
+				<li class="layui-nav-item layui-hide-xs"><a href="javascript:;">nav
+						3</a></li>
+			</ul>
+			<ul class="layui-nav layui-layout-right">
+				<li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+					<a href="javascript:;"> <img
+						src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png"
+						class="layui-nav-img" id="top-username">
+				</a>
+					<dl class="layui-nav-child">
+						<dd>
+							<a href="PersonalInfo.html">个人信息</a>
+						</dd>
+						<dd>
+							<a href="javascript:;">退出登录</a>
+						</dd>
+					</dl>
+				</li>
+				<li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+					<a href="javascript:;"> <i
+						class="layui-icon layui-icon-more-vertical"></i>
+				</a>
+				</li>
+			</ul>
+		</div>
+		<div class="layui-side layui-bg-black">
+			<div class="layui-side-scroll">
+				<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+				<ul class="layui-nav layui-nav-tree" lay-filter="test">
+					<li class="layui-nav-item"><a href="javascript:;">主页</a></li>
+					<li class="layui-nav-item"><a class="" href="javascript:;">维修指南</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="javascript:;">手机</a>
+							</dd>
+							<dd>
+								<a href="javascript:;">笔记本电脑</a>
+							</dd>
+							<dd>
+								<a href="javascript:;">游戏主机</a>
+							</dd>
+							<dd>
+								<a href="javascript:;">家用电器</a>
+							</dd>
+						</dl></li>
+					<li class="layui-nav-item"><a href="javascript:;">文章</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="AllArticle.html">所有文章</a>
+							</dd>
+							<dd>
+								<a href="MyArticle.html">我的文章</a>
+							</dd>
+						</dl>
+					</li>
+					<li class="layui-nav-item"><a href="javascript:;">创作中心</a></li>
+										<li class="layui-nav-item"><a href="javascript:;">我的</a>
+						<dl class="layui-nav-child">
+							<dd>
+								<a href="PersonalInfo.html">个人信息</a>
+							</dd>
+							<dd>
+								<a href="EditPassword.html">修改密码</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="layui-body">
+			<!-- 内容主体区域 -->
+			<div style="width: 100%; height: 85vh; padding: 10px;">
+				<iframe src="zhanwei.html" id="main" height="100%" width="100%"
+					scrolling="no" style="border: none;"></iframe>
+			</div>
+			<div class="layui-footer">
+				<!-- 底部固定区域 -->
+				底部固定区域
+			</div>
+		</div>
 
-<script>
+		<script>
 	layui.use([ 'element', 'layer', 'util' ], function() {
 		var element = layui.element;
 		var layer = layui.layer;

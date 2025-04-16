@@ -1,0 +1,107 @@
+<%@page import="java.io.PrintStream"%>
+<%@page import="java.io.ByteArrayOutputStream"%>
+<%@page import="java.io.IOException"%>
+<%@page import="java.io.OutputStream"%>
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<%@page isErrorPage="true"%>
+//定义一个方法
+<%!
+	public static OutputStream getErrorInfo(HttpServletRequest request, Throwable exe) {  
+        try{ 
+			// 创建一个空的字节流，保存错误信息  
+            OutputStream os = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(os);  
+        
+            // 收集错误信息  
+            ps.println("错误码: " + request.getAttribute("javax.servlet.error.status_code"));   
+            ps.println("异常类: " + request.getAttribute("javax.servlet.error.servlet_name"));  
+            ps.println("出错页面地址: " + request.getAttribute("javax.servlet.error.request_uri"));  
+            ps.println("访问的地址路径: " +   request.getAttribute("javax.servlet.forward.request_uri"));  
+            ps.println(); 
+             
+      		Map<String, String[]> map = request.getParameterMap(); 
+      		
+            /* for (String key : map.keySet()) {  
+                ps.println("请求中的参数包括：");  
+                ps.println(key + "=" + request.getParameter(key));  
+                ps.println();  
+            }  */ 
+              
+            /* for (Cookie cookie : request.getCookies()) {  
+                ps.println("请求中的 Cookie 包括：");  
+                ps.println(cookie.getName() + "=" + cookie.getValue());  
+                ps.println();  
+            }   */
+      
+           
+            if (exe != null) {   
+                ps.println("堆栈信息");  
+                exe.printStackTrace(ps);  
+                ps.println();  
+            }  
+  
+            return os;   
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            return null;  
+        }  
+    }%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<base href="<%=basePath%>">
+
+<title>错误页面
+	code：${requestScope['javax.servlet.error.status_code']}</title>
+
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+<meta http-equiv="description" content="This is my page">
+
+<style>
+body {
+	max-width: 600px;
+	min-width: 320px;
+	margin: 0 auto;
+	padding-top: 2%;
+}
+
+textarea {
+	width: 100%;
+	min-height: 300px;
+	outline: none;
+	border: 1px solid gray;
+	padding: 1%;
+}
+
+h1 {
+	text-align: right;
+	color: lightgray;
+}
+
+div {
+	margin-top: 1%;
+}
+</style>
+</head>
+<body>
+	<h1>抱 歉……</h1>
+	<div style="padding:2% 0;text-indent:2em;">尊敬的用户：你访问的界面出现了一点小错误！如果问题重复出现，请向系统管理员反馈。</div>
+	<textarea>
+		<%
+			out.print(getErrorInfo(request, exception));
+		%>
+	</textarea>
+	<div align="center">
+		<a href="index.jsp">回首页</a> | <a href="javascript:history.go(-1);">上一页</a>
+	</div>
+</body>
+</html>

@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.zpq.pojo.Article;
-
+//文章接口
 public interface ArticleDao {
 	//所有用户文章
 	public List<Object> selectArticle(int page,int limit) throws SQLException;

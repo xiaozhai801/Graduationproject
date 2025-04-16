@@ -50,21 +50,6 @@ public class UserDaoImpl implements UserDao {
 		return null;
 	}
 
-	// 连接数据库查找所有用户信息
-	/*
-	 * @Override public List<Object> SelectAllUserLsit() throws SQLException {
-	 * List<Object> userList = new ArrayList<>(); DBUtil dbUtil = new DBUtil();
-	 * String sql = "SELECT * FROM v_userinfo"; Connection conn =
-	 * dbUtil.getConnection(); // 没有?占位符，用Statement Statement st =
-	 * conn.createStatement(); ResultSet rs = st.executeQuery(sql); while
-	 * (rs.next()) { User user = new User(); // 查询user信息 // 获取userId的值并转换成整型
-	 * user.setUserId(Integer.parseInt(rs.getString("userId")));
-	 * user.setName(rs.getString("name")); user.setSex(rs.getString("sex")); //
-	 * 获取age的值并转换成整型 user.setAge(Integer.parseInt(rs.getString("age")));
-	 * user.setEmail(rs.getString("email")); userList.add(user); } return userList;
-	 * }
-	 */
-	//分页查询
 	@Override
 	public List<Object> SelectAllUserLsit(int page, int limit) throws SQLException {
 		// TODO Auto-generated method stub
@@ -72,7 +57,7 @@ public class UserDaoImpl implements UserDao {
 		DBUtil dbUtil = new DBUtil();
 		String sql = "SELECT * FROM v_userinfo LIMIT ?,?";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
-		ps.setInt(1, (page-1)*limit);
+		ps.setInt(1, (page - 1) * limit);
 		ps.setInt(2, limit);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
@@ -99,6 +84,80 @@ public class UserDaoImpl implements UserDao {
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next()) {
 			return rs.getInt("sum");
+		}
+		return 0;
+	}
+
+	@Override
+	public String addUser(String name, String password) throws SQLException {
+		DBUtil dbUtil = new DBUtil();
+		String sql = "select * from s_user where name=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, name);
+		ResultSet rs = ps.executeQuery();
+
+		// 检查结果集是否有记录
+		if (rs.next()) {
+			// name 存在返回 null
+			return "user exists";
+		}
+
+		// 重新初始化 SQL 语句和 PreparedStatement
+		sql = "INSERT INTO s_user (NAME, PASSWORD, id) VALUES(?,?,(SELECT id FROM(SELECT id,ROW_NUMBER () OVER (ORDER BY id DESC) AS row_num FROM s_user) subquery WHERE row_num = 1)+1);";
+		ps = dbUtil.getPreparedStatement(sql); // 重新获取 PreparedStatement
+		ps.setString(1, name);
+		ps.setString(2, password);
+
+		// 执行插入操作，对于插入语句使用 executeUpdate
+		int rowsAffected = ps.executeUpdate();
+
+		// 检查是否插入成功
+		if (rowsAffected > 0) {
+			return "success";
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public int EditUser(User user) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		String sql = "UPDATE v_userinfo SET userId = ?, `name` = ?, sex = ?, age = ?, email = ? WHERE userId = ?;";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, user.getUserId());
+		ps.setString(2, user.getName());
+		ps.setString(3, user.getSex());
+		ps.setInt(4, user.getAge());
+		ps.setString(5, user.getEmail());
+		ps.setString(6, user.getUserId());
+		int rs = ps.executeUpdate();
+		while (rs == 1) {
+			return 1;
+		}
+		return 0;
+	}
+
+	@Override
+	public int EditPersonalPassword(User user, String newPassword) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+
+		String sql = "UPDATE s_user SET password = ? WHERE password = ? AND name = ?;";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, newPassword);
+		ps.setString(2, user.getPassword());
+		ps.setString(3, user.getName());
+		ps.executeUpdate();
+		
+        String countSql = "SELECT ROW_COUNT() as count";
+		// 没有?占位符，用Statement
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery(countSql);
+		rs.next();
+		if (rs.getInt("count")==1) {
+			return 1;
 		}
 		return 0;
 	}

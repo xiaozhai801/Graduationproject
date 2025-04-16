@@ -49,16 +49,6 @@
 			<div class="layui-form-item">
 				<div class="layui-input-wrap">
 					<div class="layui-input-prefix">
-						<i class="layui-icon layui-icon-email"></i>
-					</div>
-					<input type="text" name="email" value="" lay-verify="required"
-						placeholder="邮箱" autocomplete="off" class="layui-input"
-						lay-affix="clear">
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-wrap">
-					<div class="layui-input-prefix">
 						<i class="layui-icon layui-icon-username"></i>
 					</div>
 					<input type="text" name="name" value="" lay-verify="required"
@@ -106,8 +96,6 @@
 				// 获取表单字段值
 				var name = data.field.name;
 				var password = data.field.password;
-				//var email = data.field.email;
-				console.log(JSON.stringify(data.field));
 				// 是否勾选同意
 				if (!data.field.agreement) {
 					layer.msg('您必须勾选同意用户协议才能注册');

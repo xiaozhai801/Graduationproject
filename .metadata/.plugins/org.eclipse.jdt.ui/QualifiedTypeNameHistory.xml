@@ -37,11 +37,12 @@
     <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
     <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDaoImpl"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="java.lang.Object"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDaoImpl"/>
+    <fullyQualifiedTypeName name="java.lang.Long"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.lang.Object"/>
     <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
 </qualifiedTypeNameHistroy>

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.zpq.dao.EditUserDao;
-import com.zpq.dao.EditUserDaoImpl;
+import com.zpq.dao.UserDao;
+import com.zpq.dao.UserDaoImpl;
 import com.zpq.pojo.User;
 //管理员修改用户信息
 /**
@@ -58,7 +58,7 @@ public class EditUserServlet extends HttpServlet {
 		user.setAge(age);
 		user.setEmail(email);
 		
-		EditUserDao editUserDao=new EditUserDaoImpl();
+		UserDao editUserDao=new UserDaoImpl();
 		try {
 			if (editUserDao.EditUser(user)==1) {
 				response.getWriter().write("success");

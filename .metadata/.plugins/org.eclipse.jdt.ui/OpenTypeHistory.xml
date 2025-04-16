@@ -4,7 +4,7 @@
     <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.dao{UserAddDao.java[UserAddDao" modifiers="513" timestamp="1744361890984"/>
     <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.service{RegisterService.java[RegisterService" modifiers="513" timestamp="1744361899224"/>
     <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.dao{EditUserDao.java[EditUserDao" modifiers="513" timestamp="1744358853108"/>
-    <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.dao{ArticleDao.java[ArticleDao" modifiers="513" timestamp="1744447068823"/>
+    <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.dao{ArticleDao.java[ArticleDao" modifiers="513" timestamp="1744703903152"/>
     <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.dao{PersonalInfoDao.java[PersonalInfoDao" modifiers="513" timestamp="1744530591794"/>
     <typeInfo handle="=javaweb/src\/main\/java&lt;com.zpq.dao{EditPersonalInfoDao.java[EditPersonalInfoDao" modifiers="513" timestamp="1744537161199"/>
 </typeInfoHistroy>
