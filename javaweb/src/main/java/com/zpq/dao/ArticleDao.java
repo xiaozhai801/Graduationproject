@@ -14,4 +14,6 @@ public interface ArticleDao {
 	public List<Object> selectMyArticle(String userId,int page,int limit) throws SQLException;
 	public int countMyArticle(String userId) throws SQLException;
 	public List<Object> searchMyArticle(Article article, int page, int limit) throws SQLException;
+	//默认分类查询
+	public List<Object> selectArticle(int page,int limit,String model) throws SQLException;
 }

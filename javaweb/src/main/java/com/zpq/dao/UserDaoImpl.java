@@ -110,7 +110,15 @@ public class UserDaoImpl implements UserDao {
 
 		// 执行插入操作，对于插入语句使用 executeUpdate
 		int rowsAffected = ps.executeUpdate();
-
+		//添加初始头像
+		String avatarSql = "UPDATE v_userinfo SET avatar = '/javaweb/img/test.jpg' WHERE userId = ?";
+		PreparedStatement avatarPs = dbUtil.getPreparedStatement(avatarSql);
+		avatarPs.setString(1, name);
+	    int avatarRs = avatarPs.executeUpdate();
+	    if (avatarRs!=1) {
+	    	return null;
+		}
+	    
 		// 检查是否插入成功
 		if (rowsAffected > 0) {
 			return "success";

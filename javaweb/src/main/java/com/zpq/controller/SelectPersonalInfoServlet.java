@@ -74,11 +74,12 @@ public class SelectPersonalInfoServlet extends HttpServlet {
                     userMap.put("sex", user.getSex());
                     userMap.put("age", user.getAge());
                     userMap.put("email", user.getEmail());
+                    userMap.put("avatar", user.getAvatar());
                     newUserList.add(userMap);
                 }
             }
-			
-			// 设置网页格式和编码
+
+            // 设置网页格式和编码
 			response.setContentType("text/html;charset=UTF-8");
 			Vo vo = new Vo();
 			vo.setCode(0);

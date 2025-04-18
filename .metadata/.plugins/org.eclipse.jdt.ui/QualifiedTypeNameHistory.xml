@@ -14,8 +14,6 @@
     <fullyQualifiedTypeName name="com.zpq.dao.UserAddDaoImpl"/>
     <fullyQualifiedTypeName name="com.zpq.service.RegisterService"/>
     <fullyQualifiedTypeName name="com.zpq.service.RegisterServiceImpl"/>
-    <fullyQualifiedTypeName name="com.zpq.dao.UserDao"/>
-    <fullyQualifiedTypeName name="com.zpq.dao.UserDaoImpl"/>
     <fullyQualifiedTypeName name="java.sql.Connection"/>
     <fullyQualifiedTypeName name="com.mysql.cj.xdevapi.Statement"/>
     <fullyQualifiedTypeName name="java.lang.Override"/>
@@ -34,15 +32,17 @@
     <fullyQualifiedTypeName name="com.mysql.cj.x.protobuf.MysqlxCursor.Open.OneOfMessage"/>
     <fullyQualifiedTypeName name="javax.servlet.http.Cookie"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
-    <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
-    <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDao"/>
-    <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDaoImpl"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDaoImpl"/>
     <fullyQualifiedTypeName name="java.lang.Long"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.lang.Object"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.UserDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.UserDaoImpl"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDao"/>
+    <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDaoImpl"/>
+    <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
     <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
     <fullyQualifiedTypeName name="java.lang.String"/>
 </qualifiedTypeNameHistroy>

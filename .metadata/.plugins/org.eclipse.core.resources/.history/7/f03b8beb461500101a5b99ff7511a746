@@ -1,8 +1,0 @@
-package com.zpq.dao;
-
-import com.zpq.pojo.Admin;
-import com.zpq.pojo.User;
-//只能添加用户，管理员只有1位
-public interface UserAddDao {
-	User addUser(String name,String password);
-}

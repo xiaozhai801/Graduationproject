@@ -13,8 +13,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="userId"/>
+		<item key="selection" value="lay-header-event"/>
 		<list key="findhistory">
+			<item value="lay-header-event"/>
+			<item value="confirm"/>
+			<item value="value"/>
+			<item value="reg-password"/>
+			<item value="demo2"/>
 			<item value="userId"/>
 			<item value="demo-table-search"/>
 			<item value="System.out.println"/>
@@ -25,14 +30,10 @@
 			<item value="layui-nav-img"/>
 			<item value="Field"/>
 			<item value="File"/>
-			<item value="layui-footer"/>
-			<item value="$"/>
-			<item value="demo-table-search-date"/>
-			<item value="test"/>
-			<item value="layui-table"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
+			<item value="confirm&#x0A;"/>
 			<item value="layui-inline"/>
 			<item value="layui-input-inline"/>
 		</list>

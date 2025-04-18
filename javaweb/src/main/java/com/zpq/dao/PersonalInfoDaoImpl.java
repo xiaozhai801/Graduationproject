@@ -28,6 +28,7 @@ public class PersonalInfoDaoImpl implements PersonalInfoDao {
 			user.setSex(rs.getString("sex"));
 			user.setAge(rs.getInt("age"));
 			user.setEmail(rs.getString("email"));
+			user.setAvatar(rs.getString("avatar"));
 			userList.add(user);
 		}
 		// 返回搜索到的文章对象列表
