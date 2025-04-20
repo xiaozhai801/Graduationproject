@@ -1,7 +1,0 @@
-package com.zpq.dao;
-
-import com.zpq.pojo.Article;
-
-public interface ArticleDao {
-	public Article selectArticle();
-}

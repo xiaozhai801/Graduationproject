@@ -1,5 +1,0 @@
-package com.zpq.dao;
-
-public interface Article {
-
-}

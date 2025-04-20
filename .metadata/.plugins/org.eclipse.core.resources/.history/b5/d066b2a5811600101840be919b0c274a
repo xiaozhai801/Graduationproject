@@ -1,7 +1,0 @@
-package com.zpq.dao;
-
-import com.zpq.pojo.User;
-
-public interface EditUserDao {
-	public int EditUser(User user);
-}

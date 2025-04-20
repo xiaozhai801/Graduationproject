@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>N站——发布中心新闻编辑</title>
+    <!-- 标题栏logo -->
+    <link rel="icon" href="../../image/nLogo.jpg" type="image/x-icon">
+    <!-- 收藏夹里显示的logo -->
+    <link rel="shortcut icon" href="../../image/nLogo.jpg" type="image/x-icon">
+    <!-- layui样式 -->
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/echarts.js"></script>
+</head>
+<body style="background: #F0F0F0;">
+<!--导航栏-->
+<div class="layui-row layui-panel" style=" background: #222222;">
+    <div class="layui-col-md2" style="padding: 10px; text-align: center;">
+        <a href="../../index.html" style="color: white; font-weight: bolder; font-size: x-large;">N站</a>
+    </div>
+    <ul class="layui-nav layui-col-md6" lay-filter="" style="background: #222222;">
+        <li class="layui-nav-item"><a href="../../index.html">首页</a></li>
+        <li class="layui-nav-item"><a href="../home/homeNews.html">发现</a></li>
+        <li class="layui-nav-item"><a href="../home/homePublisher.html">新闻方</a></li>
+        <li class="layui-nav-item"><a href="../home/homeNewsType.html">新闻专栏</a></li>
+        <li class="layui-nav-item"><a href="../home/homeSubscribe.html">我的订阅</a></li>
+        <li class="layui-nav-item"><a href="">可能感兴趣</a></li>
+    </ul>
+    <ul class="layui-nav layui-col-md2" style=" background: #222222;">
+        <li class="layui-nav-item">
+            <a><img src="../../image/avatar.jpg" class="layui-nav-img">peng_YuJun</a>
+            <dl class="layui-nav-child">
+                <dd style="color: white; text-align: center; background: orange">硬币：0</dd>
+                <dd><a href="../self/selfData.html">个人中心</a></dd>
+                <dd><a href="../publish/publishNews.html">新闻管理</a></dd>
+                <dd><a href="../publish/publishRequest.html">申请成为新闻作者</a></dd>
+                <dd><a href="#">退出登录</a></dd>
+            </dl>
+        </li>
+    </ul>
+    <div class="layui-nav layui-col-md2" style=" background: #222222; display: flex;align-items: center; padding: 10px;">
+        <button class="layui-btn layui-btn-sm" lay-event="register">注册</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="login">登录</button>
+    </div>
+</div>
+<!--页面主体-->
+<div class="layui-fluid">
+    <!--标题-->
+    <div class="layui-row" style="display: flex; justify-content: center;align-items: center;">
+        <div class="layui-panel layui-col-md11" style="font-size:x-large; font-weight: bolder; padding: 10px; margin-top: 10px; border-radius: 10px;">
+            <input value="" type="text" name="title" id="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <!--编辑器+侧栏-->
+    <div class="layui-row" style="display: flex; justify-content: center; margin-top: 10px;">
+        <!--编辑器-->
+        <div class="layui-col-md8" style="padding-right:10px;">
+            <!-- 加载编辑器的容器 -->
+            <textarea onkeydown="getContent" name="" id="edit">
+                这里是<span style="color: #e03e2d;"><em>edit初始化</em></span>的内容
+            </textarea>
+        </div>
+        <!--侧栏-->
+        <div class="layui-col-md3">
+            <div class="layui-panel" style="padding: 10px;">
+                <div id="coverLoad" style="overflow: hidden; margin:10px auto; border: 3px dotted gray; display: flex; flex-direction: column;align-items: center;justify-content: center; height: 200px; width: 320px;">
+                    <div id="explain" style="text-align: center">
+                        <p style="margin-bottom: 8px;">选择上传封面</p>
+                        <i class="layui-icon layui-icon-addition"></i>
+                    </div>
+                </div>
+                <input id="upload" type="file" accept="image/*" style="display:none;"/>
+                <div class="layui-form" style="margin:10px auto; border:2px solid #F0F0F4; padding: 8px;">
+                    <div>
+                        <div style="display: flex; justify-content: center;align-items: center;">
+                            <p style="flex: 0 0 30%; text-align: left;">选择所属专栏</p>
+                            <input style="flex: 0 0 60%;" type="text" name="title" required  lay-verify="required" placeholder="搜索专栏名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <hr class="layui-border-gray">
+                    <div class="layui-form-item" id="checks">
+                        <input type="radio" name="radio" value="1" title="科技">
+                        <input type="radio" name="radio" value="2" title="娱乐">
+                        <input type="radio" name="radio" value="3" title="体育">
+                        <input type="radio" name="radio" value="4" title="军事">
+                        <input type="radio" name="radio" value="5" title="社会">
+                        <input type="radio" name="radio" value="6" title="财经">
+                        <input type="radio" name="radio" value="7" title="搞笑">
+                        <input type="radio" name="radio" value="8" title="美食">
+                        <input type="radio" name="radio" value="9" title="时尚">
+                        <input type="radio" name="radio" value="10" title="旅游">
+                        <input type="radio" name="radio" value="11" title="游戏">
+                        <input type="radio" name="radio" value="12" title="国际">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="display: flex;justify-content: flex-end; margin:10px 0;">
+                    <button class="layui-btn" lay-event="unReady">保存为草稿</button>
+                    <button class="layui-btn layui-btn-primary" data-method="setTop" id="preSee">预览</button>
+                    <button class="layui-btn layui-btn-primary" lay-event="allReady">发布</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var title = null; //用于记录输入的标题
+    var contentHtml = null; //用于记录富文本形式
+    var contentTest = null; //用于记录纯文本形式
+    var typeId = 0; //用于记录所选的专栏编号
+
+    /**
+     * layui 事件
+     */
+    /^http(s*):\/\//.test(location.href) || alert('请先部署到 localhost 下再访问');
+    layui.extend({
+        tinymce: '{/}/UserPort/layui_exts/tinymce/tinymce'
+    }).use(['tinymce', 'util', 'layer','form','element'], function () {
+        var t = layui.tinymce
+            , util = layui.util
+            , layer = layui.layer
+            , $ = layui.$
+            , form = layui.form
+            , element = layui.element;
+
+        var edit = t.render({
+            elem: "#edit"
+            , height: 600 //编辑器高度
+            // ...
+            // 其余配置可参考官方文档
+        },function(opt,edit){
+            //加载完成后回调
+        });
+
+        //触发事件
+        var active = {
+            setTop: function(){
+                var that = this;
+                //多窗口模式，层叠置顶
+                layer.open({
+                    type: 1 //此处以iframe举例
+                    ,title: '预览页面'
+                    ,area: ['100%', '90vh']
+                    ,shade: 0
+                    ,maxmin: true
+                    ,offset: [0,0]
+                    ,content: '<div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;"><div class="layui-col-md7" style="margin-right: 10px"><div class="layui-panel" style="padding: 10px;"><h1>'+$('#title').val()+'</h1></div><div class="layui-panel" style="padding: 18px; min-height: 50vh;">'+t.get('#edit').getContent()+'</div></div></div>'
+
+                    ,btn: ['关闭预览页面'] //只是为了演示
+                    ,yes: function(){
+                        layer.closeAll();
+                    }
+                    ,zIndex: layer.zIndex //重点1
+                    ,success: function(layero, index){
+                        layer.setTop(layero); //重点2. 保持选中窗口置顶
+
+                        //记录索引，以便按 esc 键关闭。事件见代码最末尾处。
+                        layer.escIndex = layer.escIndex || [];
+                        layer.escIndex.unshift(index);
+                        //选中当前层时，将当前层索引放置在首位
+                        layero.on('mousedown', function(){
+                            var _index = layer.escIndex.indexOf(index);
+                            if(_index !== -1){
+                                layer.escIndex.splice(_index, 1); //删除原有索引
+                            }
+                            layer.escIndex.unshift(index); //将索引插入到数组首位
+                        });
+                    }
+                    ,end: function(){
+                        //更新索引
+                        if(typeof layer.escIndex === 'object'){
+                            layer.escIndex.splice(0, 1);
+                        }
+                    }
+                });
+            }
+        };
+
+        $('#preSee').on('click', function(){
+            var othis = $(this), method = othis.data('method');
+            active[method] ? active[method].call(this, othis) : '';
+        });
+
+        util.event('lay-event', {
+            setByAjax:function() {
+                $.ajax({
+                    url:'./layui_exts/mock/content.json',
+                    success:function(res){
+                        t.get('#edit').setContent(res.data.content)
+                    }
+                })
+            },
+            getContent:function() {
+                var content = t.get('#edit').getContent()
+                layer.alert(content)
+            },
+            setContent:function() {
+                t.get('#edit').setContent('点击按钮设置的内容：<span style="color: #e03e2d;">' + new Date()+'</span>')
+            },
+            clearContent:function() {
+                t.get('#edit').setContent('')
+            },
+            insertContent:function() {
+                t.get('#edit').insertContent('<b>插入内容</b>')
+            },
+            getText:function() {
+                var text = t.get('#edit').getContent({format:'text'})
+                layer.alert(text)
+            },
+            unReady: function (){
+                contentHtml = t.get('#edit').getContent();
+                contentTest = t.get('#edit').getContent({format:'text'});
+            },
+            preSee: function (){
+                layer.msg("预览",{icon: 1})
+            },
+            allReady: function (){
+                contentHtml = t.get('#edit').getContent();
+                contentTest = t.get('#edit').getContent({format:'text'});
+            },
+            login : function (){
+                window.location.href = "../user/userLogin.html";
+            },
+            register: function (){
+                window.location.href = "../user/userRegister.html";
+            }
+        });
+    });
+
+    /**
+     *鼠标移入上传框的效果
+     */
+     $('#coverLoad').hover(
+        function (){
+            $('#coverLoad').css({
+                'cursor': 'pointer',
+                'background': 'gray',
+                'color': 'white'
+            })
+        },
+        function (){
+            $('#coverLoad').css({
+                'background': '#FFFFFF',
+                'color': 'black'
+            })
+        }
+    )
+    /**
+     * 点击使隐藏的上传按钮被点击
+     */
+     $('#coverLoad').click(function (){
+        $('#upload').click();
+    })
+
+</script>
+</html>

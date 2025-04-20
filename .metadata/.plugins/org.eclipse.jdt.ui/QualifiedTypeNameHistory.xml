@@ -30,7 +30,6 @@
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDaoImpl"/>
     <fullyQualifiedTypeName name="com.mysql.cj.x.protobuf.MysqlxCursor.Open.OneOfMessage"/>
-    <fullyQualifiedTypeName name="javax.servlet.http.Cookie"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="com.zpq.dao.EditPersonalInfoDao"/>
@@ -43,6 +42,11 @@
     <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDao"/>
     <fullyQualifiedTypeName name="com.zpq.dao.PersonalInfoDaoImpl"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
-    <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
     <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.Cookie"/>
+    <fullyQualifiedTypeName name="java.lang.StringIndexOutOfBoundsException"/>
+    <fullyQualifiedTypeName name="javax.servlet.annotation.MultipartConfig"/>
+    <fullyQualifiedTypeName name="java.io.PrintWriter"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.Part"/>
+    <fullyQualifiedTypeName name="java.util.UUID"/>
 </qualifiedTypeNameHistroy>
