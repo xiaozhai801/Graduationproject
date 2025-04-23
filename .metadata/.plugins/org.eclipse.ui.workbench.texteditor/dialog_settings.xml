@@ -15,6 +15,7 @@
 		<item key="isRegEx" value="false"/>
 		<item key="selection" value="dropdown"/>
 		<list key="findhistory">
+			<item value="overflow-y: auto;"/>
 			<item value="dropdown"/>
 			<item value="lay-header-event"/>
 			<item value="confirm"/>
@@ -29,7 +30,6 @@
 			<item value="layui-input-wrap"/>
 			<item value="layui-col-md4"/>
 			<item value="layui-nav-img"/>
-			<item value="Field"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

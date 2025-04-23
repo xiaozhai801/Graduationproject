@@ -1,7 +1,0 @@
-package com.zpq.dao;
-
-import java.util.List;
-
-public interface PersonalInfoDao {
-	public List<Object> SelectPerSonalInfo();
-}

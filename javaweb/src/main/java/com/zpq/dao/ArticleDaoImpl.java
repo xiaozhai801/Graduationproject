@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zpq.pojo.Article;
+import com.zpq.pojo.Draft;
 import com.zpq.utils.DBUtil;
 
 public class ArticleDaoImpl implements ArticleDao {
 
-	// 分页显示所有文章的方法
 	@Override
 	public List<Object> selectArticle(int page, int limit) throws SQLException {
 		// 用于存储查询到的文章对象的列表
@@ -68,7 +68,6 @@ public class ArticleDaoImpl implements ArticleDao {
 		return 0;
 	}
 
-	// 根据关键词搜索文章的方法
 	@Override
 	public List<Object> searchArticle(Article article, int page, int limit) throws SQLException {
 		// 用于存储搜索到的文章对象的列表
@@ -139,7 +138,6 @@ public class ArticleDaoImpl implements ArticleDao {
 		return searchArticleList;
 	}
 
-	// 显示我的文章
 	@Override
 	public List<Object> selectMyArticle(String userId, int page, int limit) throws SQLException {
 		// 用于存储查询到的文章对象的列表
@@ -296,5 +294,31 @@ public class ArticleDaoImpl implements ArticleDao {
 		}
 		// 返回查询到的文章对象列表
 		return articleList;
+	}
+
+	@Override
+	public int uploadArticle(Draft draft) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		// 始化 SQL 语句和 PreparedStatement
+		String sql = "INSERT INTO v_articledraft (draftId,topic,userId,v_articledraft.`name`,model,typeId,data_html,data_text) values (?,?,?,?,?,?,?,?)";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql); // 重新获取 PreparedStatement
+		ps.setInt(1, draft.getDraftId());
+		ps.setString(2, draft.getTopic());
+		ps.setString(3, draft.getUserId());
+		ps.setString(4, draft.getName());
+		ps.setString(5, draft.getModel());
+		ps.setInt(6, draft.getTypeId());
+		ps.setString(7, draft.getData_html());
+		ps.setString(8, draft.getData_text());
+
+		// 执行插入操作，对于插入语句使用 executeUpdate
+		int rowsAffected = ps.executeUpdate();
+		// 检查是否插入成功
+		if (rowsAffected > 0) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 }
