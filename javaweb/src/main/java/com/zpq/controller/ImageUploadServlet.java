@@ -91,7 +91,6 @@ public class ImageUploadServlet extends HttpServlet {
 			json.addProperty("data", request.getContextPath() + "/img/Article/" + uniqueName);
 
 			out.print(json.toString());
-
 			System.out.println(uploadPath);
 			System.out.println(request.getContextPath() + "/img/Article/" + uniqueName);
 		} catch (Exception e) {
