@@ -17,7 +17,7 @@ public interface ArticleDao {
 	// 搜索文章
 	public List<Object> searchArticle(Article article, int page, int limit) throws SQLException;
 
-	// 当前用户文章
+	// 我的文章
 	public List<Object> selectMyArticle(String userId, int page, int limit) throws SQLException;
 
 	// 我的文章数量
@@ -31,4 +31,13 @@ public interface ArticleDao {
 
 	// 上传文章草稿
 	public int uploadArticle(Draft draft) throws SQLException;
+
+	// 我的文章草稿
+	public List<Object> selectMyDraftArticle(String userId, int page, int limit) throws SQLException;
+
+	// 我的文章草稿数量
+	public int countMyDraftArticle(String userId) throws SQLException;
+	
+	// 搜索我的文章草稿
+	public List<Object> searchMyDraftArticle(Draft draft, int page, int limit) throws SQLException;
 }

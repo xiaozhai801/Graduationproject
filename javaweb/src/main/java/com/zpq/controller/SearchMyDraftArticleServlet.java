@@ -14,28 +14,28 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.zpq.dao.ArticleDao;
 import com.zpq.dao.ArticleDaoImpl;
-import com.zpq.pojo.Article;
+import com.zpq.pojo.Draft;
 import com.zpq.pojo.Vo;
 
 /**
- * Servlet implementation class SearchMyArticleServlet
+ * Servlet implementation class SearchMyDraftArticleServlet
  */
-@WebServlet("/SearchMyArticleServlet")
-public class SearchMyArticleServlet extends HttpServlet {
+@WebServlet("/SearchMyDraftArticleServlet")
+public class SearchMyDraftArticleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public SearchMyArticleServlet() {
+	public SearchMyDraftArticleServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-    private String getParamValue(HttpServletRequest request, String paramName, String defaultValue) {
-        String value = request.getParameter(paramName);
-        return (value != null && !value.isEmpty())? value : defaultValue;
-    }
+
+	private String getParamValue(HttpServletRequest request, String paramName, String defaultValue) {
+		String value = request.getParameter(paramName);
+		return (value != null && !value.isEmpty()) ? value : defaultValue;
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -54,40 +54,40 @@ public class SearchMyArticleServlet extends HttpServlet {
 				}
 			}
 		}
-		
+
 		// 解析分页参数page
 		int page = Integer.parseInt(request.getParameter("page"));
 		// 解析分页参数limit
 		int limit = Integer.parseInt(request.getParameter("limit"));
 
 		// 获取页面元素值，使用封装方法获取参数值并转换为字符串
-		String titleIdStr = getParamValue(request, "titleId", "-1");
+		String draftIdStr = getParamValue(request, "draftId", "-1");
 		String topic = getParamValue(request, "topic", null);
 		String model = getParamValue(request, "model", null);
 
 		// 将titleId的字符串值转换为整数
-		int titleId = Integer.parseInt(titleIdStr);
+		int draftId = Integer.parseInt(draftIdStr);
 
-		// 创建Article对象并设置属性
-		Article article = new Article();
-		article.setTitleId(titleId);
-		article.setTopic(topic);
-		article.setUserId(name);
-		article.setModel(model);
+		// 创建Draft对象并设置属性
+		Draft draft=new Draft();
+		draft.setDraftId(draftId);
+		draft.setTopic(topic);
+		draft.setModel(model);
+		draft.setUserId(name);
 
 		// 创建ArticleDao实例
 		ArticleDao articleDao = new ArticleDaoImpl();
 		try {
 			// 调用searchArticle方法获取文章列表
-			List<Object> articleList = articleDao.searchMyArticle(article, page, limit);
+			List<Object> draftList = articleDao.searchMyDraftArticle(draft, page, limit);
 			// 设置网页格式和编码
 			response.setContentType("text/html;charset=UTF-8");
 			// 创建Vo对象并设置相关属性
 			Vo vo = new Vo();
 			vo.setCode(0);
 			vo.setMsg("success");
-			vo.setCount(articleDao.countMyArticle(name));
-			vo.setData(articleList);
+			vo.setCount(articleDao.countMyDraftArticle(name));
+			vo.setData(draftList);
 			// 将Vo对象转换为JSON字符串并返回给客户端
 			response.getWriter().write(JSONObject.toJSON(vo).toString());
 		} catch (SQLException e) {

@@ -311,7 +311,6 @@ public class ArticleDaoImpl implements ArticleDao {
 		ps.setInt(6, draft.getTypeId());
 		ps.setString(7, draft.getData_html());
 		ps.setString(8, draft.getData_text());
-
 		// 执行插入操作，对于插入语句使用 executeUpdate
 		int rowsAffected = ps.executeUpdate();
 		// 检查是否插入成功
@@ -321,4 +320,120 @@ public class ArticleDaoImpl implements ArticleDao {
 			return -1;
 		}
 	}
+
+	@Override
+	public List<Object> selectMyDraftArticle(String userId, int page, int limit) throws SQLException {
+		// 用于存储查询到的文章对象的列表
+		List<Object> draftArticle = new ArrayList<>();
+		// 创建数据库工具类实例，用于获取数据库连接和操作数据库
+		DBUtil dbUtil = new DBUtil();
+		// SQL语句，使用LIMIT进行分页查询，?为占位符
+		String sql = "SELECT * FROM v_articledraft where userId=? LIMIT ?,?";
+		// 获取预编译的SQL语句对象
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		// 设置where字句的第一个参数,即查询的用户
+		ps.setString(1, userId);
+		// 设置LIMIT子句的第一个参数，即偏移量，(page - 1) * limit计算出从哪条数据开始查询
+		ps.setInt(2, (page - 1) * limit);
+		// 设置LIMIT子句的第二个参数，即每页显示的记录数
+		ps.setInt(3, limit);
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		// 遍历结果集，将每一条记录封装成Article对象并添加到articleList中
+		while (rs.next()) {
+			Draft draft = new Draft();
+			draft.setDraftId(rs.getInt("draftId"));
+			draft.setTopic(rs.getString("topic"));
+			draft.setName(rs.getString("name"));
+			draft.setModel(rs.getString("model"));
+			draft.setData_text(rs.getString("data_text"));
+			draftArticle.add(draft);
+		}
+		// 返回查询到的文章对象列表
+		return draftArticle;
+	}
+
+	@Override
+	public int countMyDraftArticle(String userId) throws SQLException {
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL语句，统计v_articleinfo表中的记录数量，使用count(*)函数，并将结果命名为sum
+		String sql = "SELECT count(*) as sum FROM v_articledraft where userId = ?";
+		// 获取预编译的SQL语句对象
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		// 遍历结果集，获取统计的文章数量并返回
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		// 如果没有查询到结果，返回0
+		return 0;
+	}
+
+	@Override
+	public List<Object> searchMyDraftArticle(Draft draft, int page, int limit) throws SQLException {
+		// 用于存储搜索到的文章对象的列表
+		List<Object> searchDraftArticleList = new ArrayList<>();
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// 使用StringBuilder构建SQL查询语句，初始语句为查询所有记录的基础部分，并添加WHERE 1=1方便后续拼接条件
+		StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM v_articledraft WHERE 1=1");
+		int draftId = draft.getDraftId();
+		String topic = draft.getTopic();
+		String model = draft.getModel();
+		String userId = draft.getUserId();
+		List<Object> params = new ArrayList<>();
+
+		// 如果文章ID不为-1，说明有文章ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (draftId != -1) {
+			sqlBuilder.append(" AND CAST(draftId AS CHAR) LIKE ?");
+			params.add("%" + draftId + "%");
+		}
+		// 如果文章标题不为null，说明有文章标题的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (topic != null) {
+			sqlBuilder.append(" AND topic LIKE ?");
+			params.add("%" + topic + "%");
+		}
+		// 文章作者ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		sqlBuilder.append(" AND userId = ?");
+		params.add(userId);
+		// 如果文章机型不为null，说明有文章机型的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (model != null) {
+			sqlBuilder.append(" AND model LIKE ?");
+			params.add("%" + model + "%");
+		}
+
+		// 添加分页查询的LIMIT子句到SQL语句中，并将分页参数值添加到params列表
+		sqlBuilder.append(" LIMIT ?,?");
+		params.add((page - 1) * limit);
+		params.add(limit);
+
+		// 将StringBuilder中的内容转换为完整的SQL语句字符串
+		String sql = sqlBuilder.toString();
+
+		// 获取预编译的SQL语句对象
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		// 遍历params列表，为预编译语句的占位符设置对应的参数值
+		for (int i = 0; i < params.size(); i++) {
+			ps.setObject(i + 1, params.get(i));
+		}
+
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		// 遍历结果集，将每一条记录封装成Article对象并添加到searchArticleList中
+		while (rs.next()) {
+			Draft searchDraft = new Draft();
+			searchDraft.setDraftId(rs.getInt("draftId"));
+			searchDraft.setTopic(rs.getString("topic"));
+			searchDraft.setName(rs.getString("name"));
+			searchDraft.setModel(rs.getString("model"));
+			searchDraft.setData_text(rs.getString("data_text"));
+			searchDraftArticleList.add(searchDraft);
+		}
+		// 返回搜索到的文章对象列表
+		return searchDraftArticleList;
+	}
+
 }

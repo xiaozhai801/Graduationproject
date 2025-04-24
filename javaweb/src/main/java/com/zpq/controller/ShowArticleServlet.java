@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.zpq.pojo.Vo;
 import com.zpq.utils.SearchElement;
-
+//显示当前文章内容
 /**
  * Servlet implementation class ShowArticleServlet
  */
@@ -39,6 +39,11 @@ public class ShowArticleServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		//获取页面元素值
+		int draftId=Integer.parseInt(request.getParameter("draftId"));
+		
 		// 获取请求中的用户ID
 		Cookie[] cookies = request.getCookies();
 		String name = null;
@@ -56,10 +61,8 @@ public class ShowArticleServlet extends HttpServlet {
 		try {
 			draftInfo = searchElement.searchDraftInfo("userId", name);
             List<Object> resultList=new ArrayList<>(draftInfo.size());
-            resultList.add(draftInfo.get(2025042323));
-			
-            // 设置网页格式和编码
-            response.setContentType("text/html;charset=UTF-8");
+            resultList.add(draftInfo.get(draftId));
+
             Vo vo = new Vo();
             vo.setCode(0);
             vo.setMsg("success");

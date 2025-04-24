@@ -14,15 +14,15 @@ import javax.servlet.http.Part;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+
 /**
  * Servlet implementation class imgServlet
  */
 @WebServlet("/ImageUploadServlet")
-@MultipartConfig(
-	    fileSizeThreshold = 1024 * 1024 * 1,   // 1 MB
-	    maxFileSize = 1024 * 1024 * 10,        // 10 MB
-	    maxRequestSize = 1024 * 1024 * 100     // 100 MB
-	)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+		maxFileSize = 1024 * 1024 * 10, // 10 MB
+		maxRequestSize = 1024 * 1024 * 100 // 100 MB
+)
 public class ImageUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -67,32 +67,29 @@ public class ImageUploadServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		try {
-			// 获取上传文件
-			Part filePart = request.getPart("edit"); // 对应前端form.name配置的字段名
-			String fileName = getFileName(filePart);
+	        Part filePart = request.getPart("edit");
+	        String fileName = getFileName(filePart);
+	        String uniqueName = UUID.randomUUID().toString() + "_" + fileName;
 
-			// 生成唯一文件名
-			String uniqueName = UUID.randomUUID().toString() + "_" + fileName;
+	        // 直接使用ServletContext的真实路径，不进行路径截断
+	        String uploadPath = getServletContext().getRealPath("/img/Article");
+	        File uploadDir = new File(uploadPath);
+	        if (!uploadDir.exists()) {
+	            uploadDir.mkdirs(); // 创建目录，包括不存在的父目录
+	        }
 
-			// 保存路径配置（示例路径）
-			String uploadPath = getServletContext().getRealPath("/img/Article");
-			File uploadDir = new File(uploadPath);
-			if (!uploadDir.exists())
-				uploadDir.mkdir();
+	        // 保存文件到部署目录
+	        String filePath = uploadPath + File.separator + uniqueName;
+	        filePart.write(filePath);
 
-			// 保存文件
-			String filePath = uploadPath + File.separator + uniqueName;
-			filePart.write(filePath);
+	        // 构造返回URL
+	        String fileUrl = request.getContextPath() + "/img/Article/" + uniqueName;
 
-			// 构造返回JSON
-			JsonObject json = new JsonObject();
-			json.addProperty("code", 0);
-			json.addProperty("msg", "上传成功");
-			json.addProperty("data", request.getContextPath() + "/img/Article/" + uniqueName);
-
-			out.print(json.toString());
-			System.out.println(uploadPath);
-			System.out.println(request.getContextPath() + "/img/Article/" + uniqueName);
+	        JsonObject json = new JsonObject();
+	        json.addProperty("code", 0);
+	        json.addProperty("msg", "上传成功");
+	        json.addProperty("data", fileUrl);
+	        out.print(json.toString());
 		} catch (Exception e) {
 			JsonObject error = new JsonObject();
 			error.addProperty("code", 1);

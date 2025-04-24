@@ -82,10 +82,11 @@ public class SaveArticleServlet extends HttpServlet {
 		String topic = getParamValue(request, "title", null);
 		// 获取html原始格式
 		String contentHtml = getParamValue(request, "contentHtml", null);
+		contentHtml=contentHtml.replace("../../", "/javaweb/");
+
 		// 获取文本格式
 		String contentText = getParamValue(request, "contentText", null);
 		String typeId = getParamValue(request, "typeId", "-1");
-
 		// 定义搜索信息工具类
 		SearchElement searchElement = new SearchElement();
 		User userInfo;
