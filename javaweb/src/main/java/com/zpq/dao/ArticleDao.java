@@ -37,7 +37,13 @@ public interface ArticleDao {
 
 	// 我的文章草稿数量
 	public int countMyDraftArticle(String userId) throws SQLException;
-	
+
 	// 搜索我的文章草稿
 	public List<Object> searchMyDraftArticle(Draft draft, int page, int limit) throws SQLException;
+
+	// 删除我的文章草稿
+	public int deleteDraftArticle(int draftId, String userId) throws SQLException;
+
+	// 上传文章草稿审核
+	public int UploadArticleReview(int draftId, String userId) throws SQLException;
 }

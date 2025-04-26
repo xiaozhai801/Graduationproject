@@ -6,10 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.zpq.pojo.Article;
 import com.zpq.pojo.Draft;
 import com.zpq.utils.DBUtil;
+import java.sql.Timestamp;
+import java.io.StringReader;
 
 public class ArticleDaoImpl implements ArticleDao {
 
@@ -434,6 +437,65 @@ public class ArticleDaoImpl implements ArticleDao {
 		}
 		// 返回搜索到的文章对象列表
 		return searchDraftArticleList;
+	}
+
+	@Override
+	public int deleteDraftArticle(int draftId, String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL删除语句
+		String sql = "DELETE FROM v_articledraft WHERE draftId = ? AND userId = ?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, draftId);
+		ps.setString(2, userId);
+		// 执行SQL删除操作，并获取受影响的行数
+		// 1 删除成功,0 删除失败
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int UploadArticleReview(int draftId, String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 获取上传文章草稿相关信息
+		SearchElementDao searchElementDao = new SearchElementDaoImpl();
+		Map<Integer, Draft> draftInfoMap = searchElementDao.searchDraftInfo("draftId", draftId);
+		Draft draftInfo = draftInfoMap.get(draftId);
+		// 获取当前时间戳
+        Timestamp uploadTime = new Timestamp(System.currentTimeMillis());
+        System.out.println(uploadTime);
+        // 处理长字符串
+        StringReader htmlReader = new StringReader(draftInfo.getData_html());
+        StringReader textReader = new StringReader(draftInfo.getData_text());
+
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL添加语句
+		String uploadSql = "INSERT INTO v_articleinfo (titleId, userId, NAME, topic, model, uploadTime, data_html, data_text) VALUES (?,?,?,?,?,?,?,?)";
+		PreparedStatement ps = dbUtil.getPreparedStatement(uploadSql);
+		ps.setInt(1, draftInfo.getDraftId());
+		ps.setString(2, draftInfo.getUserId());
+		ps.setString(3, draftInfo.getName());
+		ps.setString(4, draftInfo.getTopic());
+		ps.setString(5, draftInfo.getModel());
+		ps.setTimestamp(6, uploadTime);
+		ps.setCharacterStream(7, htmlReader, draftInfo.getData_html().length());
+		ps.setCharacterStream(8, textReader, draftInfo.getData_text().length());
+
+		int row = ps.executeUpdate();
+		if (row == 0) {
+			return -1;
+		}
+
+		// SQL删除草稿文章语句
+		String deleteSql = "DELETE FROM v_articledraft WHERE draftId = ? AND userId = ?";
+		ps = dbUtil.getPreparedStatement(deleteSql);
+		ps.setInt(1, draftId);
+		ps.setString(2, userId);
+		row = ps.executeUpdate();
+
+		return row;
 	}
 
 }

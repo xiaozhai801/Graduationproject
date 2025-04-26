@@ -71,7 +71,7 @@ public class ImageUploadServlet extends HttpServlet {
 	        String fileName = getFileName(filePart);
 	        String uniqueName = UUID.randomUUID().toString() + "_" + fileName;
 
-	        // 直接使用ServletContext的真实路径，不进行路径截断
+	        // 使用ServletContext的真实路径
 	        String uploadPath = getServletContext().getRealPath("/img/Article");
 	        File uploadDir = new File(uploadPath);
 	        if (!uploadDir.exists()) {

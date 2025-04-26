@@ -81,7 +81,11 @@ html, body {
 				}, {
 					field : 'topic',
 					title : '标题',
-					width : 650
+					width : 650,
+					templet : function(d) {
+						var link = "CurrentArticle.html?titleId=" + d.titleId;
+						return '<a href="' + link + '">' + d.topic + '</a>';
+					}
 				}, {
 					field : 'name',
 					title : '作者',

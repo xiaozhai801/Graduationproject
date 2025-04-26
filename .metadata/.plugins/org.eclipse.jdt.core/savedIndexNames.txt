@@ -19,7 +19,6 @@ INDEX VERSION 1.132+C:\Users\zzz\eclipse-workspace\.metadata\.plugins\org.eclips
 3335638557.index
 1773308787.index
 1047890122.index
-2487587582.index
 2152756206.index
 1057365145.index
 364425036.index

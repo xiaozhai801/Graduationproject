@@ -14,9 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zpq.dao.SearchElementDao;
+import com.zpq.dao.SearchElementDaoImpl;
+import com.zpq.pojo.Draft;
 import com.zpq.pojo.Vo;
-import com.zpq.utils.SearchElement;
-//显示当前文章内容
+
 /**
  * Servlet implementation class ShowArticleServlet
  */
@@ -39,41 +41,7 @@ public class ShowArticleServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=UTF-8");
-		//获取页面元素值
-		int draftId=Integer.parseInt(request.getParameter("draftId"));
-		
-		// 获取请求中的用户ID
-		Cookie[] cookies = request.getCookies();
-		String name = null;
-
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if ("username".equals(cookie.getName())) {
-					name = cookie.getValue();
-				}
-			}
-		}
-
-		SearchElement searchElement = new SearchElement();
-		Map<Integer, Object> draftInfo;
-		try {
-			draftInfo = searchElement.searchDraftInfo("userId", name);
-            List<Object> resultList=new ArrayList<>(draftInfo.size());
-            resultList.add(draftInfo.get(draftId));
-
-            Vo vo = new Vo();
-            vo.setCode(0);
-            vo.setMsg("success");
-            vo.setCount(searchElement.countDraft("userId", name));
-            vo.setData(resultList);
-            response.getWriter().write(JSONObject.toJSON(vo).toString());
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -83,7 +51,25 @@ public class ShowArticleServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		// 获取页面传入标题ID
+		int titleId = Integer.parseInt(request.getParameter("titleId"));
+
+		try {
+
+
+			Vo vo = new Vo();
+			vo.setCode(0);
+			vo.setMsg("success");
+			vo.setCount());
+			vo.setData();
+			response.getWriter().write(JSONObject.toJSON(vo).toString());
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
