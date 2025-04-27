@@ -54,10 +54,10 @@
     <fullyQualifiedTypeName name="com.zpq.pojo.User"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.Model"/>
     <fullyQualifiedTypeName name="java.util.HashMap"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
     <fullyQualifiedTypeName name="javax.imageio.event.IIOReadWarningListener"/>
-    <fullyQualifiedTypeName name="java.lang.Integer"/>
     <fullyQualifiedTypeName name="com.zpq.pojo.Article"/>
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDaoImpl"/>
     <fullyQualifiedTypeName name="com.zpq.dao.ArticleDao"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
 </qualifiedTypeNameHistroy>

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import com.zpq.dao.ArticleDaoImpl;
 import com.zpq.dao.SearchElementDao;
 import com.zpq.dao.SearchElementDaoImpl;
 import com.zpq.pojo.Article;
+import com.zpq.pojo.UserAction;
 import com.zpq.pojo.Vo;
 
 /**
@@ -56,15 +58,33 @@ public class ShowArticleServlet extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		// 获取页面传入标题ID
 		int titleId = Integer.parseInt(request.getParameter("titleId"));
+		
+		// 获取请求中的用户ID
+		Cookie[] cookies = request.getCookies();
+		String name = null;
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("username".equals(cookie.getName())) {
+					name = cookie.getValue();
+				}
+			}
+		}
 
 		SearchElementDao searchElement=new SearchElementDaoImpl();
 		ArticleDao articleDao=new ArticleDaoImpl();
 		Map<Integer, Article> articleInfo;
+		Map<Long, UserAction> userActionInfo;
 		try {
-			// 获取当前登录用户所选择的文章信息
+			// 获取当前登录用户所选择的文章信息,第一段json
 			articleInfo=searchElement.searchArticleInfo("titleId", titleId+"");
-			List<Object> resultList=new ArrayList<>(articleInfo.size());
+			List<Object> resultList=new ArrayList<>();
 			resultList.add(articleInfo.get(titleId));
+			
+			// 获取当前用户是否与该文章互动情况,第二段json
+			userActionInfo=searchElement.searchUserActionInfo(name, titleId);
+			long id=(long) titleId*10+Integer.parseInt(name);
+			resultList.add(userActionInfo.get(id));
 			
 			Vo vo = new Vo();
 			vo.setCode(0);

@@ -10,52 +10,45 @@
     <link href="..//layui/css/layui.css" rel="stylesheet">
     <script src="..//layui/layui.js"></script>
     <script src="..//js/jquery-3.6.0.min.js"></script>
-    <style>
-        /* 隐藏页面主体的滚动条 */
-        body {
-            overflow: hidden; /* 禁止页面主体滚动 */
-            min-width: fit-content;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-        }
+<style>
+    /* 隐藏页面主体的滚动条 */
+    body {
+        overflow: hidden; 
+        min-width: fit-content;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+    }
 
-        #main {
-            width: 100%;
-            height: calc(100vh - 60px);
-            border: 0;
-            display: block;
-            overflow: auto; /* 让 iframe 内容超出时显示滚动条 */
-        }
+    #main {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+    }
 
+    .layui-body {
+        position: absolute;
+        top: 60px; /* 与头部高度一致 */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0;
+        overflow: hidden; /* 确保内容被裁剪 */
+    }
+
+    .layui-body > div {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* 移动端适配 */
+    @media screen and (max-width: 768px) {
         .layui-body {
-            padding: 0;
-            height: 100vh;
+            top: 50px; /* 调整移动端头部高度 */
         }
-
-        /* 设置滚动条整体样式 */
-        #main::-webkit-scrollbar {
-            width: 8px; /* 垂直滚动条宽度 */
-            height: 8px; /* 水平滚动条高度 */
-        }
-
-        /* 设置滚动条轨道样式 */
-        #main::-webkit-scrollbar-track {
-            background: #f1f1f1; /* 轨道背景颜色 */
-            border-radius: 4px; /* 轨道圆角 */
-        }
-
-        /* 设置滚动条滑块样式 */
-        #main::-webkit-scrollbar-thumb {
-            background: #888; /* 滑块背景颜色 */
-            border-radius: 4px; /* 滑块圆角 */
-        }
-
-        /* 鼠标悬停在滑块上时的样式 */
-        #main::-webkit-scrollbar-thumb:hover {
-            background: #555; /* 悬停时滑块背景颜色 */
-        }
-    </style>
+    }
+</style>
 </head>
 
 <body>

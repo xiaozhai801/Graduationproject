@@ -1,157 +1,212 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>当前文章</title>
-<link href="../..//layui/css/layui.css" rel="stylesheet">
-<script src="../..//layui/layui.js"></script>
-<script src="../..//js/jquery-3.6.0.min.js"></script>
-<style>
-/* 自定义样式 */
-.article-container {
-	padding: 20px;
-	max-width: 1200px;
-	margin: 0 auto;
-}
+    <meta charset="UTF-8">
+    <title>当前文章</title>
+    <link href="../..//layui/css/layui.css" rel="stylesheet">
+    <script src="../..//layui/layui.js"></script>
+    <script src="../..//js/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 重置 body 边距，确保内容撑满容器 */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            /* 确保内容高度撑满 */
+        }
 
-.article-content {
-	line-height: 1.8;
-	font-size: 16px;
-	padding: 20px;
-	background: #fff;
-	border-radius: 2px;
-	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
-}
+        /* 内容容器铺满宽度，去除最大宽度限制 */
+        .article-container {
+            padding: 20px;
+            width: 100%;
+            /* 宽度撑满父级 */
+            box-sizing: border-box;
+            /* 内边距包含在宽度内 */
+        }
 
-.article-title {
-	margin-bottom: 20px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #eee;
-}
-</style>
+        .article-content {
+            line-height: 1.8;
+            font-size: 16px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        }
+
+        .article-title {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
 </head>
+
 <body>
-	<!-- 使用 Layui 布局容器 -->
-	<div class="layui-container article-container">
-		<!-- 卡片面板 -->
-		<div class="layui-card">
-			<div class="layui-card-header">
-				<div class="layui-row">
-					<div class="layui-col-md6">
-						<h1 id="title" class="article-title"></h1>
-					</div>
-					<div class="layui-col-md6" style="text-align: right;">
-						<button class="layui-btn layui-btn-primary" id="btn-back">
-							<i class="layui-icon layui-icon-return"></i> 返回
-						</button>
-					</div>
-				</div>
-			</div>
+    <!-- 使用 Layui 布局容器，宽度铺满 -->
+    <div class="layui-container article-container">
+        <!-- 卡片面板，去除固定宽度限制 -->
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <h1 id="title" class="article-title"></h1>
+                    </div>
+                    <div class="layui-col-md6" style="text-align: right;">
+                        <button class="layui-btn layui-btn-primary" id="btn-back">
+                            <i class="layui-icon layui-icon-return"></i> 返回
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-			<div class="layui-card-body">
-				<div id="content" class="article-content"></div>
+            <div class="layui-card-body">
+                <div id="content" class="article-content"></div>
 
-				<div class="layui-row">
-					<div class="layui-col-md4" style="text-align: right;">
-						<button class="layui-btn layui-btn-primary" id="btn-like">
-							<i class="layui-icon layui-icon-praise"></i> 点赞
-						</button>
-					</div>
-					<div class="layui-col-md4" style="text-align: center;">
-						<button class="layui-btn layui-btn-primary" id="btn-favorite">
-							<i class="layui-icon layui-icon-rate"></i> 收藏
-						</button>
-					</div>
-					<div class="layui-col-md4" style="text-align: left;">
-						<button class="layui-btn layui-btn-primary" id="btn-copelink">
-							<i class="layui-icon layui-icon-link"></i> 复制链接
-						</button>
-					</div>
-				</div>
+                <div class="layui-row">
+                    <div class="layui-col-md4" style="text-align: right;">
+                        <button class="layui-btn layui-btn-primary" id="btn-like">
+                            <i class="layui-icon layui-icon-heart"></i> 点赞
+                        </button>
+                    </div>
+                    <div class="layui-col-md4" style="text-align: center;">
+                        <button class="layui-btn layui-btn-primary" id="btn-favorite">
+                            <i class="layui-icon layui-icon-rate"></i> 收藏
+                        </button>
+                    </div>
+                    <div class="layui-col-md4" style="text-align: left;">
+                        <button class="layui-btn layui-btn-primary" id="btn-copelink">
+                            <i class="layui-icon layui-icon-link"></i> 复制链接
+                        </button>
+                    </div>
+                </div>
 
-				<div id="comments" class="article-footer">
-					<h1>评论</h1>
-				</div>
-			</div>
+                <div id="comments" class="article-footer">
+                    <h1>评论</h1>
+                </div>
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 
-	<script>
-		// 加载 Layui 模块
-		layui.use([ 'layer', 'element' ], function() {
-			var layer = layui.layer;
-			var element = layui.element;
-			// 从 URL 中解析 draftId
-			var urlParams = new URLSearchParams(window.location.search);
-			var titleId = urlParams.get('titleId');
+    <script>
+        // 加载 Layui 模块
+        layui.use(['layer', 'element'], function () {
+            var layer = layui.layer;
+            var element = layui.element;
+            var urlParams = new URLSearchParams(window.location.search);
+            var titleId = urlParams.get('titleId');
+            var loadIndex = layer.load(1, { shade: 0.3 });
+            var isLiked = false;
+            var isFavorited = false;
 
-			// 显示加载层
-			var loadIndex = layer.load(1, {
-				shade : 0.3
-			});
+            $(document).ready(function () {
+                if (!titleId) {
+                    layer.alert("缺少文章ID参数", { icon: 2 });
+                    return;
+                }
 
-			// 页面加载时执行
-			$(document).ready(function() {
-				if (!titleId) {
-					layer.alert("缺少文章ID参数", {
-						icon : 2
-					});
-					return;
-				}
+                $.ajax({
+                    url: '../../ShowArticleServlet',
+                    type: 'POST',
+                    data: { titleId: titleId },
+                    dataType: 'json',
+                    success: function (data) {
+                        layer.close(loadIndex);
+                        if (data.code === 0 && data.data.length > 0) {
+                            const article = data.data[0];
+                            const userAction = data.data[1];
+                            $('#title').text(article.topic);
+                            $('#content').html(article.data_html);
+                            isLiked = userAction.like;
+                            isFavorited = userAction.favorite;
+                            updateButtonIcons();
+                        } else {
+                            layer.alert("加载失败：" + data.msg, { icon: 2 });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        layer.close(loadIndex);
+                        console.log('AJAX 请求错误:', error);
+                        layer.alert("请求失败：" + error, { icon: 2 });
+                    }
+                });
+            });
+			// 处理点赞和收藏图标
+            function updateButtonIcons() {
+                var likeIcon = $('#btn-like i');
+                var favoriteIcon = $('#btn-favorite i');
 
-				// 发送 AJAX 请求到 ShowArticleServlet
-				$.ajax({
-					url : '../../ShowArticleServlet',
-					type : 'POST',
-					data : {
-						titleId : titleId
-					},
-					dataType : 'json',
-					success : function(data) {
-						layer.close(loadIndex); // 关闭加载层
-						if (data.code === 0 && data.data.length > 0) {
-							// 解析字符串为对象
-							const article = data.data[0];
-							const topic = article.topic;
-							const dataHtml = article.data_html;
+                if (isLiked) {
+                    likeIcon.removeClass('layui-icon-heart').addClass('layui-icon-heart-fill');
+                } else {
+                    likeIcon.removeClass('layui-icon-heart-fill').addClass('layui-icon-heart');
+                }
 
-							$('#title').text(topic);
-							$('#content').html(dataHtml);
-						} else {
-							layer.alert("加载失败：" + data.msg, {
-								icon : 2
-							});
-						}
-					},
-					error : function(xhr, status, error) {
-						layer.close(loadIndex);
-						console.log('AJAX 请求错误:', error); // 打印错误信息
-						layer.alert("请求失败：" + error, {
-							icon : 2
-						});
-					}
-				});
-			});
+                if (isFavorited) {
+                    favoriteIcon.removeClass('layui-icon-rate').addClass('layui-icon-rate-solid');
+                } else {
+                    favoriteIcon.removeClass('layui-icon-rate-solid').addClass('layui-icon-rate');
+                }
+            }
 
-			// 返回按钮点击事件
-			$('#btn-back').click(function() {
-				window.history.back();
-			});
-			
-			
-			
-			// 复制按钮点击事件
-			$('#btn-copelink').click(function() {
-				navigator.clipboard.writeText(window.location.href)
-				.then(() => {
-					layer.msg('复制链接成功', {icon: 1});
-				})
-				.catch((err) => {
-					layer.msg('复制链接失败: ' + err, {icon: 2});
-				});
-			});
-		});
-	</script>
+            // 返回按钮点击事件
+            $('#btn-back').click(function () {
+                window.history.back();
+            });
+
+            // 复制链接点击事件
+            $('#btn-copelink').click(function () {
+                navigator.clipboard.writeText(window.location.href)
+                   .then(() => layer.msg('复制链接成功', { icon: 1 }))
+                   .catch((err) => layer.msg('复制链接失败: ' + err, { icon: 2 }));
+            });
+
+            // 点赞点击事件
+            $('#btn-like').click(function () {
+                isLiked = !isLiked;
+                updateButtonIcons();
+                // 发送请求更新数据库中的点赞状态
+                $.ajax({
+                    url: '',
+                    type: 'POST',
+                    data: { titleId: titleId, like: isLiked },
+                    success: function (response) {
+                        if (response.code === 0) {
+                            layer.msg('点赞状态更新成功', { icon: 1 });
+                        } else {
+                            layer.msg('点赞状态更新失败: ' + response.msg, { icon: 2 });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        layer.msg('请求失败: ' + error, { icon: 2 });
+                    }
+                });
+            });
+
+            // 收藏点击事件
+            $('#btn-favorite').click(function () {
+                isFavorited = !isFavorited;
+                updateButtonIcons();
+                // 发送请求更新数据库中的收藏状态
+                $.ajax({
+                    url: '',
+                    type: 'POST',
+                    data: { titleId: titleId, favorite: isFavorited },
+                    success: function (response) {
+                        if (response.code === 0) {
+                            layer.msg('收藏状态更新成功', { icon: 1 });
+                        } else {
+                            layer.msg('收藏状态更新失败: ' + response.msg, { icon: 2 });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        layer.msg('请求失败: ' + error, { icon: 2 });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
-</html>
+
+</html>    

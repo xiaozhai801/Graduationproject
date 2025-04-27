@@ -32,32 +32,6 @@ body {
     display: block;
     overflow: auto; /* 允许 iframe 内部滚动 */
 }
-
-/* 自定义滚动条样式（WebKit 内核浏览器） */
-#main::-webkit-scrollbar {
-    width: 8px; /* 垂直滚动条宽度 */
-    height: 8px; /* 水平滚动条高度 */
-}
-
-#main::-webkit-scrollbar-track {
-    background: #f2f2f2; /* 轨道背景色（接近 Layui 风格） */
-    border-radius: 4px;
-}
-
-#main::-webkit-scrollbar-thumb {
-    background: #d2d2d2; /* 滑块背景色（浅灰色，适配 Layui） */
-    border-radius: 4px;
-}
-
-#main::-webkit-scrollbar-thumb:hover {
-    background: #b5b5b5; /* 悬停时颜色加深 */
-}
-
-/* 兼容 Firefox 滚动条样式 */
-#main {
-    scrollbar-color: #b5b5b5 #f2f2f2; /* 滑块 轨道 */
-    scrollbar-width: thin;
-}
 </style>
 </head>
 <body>

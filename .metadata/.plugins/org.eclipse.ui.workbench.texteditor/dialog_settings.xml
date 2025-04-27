@@ -13,8 +13,10 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="ID-table-demo-search"/>
+		<item key="selection" value="uploadArticle"/>
 		<list key="findhistory">
+			<item value="uploadArticle"/>
+			<item value="UploadArticleReview"/>
 			<item value="ID-table-demo-search"/>
 			<item value="deleteDraftArticle"/>
 			<item value="draftId"/>
@@ -28,8 +30,6 @@
 			<item value="dropdown"/>
 			<item value="lay-header-event"/>
 			<item value="confirm"/>
-			<item value="value"/>
-			<item value="reg-password"/>
 		</list>
 		<list key="replacehistory">
 			<item value="titleId"/>

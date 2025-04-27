@@ -2,10 +2,8 @@ package com.zpq.dao;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import com.zpq.pojo.Admin;
 import com.zpq.pojo.User;
-//用户接口
 public interface UserDao {
 	//查询管理员
 	public Admin selectAdmin(String name, String password) throws SQLException;

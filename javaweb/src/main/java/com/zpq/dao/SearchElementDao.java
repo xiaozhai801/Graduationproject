@@ -7,6 +7,7 @@ import com.zpq.pojo.Article;
 import com.zpq.pojo.Draft;
 import com.zpq.pojo.Model;
 import com.zpq.pojo.User;
+import com.zpq.pojo.UserAction;
 
 public interface SearchElementDao {
 	// 查询用户信息,userId:User
@@ -20,4 +21,7 @@ public interface SearchElementDao {
 
 	// 查询文章草稿信息,draftId:Draft
 	public Map<Integer, Draft> searchDraftInfo(Object element, Object value) throws SQLException;
+	
+	//当前用户与文章互动情况
+	public Map<Long, UserAction> searchUserActionInfo(String userId,int titleId) throws SQLException;
 }
