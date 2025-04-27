@@ -2,96 +2,133 @@
 <html>
 
 <head>
-<meta charset="utf-8">
-<title>Fix</title>
-<meta name="renderer" content="webkit">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="..//layui/css/layui.css" rel="stylesheet">
-<script src="..//layui/layui.js"></script>
-<script src="..//js/jquery-3.6.0.min.js"></script>
-<style>
-/* 隐藏横向滚动条 */
-body {
-	overflow-x: hidden; /* 隐藏横向滚动 */
-	min-width: fit-content; /* 确保内容自适应宽度 */
-}
-</style>
+    <meta charset="utf-8">
+    <title>Fix</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="..//layui/css/layui.css" rel="stylesheet">
+    <script src="..//layui/layui.js"></script>
+    <script src="..//js/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 隐藏页面主体的滚动条 */
+        body {
+            overflow: hidden; /* 禁止页面主体滚动 */
+            min-width: fit-content;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        #main {
+            width: 100%;
+            height: calc(100vh - 60px);
+            border: 0;
+            display: block;
+            overflow: auto; /* 让 iframe 内容超出时显示滚动条 */
+        }
+
+        .layui-body {
+            padding: 0;
+            height: 100vh;
+        }
+
+        /* 设置滚动条整体样式 */
+        #main::-webkit-scrollbar {
+            width: 8px; /* 垂直滚动条宽度 */
+            height: 8px; /* 水平滚动条高度 */
+        }
+
+        /* 设置滚动条轨道样式 */
+        #main::-webkit-scrollbar-track {
+            background: #f1f1f1; /* 轨道背景颜色 */
+            border-radius: 4px; /* 轨道圆角 */
+        }
+
+        /* 设置滚动条滑块样式 */
+        #main::-webkit-scrollbar-thumb {
+            background: #888; /* 滑块背景颜色 */
+            border-radius: 4px; /* 滑块圆角 */
+        }
+
+        /* 鼠标悬停在滑块上时的样式 */
+        #main::-webkit-scrollbar-thumb:hover {
+            background: #555; /* 悬停时滑块背景颜色 */
+        }
+    </style>
 </head>
 
 <body>
-	<div class="layui-layout layui-layout-admin">
-		<div class="layui-header">
-			<div class="layui-logo layui-hide-xs layui-bg-black">FIX</div>
-			<!-- 头部区域（可配合layui 已有的水平导航） -->
-			<ul class="layui-nav layui-layout-left">
-				<!-- 移动端显示 -->
-				<li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm"
-					lay-header-event="menuLeft"><i
-					class="layui-icon layui-icon-spread-left"></i></li>
-				<li class="layui-nav-item layui-hide-xs"><a
-					href="Public/Home.html">首页</a></li>
-				<li class="layui-nav-item layui-hide-xs"><a
-					href="Article/AllArticle.html">所有文章</a></li>
-				<li class="layui-nav-item"><a href="javascript:;">维修指南</a>
-					<dl class="layui-nav-child">
-						<dd>
-							<a href="Article/PhoneArticle.html">手机</a>
-						</dd>
-						<dd>
-							<a href="Article/LaptopArticle.html">笔记本电脑</a>
-						</dd>
-						<dd>
-							<a href="Article/ConsoleArticle.html">游戏主机</a>
-						</dd>
-					</dl></li>
-				<li class="layui-nav-item"><a href="javascript:;">创作中心</a>
-					<dl class="layui-nav-child">
-						<dd>
-							<a href="Article/MyArticle.html">我的文章</a>
-						</dd>
-						<dd>
-							<a href="Article/DraftArticle.html">我的草稿</a>
-						</dd>
-						<dd>
-							<a href="Article/UploadArticle.html">上传文章</a>
-						</dd>
-					</dl></li>
-			</ul>
-			<ul class="layui-nav layui-layout-right">
-				<li class="layui-nav-item layui-hide layui-show-sm-inline-block">
-					<a href="javascript:;"> <img src="" class="layui-nav-img"
-						id="top-username">
-				</a>
-					<dl class="layui-nav-child">
-						<dd>
-							<a href="Personal/PersonalInfo.html">个人信息</a>
-						</dd>
-						<dd>
-							<a href="Personal/EditPassword.html">修改密码</a>
-						</dd>
-						<dd>
-							<a href="javascript:void(0);" id="logout-link">退出登录</a>
-						</dd>
-					</dl>
-				</li>
-				<li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
-					<a href="javascript:;"> <i
-						class="layui-icon layui-icon-more-vertical"></i>
-				</a>
-				</li>
-			</ul>
-		</div>
-		<div class="layui-body">
-			<!-- 内容主体区域 -->
-			<div
-				style="width: 100%; height: 90vh; justify-content: center; align-items: center;">
-				<iframe src="Public/Home.html" id="main" height="100%" width="100%"
-					style="border: none;"></iframe>
-			</div>
-		</div>
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo layui-hide-xs layui-bg-black">FIX</div>
+            <!-- 头部区域（可配合layui 已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <!-- 移动端显示 -->
+                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm"
+                    lay-header-event="menuLeft"><i
+                        class="layui-icon layui-icon-spread-left"></i></li>
+                <li class="layui-nav-item layui-hide-xs"><a
+                        href="Public/Home.html">首页</a></li>
+                <li class="layui-nav-item layui-hide-xs"><a
+                        href="Article/AllArticle.html">所有文章</a></li>
+                <li class="layui-nav-item"><a href="javascript:;">维修指南</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="Article/PhoneArticle.html">手机</a>
+                        </dd>
+                        <dd>
+                            <a href="Article/LaptopArticle.html">笔记本电脑</a>
+                        </dd>
+                        <dd>
+                            <a href="Article/ConsoleArticle.html">游戏主机</a>
+                        </dd>
+                    </dl></li>
+                <li class="layui-nav-item"><a href="javascript:;">创作中心</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="Article/MyArticle.html">我的文章</a>
+                        </dd>
+                        <dd>
+                            <a href="Article/DraftArticle.html">我的草稿</a>
+                        </dd>
+                        <dd>
+                            <a href="Article/UploadArticle.html">上传文章</a>
+                        </dd>
+                    </dl></li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+                    <a href="javascript:;"> <img src="" class="layui-nav-img"
+                            id="top-username">
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="Personal/PersonalInfo.html">个人信息</a>
+                        </dd>
+                        <dd>
+                            <a href="Personal/EditPassword.html">修改密码</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:void(0);" id="logout-link">退出登录</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+                    <a href="javascript:;"> <i
+                            class="layui-icon layui-icon-more-vertical"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div>
+                <iframe src="Public/Home.html" id="main"></iframe>
+            </div>
+        </div>
 
-		<script>
+        <script>
             layui.use(['element', 'layer', 'util'], function () {
                 var element = layui.element;
                 var layer = layui.layer;
@@ -154,7 +191,6 @@ body {
                                             setTimeout(function () {
                                                 window.location.href = "../Login.html";
                                             }, 2000);
-                                            window.location.href = "../Login.html";
                                         } else {
                                             layer.msg('退出登录失败', {
                                                 icon: 2,
@@ -178,4 +214,4 @@ body {
         </script>
 </body>
 
-</html>
+</html>    
