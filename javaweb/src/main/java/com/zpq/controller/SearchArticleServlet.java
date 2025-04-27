@@ -62,17 +62,20 @@ public class SearchArticleServlet extends HttpServlet {
         String topic = getParamValue(request, "topic", null);
         String name = getParamValue(request, "name", null);
         String model = getParamValue(request, "model", null);
+        String releaseStr=getParamValue(request, "release", "-1");
 
-        // 将titleId的字符串值转换为整数
+        // 将字符串值转换为整数
         int titleId = Integer.parseInt(titleIdStr);
-
+        int release=Integer.parseInt(releaseStr);
+        
         // 创建Article对象并设置属性
         Article article = new Article();
         article.setTitleId(titleId);
         article.setTopic(topic);
         article.setName(name);
         article.setModel(model);
-
+        article.setRelease(release);
+        
         // 创建ArticleDao实例
         ArticleDao articleDao = new ArticleDaoImpl();
         try {

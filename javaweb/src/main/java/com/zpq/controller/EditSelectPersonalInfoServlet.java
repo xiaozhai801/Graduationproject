@@ -50,8 +50,7 @@ public class EditSelectPersonalInfoServlet extends HttpServlet {
 		String sex=request.getParameter("sex");
 		int age=Integer.parseInt(request.getParameter("age"));
 		String email=request.getParameter("email");
-		String avatar=request.getParameter("avatar");
-		System.out.println(avatar);
+		//String avatar=request.getParameter("avatar");
 		//设置值
 		User user=new User();
 		user.setUserId(userId);

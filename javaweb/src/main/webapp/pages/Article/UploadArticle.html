@@ -174,21 +174,31 @@
                         layer.msg('请选择文章分类');
                         return;
                     }
-                    // 模拟发布文章的请求
+                    // 发布文章的请求
                     $.ajax({
-                        url: 'PublishArticleServlet', // 设置为实际的发布文章接口地址
+                        url: '../../UploadArticleReviewServlet', // 设置为实际的发布文章接口地址
                         type: 'POST',
                         data: {
                             title: title,
                             contentHtml: contentHtml,
                             contentText: contentText,
-                            typeId: typeId
+                            typeId: typeId,
+                            status:1
                         },
+    					dataType : 'text',
                         success: function (res) {
-                            if (res.code === 0) {
-                                layer.msg('文章发布成功');
+                            if (res == "success") {
+                                layer.msg('发布文章成功,待管理员审核', {
+                                    icon: 1, // 显示成功图标
+                                    time: 2000
+                                    // 提示信息显示 2 秒
+                                });
                             } else {
-                                layer.msg('文章发布失败');
+                                layer.msg('发布文章失败', {
+                                    icon: 2, // 显示失败图标
+                                    time: 2000
+                                    // 提示信息显示 2 秒
+                                });
                             }
                         },
                         error: function () {

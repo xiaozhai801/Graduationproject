@@ -15,11 +15,12 @@ import com.zpq.utils.DBUtil;
 public class SearchElementDaoImpl implements SearchElementDao {
 
 	@Override
-	public User searchUserInfo(String element, String value) throws SQLException {
+	public Map<String, User> searchUserInfo(String element, String value) throws SQLException {
 		// TODO Auto-generated method stub
 		// 创建数据库工具类实例
 		DBUtil dbUtil = new DBUtil();
 		User user = new User();
+		Map<String, User> userInfo=new HashMap<>();
 		String sql = "SELECT * FROM v_userinfo where " + element + "=?";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, value);
@@ -31,15 +32,17 @@ public class SearchElementDaoImpl implements SearchElementDao {
 			user.setSex(rs.getString("sex"));
 			user.setAge(rs.getInt("age"));
 			user.setEmail(rs.getString("email"));
+			userInfo.put(user.getUserId(), user);
 		}
-		return user;
+		return userInfo;
 	}
 
 	@Override
-	public Article searchArticleInfo(String element, String value) throws SQLException {
+	public Map<Integer, Article> searchArticleInfo(String element, String value) throws SQLException {
 		// TODO Auto-generated method stub
 		DBUtil dbUtil = new DBUtil();
 		Article article = new Article();
+		Map<Integer, Article> articleInfo=new HashMap<>();
 		String sql = "SELECT * FROM v_articleinfo where " + element + "=?";
 		// 获取预编译的SQL语句对象
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
@@ -57,19 +60,21 @@ public class SearchElementDaoImpl implements SearchElementDao {
 			article.setRelease(rs.getInt("release"));
 			article.setViews(rs.getInt("views"));
 			article.setLikes(rs.getInt("likes"));
+			article.setFavorites(rs.getInt("favorites"));
 			article.setData_html(rs.getString("data_html"));
 			article.setData_text(rs.getString("data_text"));
-
+			articleInfo.put(article.getTitleId(), article);
 		}
 		// 返回查询到的文章对象列表
-		return article;
+		return articleInfo;
 	}
 
 	@Override
-	public Model searchModelInfo(String element, String value) throws SQLException {
+	public Map<Integer, Model> searchModelInfo(String element, String value) throws SQLException {
 		// TODO Auto-generated method stub
 		DBUtil dbUtil = new DBUtil();
 		Model model = new Model();
+		Map<Integer, Model> modelInfo=new HashMap<>();
 		String sql = "SELECT * FROM v_modeltype where " + element + "=?";
 		// 获取预编译的SQL语句对象
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
@@ -80,9 +85,10 @@ public class SearchElementDaoImpl implements SearchElementDao {
 		while (rs.next()) {
 			model.setTypeId(rs.getInt("typeId"));
 			model.setTypeName(rs.getString("typeName"));
+			modelInfo.put(model.getTypeId(), model);
 		}
 		// 返回查询到的型号对象列表
-		return model;
+		return modelInfo;
 	}
 
 	@Override
@@ -111,26 +117,6 @@ public class SearchElementDaoImpl implements SearchElementDao {
 		}
 		// 返回查询到的型号对象列表
 		return draftInfo;
-	}
-
-	@Override
-	public int countDraft(String element, String value) throws SQLException {
-		// TODO Auto-generated method stub
-		// 创建数据库工具类实例
-		DBUtil dbUtil = new DBUtil();
-		// SQL语句，统计v_articleinfo表中的记录数量，使用count(*)函数，并将结果命名为sum
-		String sql = "SELECT count(*) as sum FROM v_articledraft where "+element+"=?";
-		// 获取预编译的SQL语句对象
-		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
-		ps.setString(1, value);
-		// 执行SQL查询，并获取结果集
-		ResultSet rs = ps.executeQuery();
-		// 遍历结果集，获取统计的文章数量并返回
-		while (rs.next()) {
-			return rs.getInt("sum");
-		}
-		// 如果没有查询到结果，返回0
-		return 0;
 	}
 
 }

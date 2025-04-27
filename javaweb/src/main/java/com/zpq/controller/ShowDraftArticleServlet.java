@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zpq.dao.ArticleDao;
+import com.zpq.dao.ArticleDaoImpl;
 import com.zpq.dao.SearchElementDao;
 import com.zpq.dao.SearchElementDaoImpl;
 import com.zpq.pojo.Draft;
@@ -69,9 +71,10 @@ public class ShowDraftArticleServlet extends HttpServlet {
 		}
 
 		SearchElementDao searchElement = new SearchElementDaoImpl();
+		ArticleDao articleDao=new ArticleDaoImpl();
 		Map<Integer, Draft> draftInfo;
 		try {
-			// 获取当前登录用户的所有草稿信息
+			// 获取当前登录用户所选择的草稿信息
 			draftInfo = searchElement.searchDraftInfo("draftId", draftId);
             List<Object> resultList=new ArrayList<>(draftInfo.size());
             resultList.add(draftInfo.get(draftId));
@@ -79,7 +82,7 @@ public class ShowDraftArticleServlet extends HttpServlet {
             Vo vo = new Vo();
             vo.setCode(0);
             vo.setMsg("success");
-            vo.setCount(searchElement.countDraft("userId", name));
+            vo.setCount(articleDao.countDraft("userId", name));
             vo.setData(resultList);
             response.getWriter().write(JSONObject.toJSON(vo).toString());
 

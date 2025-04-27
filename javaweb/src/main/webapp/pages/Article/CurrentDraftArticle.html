@@ -41,10 +41,14 @@
 						<h1 id="title" class="article-title"></h1>
 					</div>
 					<div class="layui-col-md6" style="text-align: right;">
-						<button class="layui-btn layui-btn-primary" id="btn-del">删除</button>
-						<button class="layui-btn layui-btn-primary" id="btn-edit">编辑</button>
+						<button class="layui-btn layui-btn-primary" id="btn-del">
+							<i class="layui-icon layui-icon-delete"></i> 删除
+						</button>
+						<button class="layui-btn layui-btn-primary" id="btn-edit">
+							<i class="layui-icon layui-icon-edit"></i>编辑
+						</button>
 						<button class="layui-btn layui-btn-primary" id="btn-upload">
-							<i class="layui-icon layui-icon-upload"></i>上传审核
+							<i class="layui-icon layui-icon-release"></i> 发布
 						</button>
 						<button class="layui-btn layui-btn-primary" id="btn-back">
 							<i class="layui-icon layui-icon-return"></i> 返回列表
@@ -122,7 +126,7 @@
 				}, function(index) {
 					// 发送 AJAX 请求到 ShowArticleServlet
 					$.ajax({
-						url : '../../DeleteDraftArticeServlet',
+						url : '../../DeleteDraftArticleServlet',
 						type : 'GET',
 						data : {
 							draftId : draftId
@@ -153,44 +157,44 @@
 			});
 
 			//编辑占位
-/* 			$('#btn-del').click(function() {
-				layer.confirm('确定要删除这篇文章吗？', {
-					icon : 3,
-					title : '提示'
-				}, function(index) {
-					// 发送 AJAX 请求到 ShowArticleServlet
-					$.ajax({
-						url : '../../DeleteDraftArticeServlet',
-						type : 'GET',
-						data : {
-							draftId : draftId
-						},
-						dataType : 'text',
-						success : function(res) {
-							if (res == "success") {
-								layer.close(loadIndex);
-								layer.msg('删除成功', {
-									icon : 1
-								});
-								window.history.back(); // 返回上一页面
-							} else {
-								layer.msg('删除失败', {
-									icon : 2
-								});
-							}
-						},
-						error : function(xhr, status, error) {
-							layer.close(loadIndex);
-							console.log('AJAX 请求错误:', error); // 打印错误信息
-							layer.alert("请求失败：" + error, {
-								icon : 2
-							});
-						}
-					})
-				})
-			}); */
-			
- 			$('#btn-upload').click(function() {
+			/* 			$('#btn-del').click(function() {
+			 layer.confirm('确定要删除这篇文章吗？', {
+			 icon : 3,
+			 title : '提示'
+			 }, function(index) {
+			 // 发送 AJAX 请求到 ShowArticleServlet
+			 $.ajax({
+			 url : '../../DeleteDraftArticeServlet',
+			 type : 'GET',
+			 data : {
+			 draftId : draftId
+			 },
+			 dataType : 'text',
+			 success : function(res) {
+			 if (res == "success") {
+			 layer.close(loadIndex);
+			 layer.msg('删除成功', {
+			 icon : 1
+			 });
+			 window.history.back(); // 返回上一页面
+			 } else {
+			 layer.msg('删除失败', {
+			 icon : 2
+			 });
+			 }
+			 },
+			 error : function(xhr, status, error) {
+			 layer.close(loadIndex);
+			 console.log('AJAX 请求错误:', error); // 打印错误信息
+			 layer.alert("请求失败：" + error, {
+			 icon : 2
+			 });
+			 }
+			 })
+			 })
+			 }); */
+
+			$('#btn-upload').click(function() {
 				layer.confirm('确定要上传这篇文章吗？', {
 					icon : 3,
 					title : '提示'
@@ -226,7 +230,7 @@
 					})
 				})
 			});
-			
+
 			// 返回按钮点击事件
 			$('#btn-back').click(function() {
 				window.history.back();

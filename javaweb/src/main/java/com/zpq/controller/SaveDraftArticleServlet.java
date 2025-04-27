@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -75,34 +76,34 @@ public class SaveDraftArticleServlet extends HttpServlet {
 		// 定义日期时间格式
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddss");
 		// 得到草稿ID
-		int DraftId = Integer.parseInt(now.format(formatter));
+		int draftId = Integer.parseInt(now.format(formatter));
 
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		// 获取标题
 		String topic = getParamValue(request, "title", null);
 		// 获取html原始格式
-		String contentHtml = getParamValue(request, "contentHtml", null);
+		String contentHtml = getParamValue(request, "contentHtml", "");
 		contentHtml=contentHtml.replace("../../", "/javaweb/");
 
 		// 获取文本格式
-		String contentText = getParamValue(request, "contentText", null);
+		String contentText = getParamValue(request, "contentText", "");
 		String typeId = getParamValue(request, "typeId", "-1");
 		// 定义搜索信息工具类
 		SearchElementDao searchElement = new SearchElementDaoImpl();
-		User userInfo;
-		Model modelInfo;
+		Map<String, User> userInfo;
+		Map<Integer, Model> modelInfo;
 		try {
 			userInfo = searchElement.searchUserInfo("userId", name);
 			modelInfo = searchElement.searchModelInfo("typeId", typeId);
 
 			// 设置值
 			Draft draft = new Draft();
-			draft.setDraftId(DraftId);
+			draft.setDraftId(draftId);
 			draft.setTopic(topic);
 			draft.setUserId(name);
-			draft.setName(userInfo.getName());
-			draft.setModel(modelInfo.getTypeName());
+			draft.setName(userInfo.get(name).getName());
+			draft.setModel(modelInfo.get(Integer.parseInt(typeId)).getTypeName());
 			draft.setTypeId(Integer.parseInt(typeId));
 			draft.setData_html(contentHtml);
 			draft.setData_text(contentText);

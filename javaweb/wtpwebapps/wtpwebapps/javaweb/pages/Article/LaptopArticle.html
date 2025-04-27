@@ -110,7 +110,15 @@ html, body {
                         }
                     ]
                 ],
-                height: 'full-55'
+                height: 'full-55',
+	            parseData: function(res) {
+	                if (res.code === 0) {
+	                    res.data = res.data.filter(function(item) {
+	                        return item.release == 1;
+	                    });
+	                }
+	                return res;
+	            }
             });
 
             // 搜索提交

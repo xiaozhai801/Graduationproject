@@ -31,7 +31,8 @@ body {
 					class="layui-icon layui-icon-spread-left"></i></li>
 				<li class="layui-nav-item layui-hide-xs"><a
 					href="Public/Home.html">首页</a></li>
-				<li class="layui-nav-item layui-hide-xs"><a href="Article/AllArticle.html">所有文章</a></li>
+				<li class="layui-nav-item layui-hide-xs"><a
+					href="Article/AllArticle.html">所有文章</a></li>
 				<li class="layui-nav-item"><a href="javascript:;">维修指南</a>
 					<dl class="layui-nav-child">
 						<dd>
@@ -47,13 +48,13 @@ body {
 				<li class="layui-nav-item"><a href="javascript:;">创作中心</a>
 					<dl class="layui-nav-child">
 						<dd>
-							<a href="Article/UploadArticle.html">上传文章</a>
-						</dd>
-						<dd>
 							<a href="Article/MyArticle.html">我的文章</a>
 						</dd>
 						<dd>
 							<a href="Article/DraftArticle.html">我的草稿</a>
+						</dd>
+						<dd>
+							<a href="Article/UploadArticle.html">上传文章</a>
 						</dd>
 					</dl></li>
 			</ul>
@@ -83,140 +84,98 @@ body {
 		</div>
 		<div class="layui-body">
 			<!-- 内容主体区域 -->
-			<div style="width: 100%; height: 90vh; 	 justify-content: center; align-items: center;">
-				<iframe src="Public/Home.html" id="main" height="100%" width="100%" style="border: none;"></iframe>
+			<div
+				style="width: 100%; height: 90vh; justify-content: center; align-items: center;">
+				<iframe src="Public/Home.html" id="main" height="100%" width="100%"
+					style="border: none;"></iframe>
 			</div>
 		</div>
 
 		<script>
-			layui
-					.use(
-							[ 'element', 'layer', 'util' ],
-							function() {
-								var element = layui.element;
-								var layer = layui.layer;
-								var util = layui.util;
-								var $ = layui.jquery;
+            layui.use(['element', 'layer', 'util'], function () {
+                var element = layui.element;
+                var layer = layui.layer;
+                var util = layui.util;
+                var $ = layui.jquery;
 
-								// 简洁的 AJAX 请求获取头像地址
-								$
-										.getJSON(
-												'../SelectPersonalInfoServlet',
-												function(response) {
-													var avatar = response.data[0].avatar
-															|| "";
-													$("#top-username").attr(
-															"src", avatar);
-												}).fail(function() {
-											layer.msg('获取头像信息失败', {
-												icon : 2,
-												time : 2000
-											});
-										});
+                // 简洁的 AJAX 请求获取头像地址
+                $.getJSON('../SelectPersonalInfoServlet', function (response) {
+                    var avatar = response.data[0].avatar || "";
+                    $("#top-username").attr("src", avatar);
+                }).fail(function () {
+                    layer.msg('获取头像信息失败', {
+                        icon: 2,
+                        time: 2000
+                    });
+                });
 
-								// 头部事件
-								util
-										.event(
-												'lay-header-event',
-												{
-													menuRight : function() { // 右侧菜单事件
-														layer
-																.open({
-																	type : 1,
-																	title : '更多',
-																	content : '<div style="padding: 15px;">处理右侧面板的操作</div>',
-																	area : [
-																			'260px',
-																			'100%' ],
-																	offset : 'rt', // 右上角
-																	anim : 'slideLeft', // 从右侧抽屉滑出
-																	shadeClose : true,
-																	scrollbar : false
-																});
-													}
-												});
-								// main 主 iframe 窗口
-								$(document)
-										.ready(
-												function() {
-													$(
-															"dd>a, li.layui-nav-item a")
-															.not("#logout-link")
-															.click(
-																	function(e) {
-																		e
-																				.preventDefault();
-																		$(
-																				'#main')
-																				.attr(
-																						"src",
-																						$(
-																								this)
-																								.attr(
-																										"href"));
-																	});
+                // 头部事件
+                util.event('lay-header-event', {
+                    menuRight: function () { // 右侧菜单事件
+                        layer.open({
+                            type: 1,
+                            title: '更多',
+                            content: '<div style="padding: 15px;">处理右侧面板的操作</div>',
+                            area: ['260px', '100%'],
+                            offset: 'rt', // 右上角
+                            anim:'slideLeft', // 从右侧抽屉滑出
+                            shadeClose: true,
+                            scrollbar: false
+                        });
+                    }
+                });
 
-													// 退出登录处理
-													$('#logout-link')
-															.click(
-																	function() {
-																		layer
-																				.confirm(
+                // main 主 iframe 窗口
+                $(document).ready(function () {
+                    $("dd>a, li.layui-nav-item a").not("#logout-link").click(function (e) {
+                        e.preventDefault();
+                        $('#main').attr("src", $(this).attr("href"));
+                    });
 
-																						'确定要退出登录吗？',
-																						{
-																							icon : 3,
-																							title : '提示'
-																						},
-																						function(
-																								index) {
-																							$
-																									.ajax({
-																										type : "POST",
-																										url : "../LoginOutServlet",
-																										success : function(
-																												data) {
-																											if (data === "success") {
-																												layer
-																														.msg(
-																																'退出登录成功',
-																																{
-																																	icon : 1,
-																																	time : 2000
-																																});
-																												// 跳转到登录页面
-																												setTimeout(
-																														function() {
-																															window.location.href = "../Login.html";
-																														},
-																														2000);
-																												window.location.href = "../Login.html";
-																											} else {
-																												layer
-																														.msg(
-																																'退出登录失败',
-																																{
-																																	icon : 2,
-																																	time : 2000
-																																});
-																											}
-																										},
-																										error : function() {
-																											layer
-																													.msg(
-																															'请求出错',
-																															{
-																																icon : 2,
-																																time : 2000
-																															});
-																										}
-																									});
-																							layer
-																									.close(index);
-																						});
-																	});
-												});
-							});
-		</script></body>
+                    // 退出登录处理
+                    $('#logout-link').click(function () {
+                        layer.confirm(
+                            '确定要退出登录吗？',
+                            {
+                                icon: 3,
+                                title: '提示'
+                            },
+                            function (index) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "../LoginOutServlet",
+                                    success: function (data) {
+                                        if (data === "success") {
+                                            layer.msg('退出登录成功', {
+                                                icon: 1,
+                                                time: 2000
+                                            });
+                                            // 跳转到登录页面
+                                            setTimeout(function () {
+                                                window.location.href = "../Login.html";
+                                            }, 2000);
+                                            window.location.href = "../Login.html";
+                                        } else {
+                                            layer.msg('退出登录失败', {
+                                                icon: 2,
+                                                time: 2000
+                                            });
+                                        }
+                                    },
+                                    error: function () {
+                                        layer.msg('请求出错', {
+                                            icon: 2,
+                                            time: 2000
+                                        });
+                                    }
+                                });
+                                layer.close(index);
+                            }
+                        );
+                    });
+                });
+            });
+        </script>
+</body>
 
 </html>

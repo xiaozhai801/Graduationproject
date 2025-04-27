@@ -14,6 +14,7 @@ public class Article {
 	private int release;
 	private int views;
 	private int likes;
+	private int favorites;
 	private String data_html;
 	private String data_text;
 }

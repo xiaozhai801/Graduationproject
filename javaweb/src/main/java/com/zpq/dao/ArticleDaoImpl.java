@@ -83,6 +83,7 @@ public class ArticleDaoImpl implements ArticleDao {
 		String topic = article.getTopic();
 		String name = article.getName();
 		String model = article.getModel();
+		int release = article.getRelease();
 		List<Object> params = new ArrayList<>();
 
 		// 如果文章ID不为-1，说明有文章ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
@@ -104,6 +105,11 @@ public class ArticleDaoImpl implements ArticleDao {
 		if (model != null) {
 			sqlBuilder.append(" AND model LIKE ?");
 			params.add("%" + model + "%");
+		}
+		// 如果文章审核状态不为-1，说明有文章机型的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (release != -1) {
+			sqlBuilder.append(" AND `release` = ?");
+			params.add(release);
 		}
 
 		// 添加分页查询的LIMIT子句到SQL语句中，并将分页参数值添加到params列表
@@ -463,11 +469,11 @@ public class ArticleDaoImpl implements ArticleDao {
 		Map<Integer, Draft> draftInfoMap = searchElementDao.searchDraftInfo("draftId", draftId);
 		Draft draftInfo = draftInfoMap.get(draftId);
 		// 获取当前时间戳
-        Timestamp uploadTime = new Timestamp(System.currentTimeMillis());
-        System.out.println(uploadTime);
-        // 处理长字符串
-        StringReader htmlReader = new StringReader(draftInfo.getData_html());
-        StringReader textReader = new StringReader(draftInfo.getData_text());
+		Timestamp uploadTime = new Timestamp(System.currentTimeMillis());
+
+		// 处理长字符串
+		StringReader htmlReader = new StringReader(draftInfo.getData_html());
+		StringReader textReader = new StringReader(draftInfo.getData_text());
 
 		// 创建数据库工具类实例
 		DBUtil dbUtil = new DBUtil();
@@ -498,4 +504,99 @@ public class ArticleDaoImpl implements ArticleDao {
 		return row;
 	}
 
+	@Override
+	public int countDraft(String element, String value) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL语句，统计v_articleinfo表中的记录数量，使用count(*)函数，并将结果命名为sum
+		String sql = "SELECT count(*) as sum FROM v_articledraft where " + element + "=?";
+		// 获取预编译的SQL语句对象
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, value);
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		// 遍历结果集，获取统计的文章数量并返回
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		// 如果没有查询到结果，返回0
+		return 0;
+	}
+
+	@Override
+	public int deleteArticle(int titleId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL删除语句
+		String sql = "DELETE FROM v_articleinfo WHERE titleId = ?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, titleId);
+		// 执行SQL删除操作，并获取受影响的行数
+		// 1 删除成功,0 删除失败
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int deleteArticle(int titleId, String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL删除语句
+		String sql = "DELETE FROM v_articleinfo WHERE titleId = ? AND userId = ?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, titleId);
+		ps.setString(2, userId);
+		// 执行SQL删除操作，并获取受影响的行数
+		// 1 删除成功,0 删除失败
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int ReviewNotPassArticle(int titleId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL修改语句
+		String sql = "UPDATE v_articleinfo SET `release` = 2 WHERE titleId = ?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, titleId);
+		// 执行SQL修改操作，并获取受影响的行数
+		// 1 修改成功,0 修改失败
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int ReviewPassArticle(int titleId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL修改语句
+		String sql = "UPDATE v_articleinfo SET `release` = 1 WHERE titleId = ?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, titleId);
+		// 执行SQL修改操作，并获取受影响的行数
+		// 1 修改成功,0 修改失败
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int UploadTitleId(int titleId) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL新增语句
+		String sql = "INSERT into c_actioncounts (titleId) VALUES (?)";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, titleId);
+		// 执行SQL新增操作，并获取受影响的行数
+		// 1 新增成功,0 新增失败
+		int row = ps.executeUpdate();
+		return row;
+	}
 }

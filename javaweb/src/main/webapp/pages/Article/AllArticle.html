@@ -71,7 +71,7 @@ html,body {
 			// 创建表格实例
 			table.render({
 				elem : '#ID-table-demo-search',
-				url : '../../SelectAllArticleServlet', // 此处为静态模拟数据，实际使用时需换成真实接口
+				url : '../../SelectAllArticleServlet',
 				page : true,
 				cols : [ [ {
 					field : 'titleId',
@@ -107,18 +107,14 @@ html,body {
 					width : 100
 				} ] ],
 				height : 'full-55',
-				done : function(res, curr, count) {
-					// 遍历表格数据
-					res.data.forEach(function(item) {
-						if (item.release === 0) {
-							// 找到对应的表格行元素并隐藏
-							var tr = $('#ID-table-demo-search').find(
-									'tr[data-index="' + item.LAY_TABLE_INDEX
-											+ '"]');
-							tr.hide();
-						}
-					});
-				}
+	            parseData: function(res) {
+	                if (res.code === 0) {
+	                    res.data = res.data.filter(function(item) {
+	                        return item.release == 1;
+	                    });
+	                }
+	                return res;
+	            }
 			});
 			// 日期
 			laydate.render({

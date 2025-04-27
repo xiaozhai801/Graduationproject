@@ -8,15 +8,16 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zpq.dao.ArticleDao;
+import com.zpq.dao.ArticleDaoImpl;
 import com.zpq.dao.SearchElementDao;
 import com.zpq.dao.SearchElementDaoImpl;
-import com.zpq.pojo.Draft;
+import com.zpq.pojo.Article;
 import com.zpq.pojo.Vo;
 
 /**
@@ -56,14 +57,20 @@ public class ShowArticleServlet extends HttpServlet {
 		// 获取页面传入标题ID
 		int titleId = Integer.parseInt(request.getParameter("titleId"));
 
+		SearchElementDao searchElement=new SearchElementDaoImpl();
+		ArticleDao articleDao=new ArticleDaoImpl();
+		Map<Integer, Article> articleInfo;
 		try {
-
-
+			// 获取当前登录用户所选择的文章信息
+			articleInfo=searchElement.searchArticleInfo("titleId", titleId+"");
+			List<Object> resultList=new ArrayList<>(articleInfo.size());
+			resultList.add(articleInfo.get(titleId));
+			
 			Vo vo = new Vo();
 			vo.setCode(0);
 			vo.setMsg("success");
-			vo.setCount());
-			vo.setData();
+			vo.setCount(articleDao.countArticle());
+			vo.setData(resultList);
 			response.getWriter().write(JSONObject.toJSON(vo).toString());
 
 		} catch (SQLException e) {
