@@ -13,8 +13,11 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="uploadArticle"/>
+		<item key="selection" value="searchUserActionInfo"/>
 		<list key="findhistory">
+			<item value="searchUserActionInfo"/>
+			<item value="field"/>
+			<item value="searchArticleInfo"/>
 			<item value="uploadArticle"/>
 			<item value="UploadArticleReview"/>
 			<item value="ID-table-demo-search"/>
@@ -27,13 +30,10 @@
 			<item value="countMyArticle"/>
 			<item value="name"/>
 			<item value="overflow-y: auto;"/>
-			<item value="dropdown"/>
-			<item value="lay-header-event"/>
-			<item value="confirm"/>
 		</list>
 		<list key="replacehistory">
-			<item value="titleId"/>
 			<item value=""/>
+			<item value="titleId"/>
 			<item value="confirm&#x0A;"/>
 			<item value="layui-inline"/>
 			<item value="layui-input-inline"/>

@@ -20,7 +20,7 @@ import com.zpq.dao.SearchElementDaoImpl;
 import com.zpq.pojo.Draft;
 import com.zpq.pojo.Model;
 import com.zpq.pojo.User;
-
+// 发布文章审核
 /**
  * Servlet implementation class UploadReviewServlet
  */

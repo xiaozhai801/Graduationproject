@@ -169,4 +169,34 @@ public class UserDaoImpl implements UserDao {
 		}
 		return 0;
 	}
+
+	@Override
+	public int Thumbsup(long id, String userId, int titleId,boolean like) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();	
+		String sql = "UPDATE c_useractions SET `like`=? WHERE id=? and userId =? and titleId=?;";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setBoolean(1, like);
+		ps.setLong(2, id);
+		ps.setString(3, userId);
+		ps.setInt(4, titleId);
+		
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int Collect(long id, String userId, int titleId, boolean favorite) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();	
+		String sql = "UPDATE c_useractions SET favorite=? WHERE id=? and userId =? and titleId=?;";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setBoolean(1, favorite);
+		ps.setLong(2, id);
+		ps.setString(3, userId);
+		ps.setInt(4, titleId);
+		
+		int row = ps.executeUpdate();
+		return row;
+	}
 }

@@ -132,7 +132,7 @@
                     }
                 });
             });
-			// 处理点赞和收藏图标
+            // 处理点赞和收藏图标
             function updateButtonIcons() {
                 var likeIcon = $('#btn-like i');
                 var favoriteIcon = $('#btn-favorite i');
@@ -165,21 +165,32 @@
             // 点赞点击事件
             $('#btn-like').click(function () {
                 isLiked = !isLiked;
+                // 更新前端状态
                 updateButtonIcons();
                 // 发送请求更新数据库中的点赞状态
                 $.ajax({
-                    url: '',
+                    url: '../../UpdateUserActionServlet',
                     type: 'POST',
                     data: { titleId: titleId, like: isLiked },
-                    success: function (response) {
-                        if (response.code === 0) {
-                            layer.msg('点赞状态更新成功', { icon: 1 });
+                    success: function (res) {
+                        let tipMsg = '';
+                        if (res == "like success") {
+                            tipMsg = '点赞';
+                        } else if (res == "nolike success") {
+                            tipMsg = '取消点赞';
                         } else {
-                            layer.msg('点赞状态更新失败: ' + response.msg, { icon: 2 });
+                            tipMsg = '点赞失败: ' + res.msg;
                         }
+                        layer.tips(tipMsg, '#btn-like', {
+                            tips: [1, '#31bdec'],
+                            time: 2000
+                        });
                     },
                     error: function (xhr, status, error) {
-                        layer.msg('请求失败: ' + error, { icon: 2 });
+                        layer.tips('请求失败: ' + error, '#btn-like', {
+                            tips: [3, '#000'],
+                            time: 2000
+                        });
                     }
                 });
             });
@@ -190,18 +201,28 @@
                 updateButtonIcons();
                 // 发送请求更新数据库中的收藏状态
                 $.ajax({
-                    url: '',
+                    url: '../../UpdateUserActionServlet',
                     type: 'POST',
                     data: { titleId: titleId, favorite: isFavorited },
-                    success: function (response) {
-                        if (response.code === 0) {
-                            layer.msg('收藏状态更新成功', { icon: 1 });
+                    success: function (res) {
+                        let tipMsg = '';
+                        if (res == "favorite success") {
+                            tipMsg = '收藏';
+                        } else if (res == "nofavorite success") {
+                            tipMsg = '取消收藏';
                         } else {
-                            layer.msg('收藏状态更新失败: ' + response.msg, { icon: 2 });
+                            tipMsg = '收藏失败: ' + res.msg;
                         }
+                        layer.tips(tipMsg, '#btn-favorite', {
+                            tips: [1, '#31bdec'],
+                            time: 2000
+                        });
                     },
                     error: function (xhr, status, error) {
-                        layer.msg('请求失败: ' + error, { icon: 2 });
+                        layer.tips('请求失败: ' + error, '#btn-favorite', {
+                            tips: [3, '#000'],
+                            time: 2000
+                        });
                     }
                 });
             });
