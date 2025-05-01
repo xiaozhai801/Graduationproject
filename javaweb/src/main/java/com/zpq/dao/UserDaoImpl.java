@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -196,6 +197,30 @@ public class UserDaoImpl implements UserDao {
 		ps.setString(3, userId);
 		ps.setInt(4, titleId);
 		
+		int row = ps.executeUpdate();
+		return row;
+	}
+
+	@Override
+	public int SubmitComment(long id, String userId, int titleId, String comment) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		// 获取当前时间戳
+		Timestamp uploadTime = new Timestamp(System.currentTimeMillis());
+		
+		SearchElementDao searchElementDao=new SearchElementDaoImpl();
+		User user=searchElementDao.searchUserInfo("userId",userId).get(userId);
+		String name=user.getName();
+		
+		String sql = "INSERT INTO c_usercomment (id, userId, `name`, titleId, `comment`,uploadTime) VALUES (?,?,?,?,?,?);";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setLong(1, id);
+		ps.setString(2, userId);
+		ps.setString(3, name);
+		ps.setInt(4, titleId);
+		ps.setString(5, comment);
+		ps.setTimestamp(6, uploadTime);
+
 		int row = ps.executeUpdate();
 		return row;
 	}

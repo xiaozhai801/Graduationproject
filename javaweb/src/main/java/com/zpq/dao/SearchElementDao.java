@@ -1,6 +1,7 @@
 package com.zpq.dao;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import com.zpq.pojo.Article;
@@ -24,4 +25,7 @@ public interface SearchElementDao {
 	
 	//当前用户与文章互动情况
 	public Map<Long, UserAction> searchUserActionInfo(String userId,int titleId) throws SQLException;
+	
+	// 显示文章所有评论
+	public List<Object> searchUserCommentInfo(int titleId) throws SQLException;
 }

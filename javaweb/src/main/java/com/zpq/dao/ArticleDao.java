@@ -64,4 +64,5 @@ public interface ArticleDao {
 	
 	//上传文章ID到文章互动量表
 	public int UploadTitleId(int titleId) throws SQLException;
+	
 }

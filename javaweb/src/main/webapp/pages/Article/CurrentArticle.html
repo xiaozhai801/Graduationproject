@@ -1,28 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <title>当前文章</title>
-    <link href="../..//layui/css/layui.css" rel="stylesheet">
-    <script src="../..//layui/layui.js"></script>
-    <script src="../..//js/jquery-3.6.0.min.js"></script>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
     <style>
-        /* 重置 body 边距，确保内容撑满容器 */
         body {
             margin: 0;
             padding: 0;
-            min-height: 100%;
-            /* 确保内容高度撑满 */
+            min-height: 100vh;
+            background-color: #f2f2f2;
         }
 
-        /* 内容容器铺满宽度，去除最大宽度限制 */
         .article-container {
-            padding: 20px;
-            width: 100%;
-            /* 宽度撑满父级 */
-            box-sizing: border-box;
-            /* 内边距包含在宽度内 */
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .article-content {
@@ -31,30 +27,65 @@
             padding: 20px;
             background: #fff;
             border-radius: 2px;
-            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
         }
 
         .article-title {
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
+            font-size: 24px;
+        }
+
+        .comment-item {
+            margin: 10px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .action-buttons .layui-col-md4 {
+            width: auto;
+            float: none;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .comment-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .comment-list {
+            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
-    <!-- 使用 Layui 布局容器，宽度铺满 -->
     <div class="layui-container article-container">
-        <!-- 卡片面板，去除固定宽度限制 -->
         <div class="layui-card">
             <div class="layui-card-header">
-                <div class="layui-row">
+                <div class="layui-row layui-col-space10">
                     <div class="layui-col-md6">
                         <h1 id="title" class="article-title"></h1>
                     </div>
-                    <div class="layui-col-md6" style="text-align: right;">
+                    <div class="layui-col-md6 text-right">
                         <button class="layui-btn layui-btn-primary" id="btn-back">
-                            <i class="layui-icon layui-icon-return"></i> 返回
+                            <i class="layui-icon layui-icon-return"></i>返回
                         </button>
                     </div>
                 </div>
@@ -63,171 +94,218 @@
             <div class="layui-card-body">
                 <div id="content" class="article-content"></div>
 
-                <div class="layui-row">
-                    <div class="layui-col-md4" style="text-align: right;">
+                <div class="action-buttons layui-row">
+                    <div class="layui-col-md4">
                         <button class="layui-btn layui-btn-primary" id="btn-like">
-                            <i class="layui-icon layui-icon-heart"></i> 点赞
+                            <i class="layui-icon"></i><span>点赞</span>
                         </button>
                     </div>
-                    <div class="layui-col-md4" style="text-align: center;">
+                    <div class="layui-col-md4">
                         <button class="layui-btn layui-btn-primary" id="btn-favorite">
-                            <i class="layui-icon layui-icon-rate"></i> 收藏
+                            <i class="layui-icon"></i><span>收藏</span>
                         </button>
                     </div>
-                    <div class="layui-col-md4" style="text-align: left;">
-                        <button class="layui-btn layui-btn-primary" id="btn-copelink">
-                            <i class="layui-icon layui-icon-link"></i> 复制链接
+                    <div class="layui-col-md4">
+                        <button class="layui-btn layui-btn-primary" id="btn-copylink">
+                            <i class="layui-icon layui-icon-link"></i>复制链接
                         </button>
                     </div>
                 </div>
 
-                <div id="comments" class="article-footer">
-                    <h1>评论</h1>
+                <div class="comment-section">
+                    <h3>评论 <span class="layui-badge">0</span></h3>
+                    <div class="layui-form">
+                        <textarea class="layui-textarea" placeholder="请输入你的评论" rows="5"></textarea>
+                        <button type="button" class="layui-btn layui-btn-normal" id="btn-comment" style="margin-top: 10px;">
+                            提交评论
+                        </button>
+                    </div>
+                    <div id="comment-list" class="comment-list"></div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // 加载 Layui 模块
-        layui.use(['layer', 'element'], function () {
-            var layer = layui.layer;
-            var element = layui.element;
-            var urlParams = new URLSearchParams(window.location.search);
-            var titleId = urlParams.get('titleId');
-            var loadIndex = layer.load(1, { shade: 0.3 });
-            var isLiked = false;
-            var isFavorited = false;
+        const config = {
+            urls: {
+                article: '../../ShowArticleServlet',
+                action: '../../UpdateUserActionServlet',
+                comment: '../../CommentServlet'
+            },
+            icons: {
+                like: ['layui-icon-heart', 'layui-icon-heart-fill'],
+                favorite: ['layui-icon-rate', 'layui-icon-rate-solid']
+            }
+        };
 
-            $(document).ready(function () {
-                if (!titleId) {
-                    layer.alert("缺少文章ID参数", { icon: 2 });
-                    return;
+        const state = {
+            titleId: new URLSearchParams(window.location.search).get('titleId'),
+            isLiked: false,
+            isFavorited: false,
+            comments: []
+        };
+
+        const dom = {
+            title: $('#title'),
+            content: $('#content'),
+            likeBtn: $('#btn-like'),
+            favoriteBtn: $('#btn-favorite'),
+            commentList: $('#comment-list'),
+            commentInput: $('.layui-textarea'),
+            commentCount: $('.comment-section h3 .layui-badge')
+        };
+
+        const utils = {
+            showLoading: () => layui.layer.load(1, { shade: 0.3 }),
+            hideLoading: () => layui.layer.closeAll('loading'),
+            showMsg: (msg, icon = 0) => layui.layer.msg(msg, { icon }),
+            showError: error => utils.showMsg(`操作失败: ${error}`, 2)
+        };
+
+        const core = {
+            async init() {
+                if (!state.titleId) return utils.showError('缺少文章ID参数');
+                
+                try {
+                    utils.showLoading();
+                    const data = await $.ajax({
+                        url: config.urls.article,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { titleId: state.titleId }
+                    });
+
+                    if (data.code !== 0 || !data.data.length) throw data.msg;
+                    
+                    const [article, actions, comments] = data.data;
+                    dom.title.text(article.topic);
+                    dom.content.html(article.data_html);
+                    state.isLiked = actions.like;
+                    state.isFavorited = actions.favorite;
+                    state.comments = comments;
+                    
+                    core.updateButtons();
+                    core.renderComments();
+                } catch (error) {
+                    utils.showError(error);
+                } finally {
+                    utils.hideLoading();
                 }
+            },
 
-                $.ajax({
-                    url: '../../ShowArticleServlet',
-                    type: 'POST',
-                    data: { titleId: titleId },
-                    dataType: 'json',
-                    success: function (data) {
-                        layer.close(loadIndex);
-                        if (data.code === 0 && data.data.length > 0) {
-                            const article = data.data[0];
-                            const userAction = data.data[1];
-                            $('#title').text(article.topic);
-                            $('#content').html(article.data_html);
-                            isLiked = userAction.like;
-                            isFavorited = userAction.favorite;
-                            updateButtonIcons();
-                        } else {
-                            layer.alert("加载失败：" + data.msg, { icon: 2 });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        layer.close(loadIndex);
-                        console.log('AJAX 请求错误:', error);
-                        layer.alert("请求失败：" + error, { icon: 2 });
-                    }
+            updateButtons() {
+                const { likeBtn, favoriteBtn } = dom;
+                const { icons } = config;
+                
+                likeBtn.find('i')
+                    .removeClass(icons.like)
+                    .addClass(state.isLiked ? icons.like[1] : icons.like[0]);
+                
+                favoriteBtn.find('i')
+                    .removeClass(icons.favorite)
+                    .addClass(state.isFavorited ? icons.favorite[1] : icons.favorite[0]);
+            },
+
+            renderComments() {
+                dom.commentList.empty();
+                dom.commentCount.text(state.comments.length);
+                
+                state.comments.forEach(comment => {
+                    dom.commentList.append(`
+                        <div class="comment-item">
+                            <div class="layui-row">
+                                <div class="layui-col-md6">
+                                    <strong>${comment.name}</strong>
+                                </div>
+                                <div class="layui-col-md6 text-right">
+                                    <span class="layui-badge-rim">${comment.uploadTime}</span>
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px;">${comment.comment}</p>
+                        </div>
+                    `);
                 });
-            });
-            // 处理点赞和收藏图标
-            function updateButtonIcons() {
-                var likeIcon = $('#btn-like i');
-                var favoriteIcon = $('#btn-favorite i');
+            }
+        };
 
-                if (isLiked) {
-                    likeIcon.removeClass('layui-icon-heart').addClass('layui-icon-heart-fill');
-                } else {
-                    likeIcon.removeClass('layui-icon-heart-fill').addClass('layui-icon-heart');
+        const handlers = {
+            backHandler: () => window.history.back(),
+
+            async likeHandler() {
+                state.isLiked = !state.isLiked;
+                core.updateButtons();
+                
+                try {
+                    await $.post(config.urls.action, {
+                        titleId: state.titleId,
+                        like: state.isLiked
+                    });
+                    utils.showMsg(state.isLiked ? '已点赞' : '已取消点赞', 1);
+                } catch (error) {
+                    state.isLiked = !state.isLiked;
+                    core.updateButtons();
+                    utils.showError(error);
                 }
+            },
 
-                if (isFavorited) {
-                    favoriteIcon.removeClass('layui-icon-rate').addClass('layui-icon-rate-solid');
-                } else {
-                    favoriteIcon.removeClass('layui-icon-rate-solid').addClass('layui-icon-rate');
+            async favoriteHandler() {
+                state.isFavorited = !state.isFavorited;
+                core.updateButtons();
+                
+                try {
+                    await $.post(config.urls.action, {
+                        titleId: state.titleId,
+                        favorite: state.isFavorited
+                    });
+                    utils.showMsg(state.isFavorited ? '已收藏' : '已取消收藏', 1);
+                } catch (error) {
+                    state.isFavorited = !state.isFavorited;
+                    core.updateButtons();
+                    utils.showError(error);
+                }
+            },
+
+            copyHandler: () => {
+                navigator.clipboard.writeText(location.href)
+                    .then(() => utils.showMsg('链接已复制', 1))
+                    .catch(err => utils.showError(err));
+            },
+
+            async commentHandler() {
+                const content = dom.commentInput.val().trim();
+                if (!content) return utils.showMsg('请输入评论内容', 3);
+                
+                try {
+                    await $.post(config.urls.comment, {
+                        titleId: state.titleId,
+                        comment: content
+                    });
+                    
+                    dom.commentInput.val('');
+                    const newComment = {
+                        name: '当前用户',
+                        comment: content,
+                        uploadTime: new Date().toLocaleString()
+                    };
+                    state.comments.unshift(newComment);
+                    core.renderComments();
+                    utils.showMsg('评论提交成功', 1);
+                } catch (error) {
+                    utils.showError(error);
                 }
             }
+        };
 
-            // 返回按钮点击事件
-            $('#btn-back').click(function () {
-                window.history.back();
-            });
+        layui.use(() => {
+            $('#btn-back').click(handlers.backHandler);
+            $('#btn-like').click(() => handlers.likeHandler());
+            $('#btn-favorite').click(() => handlers.favoriteHandler());
+            $('#btn-copylink').click(handlers.copyHandler);
+            $('#btn-comment').click(handlers.commentHandler);
 
-            // 复制链接点击事件
-            $('#btn-copelink').click(function () {
-                navigator.clipboard.writeText(window.location.href)
-                   .then(() => layer.msg('复制链接成功', { icon: 1 }))
-                   .catch((err) => layer.msg('复制链接失败: ' + err, { icon: 2 }));
-            });
-
-            // 点赞点击事件
-            $('#btn-like').click(function () {
-                isLiked = !isLiked;
-                // 更新前端状态
-                updateButtonIcons();
-                // 发送请求更新数据库中的点赞状态
-                $.ajax({
-                    url: '../../UpdateUserActionServlet',
-                    type: 'POST',
-                    data: { titleId: titleId, like: isLiked },
-                    success: function (res) {
-                        let tipMsg = '';
-                        if (res == "like success") {
-                            tipMsg = '点赞';
-                        } else if (res == "nolike success") {
-                            tipMsg = '取消点赞';
-                        } else {
-                            tipMsg = '点赞失败: ' + res.msg;
-                        }
-                        layer.tips(tipMsg, '#btn-like', {
-                            tips: [1, '#31bdec'],
-                            time: 2000
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        layer.tips('请求失败: ' + error, '#btn-like', {
-                            tips: [3, '#000'],
-                            time: 2000
-                        });
-                    }
-                });
-            });
-
-            // 收藏点击事件
-            $('#btn-favorite').click(function () {
-                isFavorited = !isFavorited;
-                updateButtonIcons();
-                // 发送请求更新数据库中的收藏状态
-                $.ajax({
-                    url: '../../UpdateUserActionServlet',
-                    type: 'POST',
-                    data: { titleId: titleId, favorite: isFavorited },
-                    success: function (res) {
-                        let tipMsg = '';
-                        if (res == "favorite success") {
-                            tipMsg = '收藏';
-                        } else if (res == "nofavorite success") {
-                            tipMsg = '取消收藏';
-                        } else {
-                            tipMsg = '收藏失败: ' + res.msg;
-                        }
-                        layer.tips(tipMsg, '#btn-favorite', {
-                            tips: [1, '#31bdec'],
-                            time: 2000
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        layer.tips('请求失败: ' + error, '#btn-favorite', {
-                            tips: [3, '#000'],
-                            time: 2000
-                        });
-                    }
-                });
-            });
+            core.init();
         });
     </script>
 </body>
-
-</html>    
+</html>

@@ -44,7 +44,47 @@ public class ShowArticleServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		// 获取页面传入标题ID
+		int titleId = Integer.parseInt(request.getParameter("titleId"));
+
+		// 获取请求中的用户ID
+		Cookie[] cookies = request.getCookies();
+		String role = null;
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("role".equals(cookie.getName())) {
+					role = cookie.getValue();
+				}
+			}
+		}
+
+		if (role.equals("admin")) {
+			SearchElementDao searchElement = new SearchElementDaoImpl();
+			ArticleDao articleDao = new ArticleDaoImpl();
+			Map<Integer, Article> articleInfo;
+			try {
+				// 获取当前所选择的文章信息
+				articleInfo = searchElement.searchArticleInfo("titleId", titleId + "");
+				List<Object> resultList = new ArrayList<>();
+				resultList.add(articleInfo.get(titleId));
+
+				Vo vo = new Vo();
+				vo.setCode(0);
+				vo.setMsg("success");
+				vo.setCount(articleDao.countArticle());
+				vo.setData(resultList);
+				response.getWriter().write(JSONObject.toJSON(vo).toString());
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+
+		}
 	}
 
 	/**
@@ -58,7 +98,7 @@ public class ShowArticleServlet extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		// 获取页面传入标题ID
 		int titleId = Integer.parseInt(request.getParameter("titleId"));
-		
+
 		// 获取请求中的用户ID
 		Cookie[] cookies = request.getCookies();
 		String name = null;
@@ -71,21 +111,27 @@ public class ShowArticleServlet extends HttpServlet {
 			}
 		}
 
-		SearchElementDao searchElement=new SearchElementDaoImpl();
-		ArticleDao articleDao=new ArticleDaoImpl();
+		SearchElementDao searchElement = new SearchElementDaoImpl();
+		ArticleDao articleDao = new ArticleDaoImpl();
 		Map<Integer, Article> articleInfo;
 		Map<Long, UserAction> userActionInfo;
+		List<Object> userCommentInfo;
 		try {
 			// 获取当前登录用户所选择的文章信息,第一段json
-			articleInfo=searchElement.searchArticleInfo("titleId", titleId+"");
-			List<Object> resultList=new ArrayList<>();
+			articleInfo = searchElement.searchArticleInfo("titleId", titleId + "");
+			List<Object> resultList = new ArrayList<>();
 			resultList.add(articleInfo.get(titleId));
-			
+
 			// 获取当前用户是否与该文章互动情况,第二段json
-			userActionInfo=searchElement.searchUserActionInfo(name, titleId);
-			long id=(long) titleId*10+Integer.parseInt(name);
+			userActionInfo = searchElement.searchUserActionInfo(name, titleId);
+			long id = (long) titleId * 10 + Integer.parseInt(name);
 			resultList.add(userActionInfo.get(id));
-			
+
+			// 获取当前文章评论信息,第三段json
+			userCommentInfo = searchElement.searchUserCommentInfo(titleId);
+
+			resultList.add(userCommentInfo);
+
 			Vo vo = new Vo();
 			vo.setCode(0);
 			vo.setMsg("success");

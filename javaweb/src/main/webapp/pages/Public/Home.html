@@ -14,30 +14,26 @@
 	box-sizing: border-box;
 	min-height: auto !important;
 }
-/* 可选：调整内部绝对定位元素 */
 .layui-panel.layui-col-xs6>div[style*="position: absolute"] {
 	height: calc(100% - 20px);
-	width: auto; /* 保持图片比例 */
+	width: auto;
 }
-/* 原有高度设置 */
 .layui-panel.layui-col-xs6 {
 	height: 230px;
 	box-sizing: border-box;
 	min-height: auto !important;
-	transition: transform 0.3s ease; /* 添加过渡动画 */
-	cursor: pointer; /* 可选：鼠标指针样式 */
+	transition: transform 0.3s ease;
+	cursor: pointer;
 }
 
-/* 鼠标悬停放大效果 */
 .layui-panel.layui-col-xs6:hover {
 	transform: scale(1.03); /* 放大 3% */
-	z-index: 1; /* 确保放大时浮于其他元素之上 */
-	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 可选：添加阴影增强立体感 */
+	z-index: 1;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* 修复绝对定位子元素可能被遮挡的问题 */
 .layui-panel.layui-col-xs6:hover>div[style*="position: absolute"] {
-	z-index: 2; /* 确保图片/按钮等子元素不被父容器遮挡 */
+	z-index: 2;
 }
 </style>
 

@@ -3,7 +3,9 @@ package com.zpq.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.zpq.pojo.Article;
@@ -11,6 +13,7 @@ import com.zpq.pojo.Draft;
 import com.zpq.pojo.Model;
 import com.zpq.pojo.User;
 import com.zpq.pojo.UserAction;
+import com.zpq.pojo.UserComment;
 import com.zpq.utils.DBUtil;
 
 public class SearchElementDaoImpl implements SearchElementDao {
@@ -148,6 +151,33 @@ public class SearchElementDaoImpl implements SearchElementDao {
 			userActionInfo.put(userAction.getId(), userAction);
 		}
 		return userActionInfo;		// 返回查询到的用户行为
+	}
+
+	@Override
+	public List<Object> searchUserCommentInfo(int titleId) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+
+		List<Object> userCommentInfo=new ArrayList<>();
+		String sql = "select * from c_usercomment where titleId=?";
+		// 获取预编译的SQL语句对象
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, titleId);
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			UserComment userComment=new UserComment();
+			userComment.setId(rs.getLong("id"));
+			userComment.setUserId(rs.getString("userId"));
+			userComment.setName(rs.getString("name"));
+			userComment.setTitleId(rs.getInt("titleId"));
+			userComment.setComment(rs.getString("comment"));
+			userComment.setUploadTime(rs.getString("uploadTime"));
+			userCommentInfo.add(userComment);
+		}
+
+		// 返回查询到的型号对象列表
+		return userCommentInfo;
 	}
 
 }

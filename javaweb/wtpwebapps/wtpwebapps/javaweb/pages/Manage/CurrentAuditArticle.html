@@ -87,7 +87,7 @@
 
 				$.ajax({
 					url : '../../ShowArticleServlet',
-					type : 'POST',
+					type : 'GET',
 					data : {
 						titleId : titleId
 					},
@@ -111,7 +111,7 @@
 					error : function(xhr, status, error) {
 						layer.close(loadIndex);
 						console.log('AJAX 请求错误:', error); // 打印错误信息
-						layer.alert("请求失败：" + error, {
+						layer.msg("请求失败：" + error, {
 							icon : 2
 						});
 					}
@@ -146,7 +146,7 @@
 						error : function(xhr, status, error) {
 							layer.close(loadIndex);
 							console.log('AJAX 请求错误:', error); // 打印错误信息
-							layer.alert("请求失败：" + error, {
+							layer.msg("请求失败：" + error, {
 								icon : 2
 							});
 						}
@@ -183,7 +183,7 @@
 						error : function(xhr, status, error) {
 							layer.close(loadIndex);
 							console.log('AJAX 请求错误:', error); // 打印错误信息
-							layer.alert("请求失败：" + error, {
+							layer.msg("请求失败：" + error, {
 								icon : 2
 							});
 						}
@@ -220,7 +220,7 @@
 						error : function(xhr, status, error) {
 							layer.close(loadIndex);
 							console.log('AJAX 请求错误:', error); // 打印错误信息
-							layer.alert("请求失败：" + error, {
+							layer.msg("请求失败：" + error, {
 								icon : 2
 							});
 						}
