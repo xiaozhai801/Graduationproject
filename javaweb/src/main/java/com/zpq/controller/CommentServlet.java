@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zpq.dao.UserDao;
 import com.zpq.dao.UserDaoImpl;
-
+//提交评论
 /**
  * Servlet implementation class SubmitReviewServlet
  */

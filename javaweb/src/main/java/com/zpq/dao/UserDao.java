@@ -6,6 +6,9 @@ import com.zpq.pojo.Admin;
 import com.zpq.pojo.User;
 
 public interface UserDao {
+	// 更新文章列表信息
+	public void Updateinformation(int titleId) throws SQLException;
+	
 	// 查询管理员列表
 	public Admin selectAdmin(String name, String password) throws SQLException;
 

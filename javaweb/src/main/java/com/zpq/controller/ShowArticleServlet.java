@@ -21,7 +21,7 @@ import com.zpq.dao.SearchElementDaoImpl;
 import com.zpq.pojo.Article;
 import com.zpq.pojo.UserAction;
 import com.zpq.pojo.Vo;
-
+//当前文章显示内容
 /**
  * Servlet implementation class ShowArticleServlet
  */

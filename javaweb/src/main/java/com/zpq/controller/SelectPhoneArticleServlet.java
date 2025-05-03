@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zpq.dao.ArticleDao;
 import com.zpq.dao.ArticleDaoImpl;
 import com.zpq.pojo.Vo;
-
+//按机型查询文章列表
 /**
  * Servlet implementation class SelectPhoneArticleServlet
  */

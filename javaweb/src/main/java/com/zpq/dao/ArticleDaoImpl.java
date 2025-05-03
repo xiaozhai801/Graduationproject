@@ -44,6 +44,7 @@ public class ArticleDaoImpl implements ArticleDao {
 			article.setRelease(rs.getInt("release"));
 			article.setViews(rs.getInt("views"));
 			article.setLikes(rs.getInt("likes"));
+			article.setFavorites(rs.getInt("favorites"));
 			articleList.add(article);
 		}
 		// 返回查询到的文章对象列表

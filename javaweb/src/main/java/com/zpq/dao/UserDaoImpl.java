@@ -10,11 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zpq.pojo.Admin;
+import com.zpq.pojo.Article;
 import com.zpq.pojo.User;
 import com.zpq.utils.DBUtil;
 
 public class UserDaoImpl implements UserDao {
-	// 连接数据库查找管理员名和密码
+	@Override
+	public void Updateinformation(int titleId) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		Article article=new Article();
+		String selectSql="SELECT (SELECT COUNT(*) FROM c_useractions WHERE titleId =2025050314) as views,likeCount as likes,favoriteCount as favorties FROM c_actioncounts WHERE titleId =?;";
+		PreparedStatement ps = dbUtil.getPreparedStatement(selectSql);
+		ps.setInt(1, titleId);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			article.setViews(rs.getInt("views"));
+			article.setLikes(rs.getInt("likes"));
+			article.setFavorites(rs.getInt("favorties"));
+		}
+		
+		String updateSql = "UPDATE v_articleinfo set views=?,likes=?,favorites=? where titleId=?";
+		ps = dbUtil.getPreparedStatement(updateSql);
+		ps.setInt(1, article.getViews());
+		ps.setInt(2, article.getLikes());
+		ps.setInt(3, article.getFavorites());
+		ps.setInt(4, titleId);
+		ps.executeUpdate();
+	}
+
 	@Override
 	public Admin selectAdmin(String name, String password) throws SQLException {
 		Admin admin = new Admin();
@@ -111,15 +135,15 @@ public class UserDaoImpl implements UserDao {
 
 		// 执行插入操作，对于插入语句使用 executeUpdate
 		int rowsAffected = ps.executeUpdate();
-		//添加初始头像
+		// 添加初始头像
 		String avatarSql = "UPDATE v_userinfo SET avatar = '/javaweb/img/test.jpg' WHERE userId = ?";
 		PreparedStatement avatarPs = dbUtil.getPreparedStatement(avatarSql);
 		avatarPs.setString(1, name);
-	    int avatarRs = avatarPs.executeUpdate();
-	    if (avatarRs!=1) {
-	    	return null;
+		int avatarRs = avatarPs.executeUpdate();
+		if (avatarRs != 1) {
+			return null;
 		}
-	    
+
 		// 检查是否插入成功
 		if (rowsAffected > 0) {
 			return "success";
@@ -159,45 +183,75 @@ public class UserDaoImpl implements UserDao {
 		ps.setString(2, user.getPassword());
 		ps.setString(3, user.getName());
 		ps.executeUpdate();
-		
-        String countSql = "SELECT ROW_COUNT() as count";
+
+		String countSql = "SELECT ROW_COUNT() as count";
 		// 没有?占位符，用Statement
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(countSql);
 		rs.next();
-		if (rs.getInt("count")==1) {
+		if (rs.getInt("count") == 1) {
 			return 1;
 		}
 		return 0;
 	}
 
 	@Override
-	public int Thumbsup(long id, String userId, int titleId,boolean like) throws SQLException {
+	public int Thumbsup(long id, String userId, int titleId, boolean like) throws SQLException {
 		// TODO Auto-generated method stub
-		DBUtil dbUtil = new DBUtil();	
-		String sql = "UPDATE c_useractions SET `like`=? WHERE id=? and userId =? and titleId=?;";
-		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		DBUtil dbUtil = new DBUtil();
+		String ActionSql = "UPDATE c_useractions SET `like`=? WHERE id=? and userId =? and titleId=?;";
+		PreparedStatement ps = dbUtil.getPreparedStatement(ActionSql);
 		ps.setBoolean(1, like);
 		ps.setLong(2, id);
 		ps.setString(3, userId);
 		ps.setInt(4, titleId);
-		
+
 		int row = ps.executeUpdate();
+		if (row != 1) {
+			return -1;
+		}
+
+		String likeSql;
+		if (like == true) {
+			likeSql = "UPDATE c_actioncounts SET likeCount=likeCount+1 WHERE titleId=?;";
+		} else {
+			likeSql = "UPDATE c_actioncounts SET likeCount=likeCount-1 WHERE titleId=?;";
+		}
+		ps = dbUtil.getPreparedStatement(likeSql);
+		ps.setInt(1, titleId);
+
+		row = ps.executeUpdate();
+		Updateinformation(titleId);
 		return row;
 	}
 
 	@Override
 	public int Collect(long id, String userId, int titleId, boolean favorite) throws SQLException {
 		// TODO Auto-generated method stub
-		DBUtil dbUtil = new DBUtil();	
+		DBUtil dbUtil = new DBUtil();
 		String sql = "UPDATE c_useractions SET favorite=? WHERE id=? and userId =? and titleId=?;";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setBoolean(1, favorite);
 		ps.setLong(2, id);
 		ps.setString(3, userId);
 		ps.setInt(4, titleId);
-		
+
 		int row = ps.executeUpdate();
+		if (row != 1) {
+			return -1;
+		}
+
+		String favoriteSql;
+		if (favorite == true) {
+			favoriteSql = "UPDATE c_actioncounts SET favoriteCount=favoriteCount+1 WHERE titleId=?;";
+		} else {
+			favoriteSql = "UPDATE c_actioncounts SET favoriteCount=favoriteCount-1 WHERE titleId=?;";
+		}
+		ps = dbUtil.getPreparedStatement(favoriteSql);
+		ps.setInt(1, titleId);
+
+		row = ps.executeUpdate();
+		Updateinformation(titleId);
 		return row;
 	}
 
@@ -207,11 +261,11 @@ public class UserDaoImpl implements UserDao {
 		DBUtil dbUtil = new DBUtil();
 		// 获取当前时间戳
 		Timestamp uploadTime = new Timestamp(System.currentTimeMillis());
-		
-		SearchElementDao searchElementDao=new SearchElementDaoImpl();
-		User user=searchElementDao.searchUserInfo("userId",userId).get(userId);
-		String name=user.getName();
-		
+
+		SearchElementDao searchElementDao = new SearchElementDaoImpl();
+		User user = searchElementDao.searchUserInfo("userId", userId).get(userId);
+		String name = user.getName();
+
 		String sql = "INSERT INTO c_usercomment (id, userId, `name`, titleId, `comment`,uploadTime) VALUES (?,?,?,?,?,?);";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setLong(1, id);
@@ -224,4 +278,5 @@ public class UserDaoImpl implements UserDao {
 		int row = ps.executeUpdate();
 		return row;
 	}
+
 }
