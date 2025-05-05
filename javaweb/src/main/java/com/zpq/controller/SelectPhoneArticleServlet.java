@@ -49,7 +49,7 @@ public class SelectPhoneArticleServlet extends HttpServlet {
 			Vo vo = new Vo();
 			vo.setCode(0);
 			vo.setMsg("success");
-			vo.setCount(articleDao.countArticle());
+			vo.setCount(articleDao.countModelArticle(model));
 			vo.setData(articleList);
 			response.getWriter().write(JSONObject.toJSON(vo).toString());
 		} catch (SQLException e) {

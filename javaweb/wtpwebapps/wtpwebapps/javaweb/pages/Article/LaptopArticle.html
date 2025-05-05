@@ -16,17 +16,27 @@ html, body {
 	/* overflow-x: hidden; */
 	overflow: hidden;
 }
+#article-list {
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+.layui-card {
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.layui-card-header {
+    padding: 15px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.layui-card-body {
+    padding: 15px;
+}
 </style>
-</head><body>
+</head>
+<body>
     <form class="layui-form layui-row layui-col-space16">
         <div class="layui-form-item">
-            <div class="layui-input-inline">
-                <div class="layui-inline">
-                    <input type="text" name="titleId" value="" placeholder="文章ID" class="layui-input" lay-affix="clear"
-                        style="width: 150px;">
-                </div>
-            </div>
-
             <div class="layui-input-inline">
                 <div class="layui-inline">
                     <input type="text" name="topic" placeholder="标题" lay-affix="clear" class="layui-input"
@@ -50,99 +60,103 @@ html, body {
             </div>
         </div>
     </form>
-    <table class="layui-hide" id="ID-table-demo-search"></table>
-
+    <div id="article-list"></div>
 
     <script>
-        layui.use(function () {
+        layui.use(['table', 'form'], function () {
             var table = layui.table;
             var form = layui.form;
-            var laydate = layui.laydate;
-            var dropdown = layui.dropdown;
-            // 创建表格实例
-            table.render({
-                elem: '#ID-table-demo-search',
-                url: '../../SelectPhoneArticleServlet',
-                page: true,
-                where: {
-                    model: '笔记本电脑'
-                },
-                cols: [
-                    [
-                        {
-                            field: 'titleId',
-                            title: '文章ID',
-                            width: 150,
-                            sort: true,
-                            fixed: true
-                        },
-                        {
-                            field: 'topic',
-                            title: '标题',
-                            width: 740,
-        					templet : function(d) {
-        						var link = "CurrentArticle.html?titleId=" + d.titleId;
-        						return '<a href="' + link + '">' + d.topic + '</a>';
-        					}
-                        },
-                        {
-                            field: 'name',
-                            title: '作者',
-                            width: 120,
-                            sort: true
-                        },
-                        {
-                            field: 'uploadTime',
-                            title: '发布日期',
-                            width: 200,
-                            sort: true
-                        },
-                        {
-                            field:'model',
-                            title: '机型',
-                            width: 100
-                        },
-                        {
-                            field: 'views',
-                            title: '浏览量',
-                            width: 100
-                        },
-                        {
-                            field: 'likes',
-                            title: '点赞量',
-                            width: 100
+
+            var page = 1;
+            var limit = 10;
+            var loading = false;
+            var searchParams = { model: '笔记本电脑' };
+
+            function loadArticles(isSearch) {
+                if (loading) return;
+                loading = true;
+
+                if (isSearch) {
+                    page = 1;
+                    $('#article-list').html('');
+                }
+
+                var url = '../../SearchArticleServlet';
+                var params = {
+                    page: page,
+                    limit: limit,
+                   ...searchParams
+                };
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: params,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 0) {
+                            var data = res.data.filter(function (item) {
+                                return item.release == 1;
+                            });
+
+                            data.forEach(function (item) {
+                                var link = "CurrentArticle.html?titleId=" + item.titleId;
+                                var articleHtml = `
+                                    <div class="layui-card" style="margin-bottom: 20px;">
+                                        <div class="layui-card-header">
+                                            <h2 style="font-size: 20px; margin-bottom: 5px;"><a href="${link}">${item.topic || '无标题'}</a></h2>
+                                            <div style="color: #666; font-size: 12px;">
+                                                <span>作者：${item.name || '匿名'}</span>
+                                                <span style="margin-left: 15px;">发布于：${item.uploadTime || '未知时间'}</span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <div style="margin-top: 15px; color: #888; font-size: 12px;">
+                                                <span>浏览：${item.views || 0}</span>
+                                                <span style="margin-left: 15px;">收藏：${item.favorites || 0}</span>
+                                                <span style="margin-left: 15px;">点赞：${item.likes || 0}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#article-list').append(articleHtml);
+                            });
+
+                            if (data.length > 0) {
+                                page++;
+                            }
                         }
-                    ]
-                ],
-                height: 'full-55',
-	            parseData: function(res) {
-	                if (res.code === 0) {
-	                    res.data = res.data.filter(function(item) {
-	                        return item.release == 1;
-	                    });
-	                }
-	                return res;
-	            }
+                        loading = false;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('请求出错:', textStatus, errorThrown);
+                        loading = false;
+                    }
+                });
+            }
+
+            // 初始加载
+            loadArticles(false);
+
+            // 滚动加载
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                    loadArticles(false);
+                }
             });
 
             // 搜索提交
             form.on('submit(demo-table-search)', function (data) {
-                var field = data.field;
-                field.model = '笔记本电脑';
-                // 执行搜索重载
-                table.reload('ID-table-demo-search', {
-                    page: {
-                        curr: 1 // 重新从第 1 页开始
-                    },
-                    url: '../../SearchArticleServlet',
-                    where: field // 搜索的字段
-                });
-                return false; // 阻止默认 form 跳转
+                // 清空之前的搜索参数
+                searchParams = { model: '笔记本电脑' };
+                // 合并新的搜索参数
+                Object.assign(searchParams, data.field);
+                loadArticles(true);
+                return false;
             });
         });
     </script>
 
 </body>
-
 </html>
     

@@ -16,6 +16,9 @@ public interface ArticleDao {
 
 	// 所有文章数量
 	public int countArticle() throws SQLException;
+	
+	// 分机型文章数量
+	public int countModelArticle(String model) throws SQLException;
 
 	// 搜索文章列表
 	public List<Object> searchArticle(Article article, int page, int limit) throws SQLException;

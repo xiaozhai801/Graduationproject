@@ -23,33 +23,17 @@ import com.zpq.pojo.Vo;
 public class SearchArticleServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 构造函数
-     */
     public SearchArticleServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    /**
-     * 获取请求参数的值，如果参数为空则返回默认值
-     * @param request HttpServletRequest对象
-     * @param paramName 参数名
-     * @param defaultValue 默认值
-     * @return 参数值或默认值
-     */
     private String getParamValue(HttpServletRequest request, String paramName, String defaultValue) {
         String value = request.getParameter(paramName);
         return (value != null && !value.isEmpty())? value : defaultValue;
     }
 
-    /**
-     * 处理GET请求
-     * @param request HttpServletRequest对象
-     * @param response HttpServletResponse对象
-     * @throws ServletException Servlet异常
-     * @throws IOException IO异常
-     */
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // 解析分页参数page
@@ -97,13 +81,6 @@ public class SearchArticleServlet extends HttpServlet {
         }
     }
 
-    /**
-     * 处理POST请求，直接调用doGet方法处理
-     * @param request HttpServletRequest对象
-     * @param response HttpServletResponse对象
-     * @throws ServletException Servlet异常
-     * @throws IOException IO异常
-     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }

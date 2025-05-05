@@ -13,8 +13,14 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="UploadArticleReview"/>
+		<item key="selection" value="loadArticles"/>
 		<list key="findhistory">
+			<item value="loadArticles"/>
+			<item value="searchParams"/>
+			<item value=" ...searchParams"/>
+			<item value="params"/>
+			<item value="scrollElem"/>
+			<item value="selectArticle"/>
 			<item value="UploadArticleReview"/>
 			<item value="uploadArticle"/>
 			<item value="searchUserActionInfo"/>
@@ -24,12 +30,6 @@
 			<item value="deleteDraftArticle"/>
 			<item value="draftId"/>
 			<item value="releaseStatusInput"/>
-			<item value="selectMyDraftArticle"/>
-			<item value="&lt;!DOCTYPE html&gt;"/>
-			<item value="searchMyArticle"/>
-			<item value="countMyArticle"/>
-			<item value="name"/>
-			<item value="overflow-y: auto;"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
@@ -40,10 +40,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1047"/>
-		<item key="DIALOG_Y_ORIGIN" value="393"/>
-		<item key="DIALOG_WIDTH" value="369"/>
-		<item key="DIALOG_HEIGHT" value="454"/>
-		<item key="DIALOG_FONT_NAME" value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI"/>
+		<item key="DIALOG_X_ORIGIN" value="1181"/>
+		<item key="DIALOG_Y_ORIGIN" value="352"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_HEIGHT" value="410"/>
+		<item key="DIALOG_FONT_NAME" value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|5|0|Microsoft YaHei UI"/>
 	</section>
 </section>

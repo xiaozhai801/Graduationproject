@@ -302,6 +302,9 @@ public class ArticleDaoImpl implements ArticleDao {
 			article.setRelease(rs.getInt("release"));
 			article.setViews(rs.getInt("views"));
 			article.setLikes(rs.getInt("likes"));
+			article.setFavorites(rs.getInt("favorites"));
+			article.setData_html(rs.getString("data_html"));
+			article.setData_text(rs.getString("data_text"));
 			articleList.add(article);
 		}
 		// 返回查询到的文章对象列表
@@ -602,4 +605,22 @@ public class ArticleDaoImpl implements ArticleDao {
 		int row = ps.executeUpdate();
 		return row;
 	}
+
+	@Override
+	public int countModelArticle(String model) throws SQLException {
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL语句，统计v_articleinfo表中的记录数量，使用count(*)函数，并将结果命名为sum
+		String sql = "SELECT count(*) as sum FROM v_articleinfo where model=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+        ps.setString(1, model);
+        ResultSet rs = ps.executeQuery();
+        int count = 0;
+        if (rs.next()) {
+            count = rs.getInt("sum");
+        }
+        return count;
+	}
+
+
 }
