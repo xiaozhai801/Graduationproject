@@ -8,7 +8,7 @@ import com.zpq.pojo.User;
 public interface UserDao {
 	// 更新文章列表信息
 	public void Updateinformation(int titleId) throws SQLException;
-	
+
 	// 查询管理员列表
 	public Admin selectAdmin(String name, String password) throws SQLException;
 
@@ -31,12 +31,18 @@ public interface UserDao {
 	public int EditPersonalPassword(User user, String newPassword) throws SQLException;
 
 	// 用户点赞文章
-	public int Thumbsup(long id,String userId,int titleId,boolean like) throws SQLException;
-	
+	public int Thumbsup(long id, String userId, int titleId, boolean like) throws SQLException;
+
 	// 用户收藏文章
-	public int Collect(long id,String userId,int titleId,boolean favorite) throws SQLException;
-	
+	public int Collect(long id, String userId, int titleId, boolean favorite) throws SQLException;
+
 	// 用户提交评论
-	public int SubmitComment(long id,String userId,int titleId,String comment) throws SQLException;
+	public int SubmitComment(long id, String userId, int titleId, String comment) throws SQLException;
+
+	// 查询用户收藏文章
+	public List<Object> SelectMyFavorite(String userId) throws SQLException;
 	
+	// 用户收藏文章数量
+	public int CountMyFavorite(String userId) throws SQLException;
+
 }

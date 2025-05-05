@@ -18,6 +18,8 @@ import com.zpq.dao.ArticleDao;
 import com.zpq.dao.ArticleDaoImpl;
 import com.zpq.dao.SearchElementDao;
 import com.zpq.dao.SearchElementDaoImpl;
+import com.zpq.dao.UserDao;
+import com.zpq.dao.UserDaoImpl;
 import com.zpq.pojo.Article;
 import com.zpq.pojo.UserAction;
 import com.zpq.pojo.Vo;
@@ -36,7 +38,7 @@ public class ShowArticleServlet extends HttpServlet {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -48,7 +50,14 @@ public class ShowArticleServlet extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		// 获取页面传入标题ID
 		int titleId = Integer.parseInt(request.getParameter("titleId"));
-
+		UserDao userDao=new UserDaoImpl();
+		try {
+			userDao.Updateinformation(titleId);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// 获取请求中的用户ID
 		Cookie[] cookies = request.getCookies();
 		String role = null;
@@ -98,7 +107,14 @@ public class ShowArticleServlet extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		// 获取页面传入标题ID
 		int titleId = Integer.parseInt(request.getParameter("titleId"));
-
+		UserDao userDao=new UserDaoImpl();
+		try {
+			userDao.Updateinformation(titleId);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// 获取请求中的用户ID
 		Cookie[] cookies = request.getCookies();
 		String name = null;

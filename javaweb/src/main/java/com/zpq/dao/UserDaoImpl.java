@@ -20,9 +20,10 @@ public class UserDaoImpl implements UserDao {
 		// TODO Auto-generated method stub
 		DBUtil dbUtil = new DBUtil();
 		Article article=new Article();
-		String selectSql="SELECT (SELECT COUNT(*) FROM c_useractions WHERE titleId =2025050314) as views,likeCount as likes,favoriteCount as favorties FROM c_actioncounts WHERE titleId =?;";
+		String selectSql="SELECT (SELECT COUNT(*) FROM c_useractions WHERE titleId =?) as views,likeCount as likes,favoriteCount as favorties FROM c_actioncounts WHERE titleId =?;";
 		PreparedStatement ps = dbUtil.getPreparedStatement(selectSql);
 		ps.setInt(1, titleId);
+		ps.setInt(2, titleId);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			article.setViews(rs.getInt("views"));
@@ -277,6 +278,50 @@ public class UserDaoImpl implements UserDao {
 
 		int row = ps.executeUpdate();
 		return row;
+	}
+
+	@Override
+	public List<Object> SelectMyFavorite(String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		List<Object> myFavoriteList=new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM v_articleinfo where titleId in (SELECT titleId FROM c_useractions where userId=? and favorite=1)";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			Article article = new Article();
+			article.setTitleId(rs.getInt("titleId"));
+			article.setUserId(rs.getString("userId"));
+			article.setName(rs.getString("name"));
+			article.setTopic(rs.getString("topic"));
+			article.setModel(rs.getString("model"));
+			article.setUploadTime(rs.getString("uploadTime"));
+			article.setRelease(rs.getInt("release"));
+			article.setViews(rs.getInt("views"));
+			article.setLikes(rs.getInt("likes"));
+			article.setFavorites(rs.getInt("favorites"));
+			article.setData_html(rs.getString("data_html"));
+			article.setData_text(rs.getString("data_text"));
+			myFavoriteList.add(article);
+		}
+		return myFavoriteList;
+	}
+
+	@Override
+	public int CountMyFavorite(String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT count(*) as sum FROM c_useractions where userId=? and favorite=1";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		return 0;
 	}
 
 }
