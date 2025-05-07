@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>所有文章</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+    .article-list {
+        padding: 15px;
+        overflow-y: auto;
+        height: calc(100vh - 100px);
+    }
+    
+    .layui-card-header h2 {
+        margin-bottom: 10px;
+    }
+    
+    .layui-card {
+        transition: all 0.3s;
+    }
+    
+    .layui-card:hover {
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    .loading-more {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+    }
+</style>
+
+<body>
+    <form class="layui-form layui-row layui-col-space16">
+        <!-- 保持原有搜索表单结构不变 -->
+        <div class="layui-form-item">
+            <!-- 原有搜索条件 -->
+            <div class="layui-input-inline">
+                <input type="text" name="titleId" placeholder="文章ID" class="layui-input" lay-affix="clear" style="width: 150px;">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="topic" placeholder="标题" class="layui-input" style="width: 150px;">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="name" placeholder="作者" class="layui-input" style="width: 150px;">
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn demo-dropdown-base" type="button" style="width: 120px;">
+                        <span>机型</span> 
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="model" id="modelInput">
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="search-form">
+                    <i class="layui-icon layui-icon-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 文章列表容器 -->
+    <div class="article-list" id="article-list"></div>
+    <div class="loading-more" id="loading-more">加载中...</div>
+
+    <script>
+        layui.use(['form', 'flow', 'dropdown'], function() {
+            var form = layui.form;
+            var flow = layui.flow;
+            var dropdown = layui.dropdown;
+            var $ = layui.$;
+
+            // 初始化机型下拉
+            dropdown.render({
+                elem: '.demo-dropdown-base',
+                data: [
+                    { title: '手机', id: 100 },
+                    { title: '笔记本电脑', id: 101 },
+                    { title: '游戏主机', id: 102 }
+                ],
+                click: function(obj) {
+                    $(this.elem).find('span').text(obj.title);
+                    $('#modelInput').val(obj.title);
+                }
+            });
+
+            // 加载函数
+            function loadArticles(params, callback) {
+                $.ajax({
+                    url: '../../SearchArticleServlet',
+                    data: params,
+                    success: function(res) {
+                        if (res.code === 0) {
+                            callback(res.data, res.count || 0);
+                        }
+                    }
+                });
+            }
+
+            // 首次加载
+            var currentParams = {}; // 当前搜索参数
+
+            // 滚动加载
+            flow.load({
+                elem: '#article-list',
+                done: function(page, next) {
+                    var params = $.extend({}, currentParams, {
+                        page: page,
+                        limit: 10 // 每页数量
+                    });
+
+                    loadArticles(params, function(data, count) {
+                        var html = '';
+                        layui.each(data, function(index, item) {
+                            html += `
+                                <div class="layui-card" style="margin-bottom: 20px;">
+                                    <div class="layui-card-header">
+                                        <h2 style="font-size: 20px; margin-bottom: 5px;">
+                                            <a href="CurrentArticle.html?titleId=${item.titleId}">${item.topic || '无标题'}</a>
+                                        </h2>
+                                        <div style="color: #666; font-size: 12px;">
+                                            <span>作者：${item.name || '匿名'}</span>
+                                            <span style="margin-left: 15px;">发布于：${item.uploadTime || '未知时间'}</span>
+                                            <span style="margin-left: 15px;">机型：${item.model || '不限'}</span>
+                                        </div>
+                                    </div>
+                                    <div class="layui-card-body">
+                                        <div style="margin-top: 15px; color: #888; font-size: 12px;">
+                                            <span>浏览：${item.views || 0}</span>
+                                            <span style="margin-left: 15px;">收藏：${item.favorites || 0}</span>
+                                            <span style="margin-left: 15px;">点赞：${item.likes || 0}</span>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                        next(html, page < Math.ceil(count / 10)); // 判断是否还有下一页
+                    });
+                }
+            });
+
+            // 搜索提交
+            form.on('submit(search-form)', function(data) {
+                currentParams = data.field; // 更新搜索参数
+                $('#article-list').empty(); // 清空当前内容
+                flow.reload(); // 重新加载数据
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

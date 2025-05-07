@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>维修指南</title>
+<link href="../..//layui/css/layui.css" rel="stylesheet">
+<script src="../..//layui/layui.js"></script>
+<script src="../..//js/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+.layui-panel.layui-col-xs6 {
+	height: 230px;
+	box-sizing: border-box;
+	min-height: auto !important;
+}
+.layui-panel.layui-col-xs6>div[style*="position: absolute"] {
+	height: calc(100% - 20px);
+	width: auto;
+}
+.layui-panel.layui-col-xs6 {
+	height: 230px;
+	box-sizing: border-box;
+	min-height: auto !important;
+	transition: transform 0.3s ease;
+	cursor: pointer;
+}
+
+.layui-panel.layui-col-xs6:hover {
+	transform: scale(1.03); /* 放大 3% */
+	z-index: 1;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.layui-panel.layui-col-xs6:hover>div[style*="position: absolute"] {
+	z-index: 2;
+}
+</style>
+
+<body>
+	<div class="layui-fluid" style="overflow-y: scroll;">
+		<div class="layui-row"
+			style="display: flex; justify-content: center; margin-top: 10px;">
+			<div class="layui-col-md9">
+				<div class="layui-panel" style="padding: 10px; line-height: 40px;">
+					<p style="font-size: large;">你需要修理什么？</p>
+				</div>
+				<div class="layui-panel layui-row" style="padding: 10px;">
+
+					<div class="layui-panel layui-col-xs6"
+						style="padding: 10px; display: flex; position: relative;">
+						<a href="../Article/PhoneArticle.html" class="panel-link">
+							<div style="line-height: 24px;">
+								<p style="font-weight: bolder;">手机</p>
+								<p style="font-weight: lighter; font-size: smaller;">类别介绍</p>
+								<p style="font-weight: lighter; font-size: smaller;">
+									<span style="margin-right: 10px;">文章数：0</span> <span>订阅数：100</span>
+								</p>
+							</div>
+							<div style="position: absolute; top: 10px; right: 10px;">
+								<img alt="" src="../../img/ModelImage/Phone.png"
+									role="presentation" width="280" height="210">
+							</div>
+						</a>
+					</div>
+
+					<div class="layui-panel layui-col-xs6"
+						style="padding: 10px; display: flex; position: relative;">
+						<a href="../Article/LaptopArticle.html" class="panel-link">
+							<div style="line-height: 24px;">
+								<p style="font-weight: bolder;">笔记本电脑</p>
+								<p style="font-weight: lighter; font-size: smaller;">类别介绍</p>
+								<p style="font-weight: lighter; font-size: smaller;">
+									<span style="margin-right: 10px;">文章数：0</span> <span>订阅数：100</span>
+								</p>
+							</div>
+							<div style="position: absolute; top: 10px; right: 10px;">
+								<img alt="" src="../../img/ModelImage/Laptop.png"
+									role="presentation" width="280" height="210">
+							</div>
+						</a>
+					</div>
+
+					<div class="layui-panel layui-col-xs6"
+						style="padding: 10px; display: flex; position: relative;">
+						<a href="../Article/ConsoleArticle.html" class="panel-link">
+							<div style="line-height: 24px;">
+								<p style="font-weight: bolder;">游戏主机</p>
+								<p style="font-weight: lighter; font-size: smaller;">类别介绍</p>
+								<p style="font-weight: lighter; font-size: smaller;">
+									<span style="margin-right: 10px;">文章数：0</span> <span>订阅数：100</span>
+								</p>
+							</div>
+							<div style="position: absolute; top: 10px; right: 10px;">
+								<img alt="" src="../../img/ModelImage/Console.png"
+									role="presentation" width="280" height="210">
+							</div>
+						</a>
+					</div>
+
+					<div class="layui-panel layui-col-xs6"
+						style="padding: 10px; display: flex; position: relative;">
+						<a href="" class="panel-link">
+							<div style="line-height: 24px;">
+								<p style="font-weight: bolder;">电动工具</p>
+								<p style="font-weight: lighter; font-size: smaller;">类别介绍</p>
+								<p style="font-weight: lighter; font-size: smaller;">
+									<span style="margin-right: 10px;">文章数：0</span> <span>订阅数：100</span>
+								</p>
+							</div>
+							<div style="position: absolute; top: 10px; right: 10px;">
+								<img alt="" src="../../img/ModelImage/PowerTools.png"
+									role="presentation" width="280" height="210">
+							</div>
+						</a>
+					</div>
+
+					<div class="layui-panel layui-col-xs6"
+						style="padding: 10px; display: flex; position: relative;">
+						<a href="../Article/AllArticle.html" class="panel-link">
+							<div style="line-height: 24px;">
+								<p style="font-weight: bolder;">所有文章</p>
+								<p style="font-weight: lighter; font-size: smaller;">类别介绍</p>
+								<p style="font-weight: lighter; font-size: smaller;">
+									<span style="margin-right: 10px;">文章数：0</span> <span>订阅数：100</span>
+								</p>
+							</div>
+							<div style="position: absolute; top: 10px; right: 10px;">
+								<img alt="" src="../../img/ModelImage/Console.png"
+									role="presentation" width="280" height="210">
+							</div>
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的收藏</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <style>
+        .layui-nav.layui-nav-tree {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            overflow-y: auto;
+        }
+
+        .layui-form {
+            margin-left: 220px;
+            padding: 20px;
+        }
+
+        #favorite-list {
+            margin-top: 20px;
+        }
+
+        .article-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="layui-nav layui-nav-tree">
+        <li class="layui-nav-item"><a href="PersonalInfo.html">个人信息</a></li>
+        <li class="layui-nav-item"><a href="EditPassword.html">修改密码</a></li>
+        <li class="layui-nav-item"><a href="MyFavorite.html">我的收藏</a></li>
+    </ul>
+    <div id="favorite-list" class="layui-form"></div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '../../SelectMyFavoriteServlet',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    var favoriteList = $('#favorite-list');
+                    favoriteList.empty();
+                    if (response.length > 0) {
+                        response.forEach(function (item) {
+                            var listItem = $('<div class="article-item"></div>');
+                            listItem.append('<h2>' + item.name + '</h2>');
+                            listItem.append('<p>标题：' + item.topic + '</p>');
+                            listItem.append('<p>作者：' + item.userId + '</p>');
+                            listItem.append('<p>发布时间：' + item.uploadTime + '</p>');
+                            listItem.append('<p>浏览量：' + item.views + '</p>');
+                            listItem.append('<p>点赞数：' + item.likes + '</p>');
+                            listItem.append('<p>收藏数：' + item.favorites + '</p>');
+                            listItem.append('<p>类型：' + item.model + '</p>');
+                            listItem.append('<h3>正文（文本版）</h3><pre>' + item.data_text + '</pre>');
+                            listItem.append('<h3>正文（HTML 版）</h3><div>' + item.data_html + '</div>');
+                            favoriteList.append(listItem);
+                        });
+                    } else {
+                        favoriteList.text('暂无收藏');
+                    }
+                },
+                error: function () {
+                    $('#favorite-list').text('获取收藏数据失败');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>    

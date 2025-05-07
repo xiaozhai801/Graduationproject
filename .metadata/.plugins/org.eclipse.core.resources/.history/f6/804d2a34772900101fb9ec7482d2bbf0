@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>手机</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <style>
+       .hide-dropdown {
+            display: none;
+        }
+
+        html,
+        body {
+            /* overflow-x: hidden; */
+            overflow: hidden;
+        }
+
+        #article-list {
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+       .layui-card {
+            border: 1px solid #e6e6e6;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+       .layui-card-header {
+            padding: 15px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+       .layui-card-body {
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form layui-row layui-col-space16">
+        <div class="layui-form-item">
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <input type="text" name="titleId" value="" placeholder="文章ID"
+                        class="layui-input" lay-affix="clear" style="width: 150px;">
+                </div>
+            </div>
+
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <input type="text" name="topic" placeholder="标题" lay-affix="clear"
+                        class="layui-input" style="width: 150px;">
+                </div>
+            </div>
+
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <input type="text" name="name" placeholder="作者" lay-affix="clear"
+                        class="layui-input" style="width: 150px;">
+                </div>
+            </div>
+
+            <div class="layui-input-inline">
+                <div class="layui-btn-container layui-col-xs12">
+                    <button class="layui-btn" lay-submit lay-filter="demo-table-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="article-list"></div>
+
+
+    <script>
+        layui.use(['table', 'form'], function () {
+            var table = layui.table;
+            var form = layui.form;
+
+            var page = 1;
+            var limit = 10;
+            var loading = false;
+            var searchParams = { model: '手机' };
+
+            function loadArticles(isSearch) {
+                if (loading) return;
+                loading = true;
+
+                if (isSearch) {
+                    page = 1;
+                    $('#article-list').html('');
+                }
+
+                var url = '../../SearchArticleServlet';
+                var params = {
+                    page: page,
+                    limit: limit,
+                   ...searchParams
+                };
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: params,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 0) {
+                            var data = res.data.filter(function (item) {
+                                return item.release == 1;
+                            });
+
+                            data.forEach(function (item) {
+                                var link = "CurrentArticle.html?titleId=" + item.titleId;
+                                var articleHtml = `
+                                    <div class="layui-card" style="margin-bottom: 20px;">
+                                        <div class="layui-card-header">
+                                            <h2 style="font-size: 20px; margin-bottom: 5px;"><a href="${link}">${item.topic || '无标题'}</a></h2>
+                                            <div style="color: #666; font-size: 12px;">
+                                                <span>作者：${item.name || '匿名'}</span>
+                                                <span style="margin-left: 15px;">发布于：${item.uploadTime || '未知时间'}</span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <div style="margin-top: 15px; color: #888; font-size: 12px;">
+                                                <span>浏览：${item.views || 0}</span>
+                                                <span style="margin-left: 15px;">收藏：${item.favorites || 0}</span>
+                                                <span style="margin-left: 15px;">点赞：${item.likes || 0}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $('#article-list').append(articleHtml);
+                            });
+
+                            if (data.length > 0) {
+                                page++;
+                            }
+                        }
+                        loading = false;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('请求出错:', textStatus, errorThrown);
+                        loading = false;
+                    }
+                });
+            }
+
+            // 初始加载
+            loadArticles(false);
+
+            // 滚动加载
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                    loadArticles(false);
+                }
+            });
+
+            // 搜索提交
+            form.on('submit(demo-table-search)', function (data) {
+                // 清空之前的搜索参数
+                searchParams = { model: '手机' };
+                // 合并新的搜索参数
+                Object.assign(searchParams, data.field);
+                loadArticles(true);
+                return false;
+            });
+        });
+    </script>
+
+</body>
+
+</html>

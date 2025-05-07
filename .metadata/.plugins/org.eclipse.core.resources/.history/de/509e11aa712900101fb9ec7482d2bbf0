@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>所有文章</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+    html, body {
+        overflow: hidden;
+    }
+</style>
+<body>
+    <!-- 搜索表单 -->
+    <form class="layui-form layui-row layui-col-space16">
+        <div class="layui-form-item">
+            <!-- 文章ID输入 -->
+            <div class="layui-input-inline">
+                <input type="text" name="titleId" placeholder="文章ID" class="layui-input" style="width: 150px;">
+            </div>
+            <!-- 标题输入 -->
+            <div class="layui-input-inline">
+                <input type="text" name="topic" placeholder="标题" class="layui-input" style="width: 150px;">
+            </div>
+            <!-- 作者输入 -->
+            <div class="layui-input-inline">
+                <input type="text" name="name" placeholder="作者" class="layui-input" style="width: 150px;">
+            </div>
+            <!-- 机型下拉菜单 -->
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn" type="button" id="modelDropdown" style="width: 120px;">
+                        <span>机型</span>
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <!-- 隐藏字段保存机型值 -->
+                <input type="hidden" name="model" id="modelInput">
+            </div>
+            <!-- 搜索按钮 -->
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="searchBtn">
+                    <i class="layui-icon layui-icon-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 表格容器 -->
+    <table id="articleTable" lay-filter="articleTable"></table>
+
+    <script>
+        layui.use(['table', 'form', 'dropdown'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var dropdown = layui.dropdown;
+            var $ = layui.$;
+            
+            // 定义表格渲染函数
+            var renderTable = function(url, whereParams) {
+                // 销毁旧表格实例
+                try { table.init('articleTable', {}); } catch(e) {}
+                
+                // 渲染新表格
+                table.render({
+                    elem: '#articleTable',
+                    url: url,
+                    where: whereParams || {}, // 携带参数
+                    page: true,
+                    cols: [[
+                        { field: 'titleId', title: '文章ID', width: 150, sort: true },
+                        { 
+                            field: 'topic', 
+                            title: '标题', 
+                            width: 740,
+                            templet: function (d) {
+                                return '<a class="layui-table-link" href="CurrentArticle.html?titleId=' + d.titleId + '">' + d.topic + '</a>';
+                            }
+                        },
+                        { field: 'name', title: '作者', width: 120, sort: true },
+                        { field: 'uploadTime', title: '发布日期', width: 200, sort: true },
+                        { field: 'model', title: '机型', width: 100 },
+                        { field: 'views', title: '浏览量', width: 100 },
+                        { field: 'likes', title: '点赞量', width: 100 }
+                    ]],
+                    height: 'full-120',
+                    parseData: function (res) {
+                        // 统一处理数据过滤
+                        if (res.code === 0) {
+                            // 如果是初始化请求，过滤 release=1
+                            if (url.indexOf('SelectAllArticleServlet') !== -1) {
+                                res.data = res.data.filter(function (item) {
+                                    return item.release == 1;
+                                });
+                            }
+                        }
+                        return res;
+                    },
+                    done: function() {
+                        console.log('表格重新渲染完成');
+                    }
+                });
+            };
+
+            // 初始化机型下拉菜单
+            dropdown.render({
+                elem: '#modelDropdown',
+                data: [
+                    { title: '手机', id: 100 },
+                    { title: '笔记本电脑', id: 101 },
+                    { title: '游戏主机', id: 102 }
+                ],
+                click: function (obj) {
+                    $('#modelDropdown span').text(obj.title);
+                    $('#modelInput').val(obj.title);
+                }
+            });
+
+            // 初始加载表格
+            renderTable('../../SelectAllArticleServlet');
+
+            // 搜索提交事件
+            form.on('submit(searchBtn)', function (data) {
+                var field = data.field;
+                field.model = $('#modelInput').val();
+                
+                // 强制重新渲染表格（携带搜索参数）
+                renderTable('../../SearchArticleServlet', field);
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

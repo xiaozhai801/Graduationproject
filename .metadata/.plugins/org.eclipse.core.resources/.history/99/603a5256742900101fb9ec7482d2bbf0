@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>手机</title>
+<link href="../..//layui/css/layui.css" rel="stylesheet">
+<script src="../..//layui/layui.js"></script>
+<script src="../..//js/jquery-3.6.0.min.js"></script>
+<style>
+.hide-dropdown {
+	display: none;
+}
+
+html, body {
+	overflow: auto;
+}
+
+.article-list {
+    padding: 15px;
+}
+
+.article-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.article-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.article-meta {
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.article-meta span {
+    margin-right: 15px;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+</style>
+</head>
+<body>
+	<form class="layui-form layui-row layui-col-space16">
+		<div class="layui-form-item">
+			<div class="layui-input-inline">
+				<div class="layui-inline">
+					<input type="text" name="titleId" value="" placeholder="文章ID"
+						class="layui-input" lay-affix="clear" style="width: 150px;">
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-inline">
+					<input type="text" name="topic" placeholder="标题" lay-affix="clear"
+						class="layui-input" style="width: 150px;">
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-inline">
+					<input type="text" name="name" placeholder="作者" lay-affix="clear"
+						class="layui-input" style="width: 150px;">
+				</div>
+			</div>
+
+			<div class="layui-input-inline">
+				<div class="layui-btn-container layui-col-xs12">
+					<button class="layui-btn" lay-submit lay-filter="demo-table-search">
+						<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	
+	<div class="article-list" id="article-list"></div>
+	<div class="loading" id="loading">加载中...</div>
+
+	<script>
+        layui.use(function () {
+            var form = layui.form;
+            var flow = layui.flow;
+            var $ = layui.$;
+            
+            // 初始加载数据
+            var loading = false;
+            var page = 1;
+            var searchParams = {model: '手机'};
+            
+            // 加载文章列表
+            function loadArticles(params, append) {
+                if (loading) return;
+                loading = true;
+                
+                $.ajax({
+                    url: append ? '../../SearchArticleServlet' : '../../SelectPhoneArticleServlet',
+                    type: 'GET',
+                    data: params,
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            var html = '';
+                            var data = res.data.filter(function(item) {
+                                return item.release == 1;
+                            });
+                            
+                            data.forEach(function(item) {
+                                var link = "CurrentArticle.html?titleId=" + item.titleId;
+                                html += '<div class="article-item">';
+                                html += '<div class="article-title"><a href="' + link + '">' + item.topic + '</a></div>';
+                                html += '<div class="article-meta">';
+                                html += '<span>作者：' + item.name + '</span>';
+                                html += '<span>机型：' + (item.model || '') + '</span>';
+                                html += '<span>日期：' + item.uploadTime + '</span>';
+                                html += '<span>浏览：' + item.views + '</span>';
+                                html += '<span>点赞：' + item.likes + '</span>';
+                                html += '</div>';
+                                html += '</div>';
+                            });
+                            
+                            if (append) {
+                                $('#article-list').append(html);
+                            } else {
+                                $('#article-list').html(html);
+                            }
+                            
+                            if (data.length < 10) {
+                                $('#loading').text('没有更多数据了');
+                            } else {
+                                $('#loading').text('加载更多');
+                            }
+                        }
+                        loading = false;
+                    },
+                    error: function() {
+                        loading = false;
+                        $('#loading').text('加载失败，请重试');
+                    }
+                });
+            }
+            
+            // 初始加载
+            loadArticles(searchParams, false);
+            
+            // 滚动加载
+            flow.load({
+                elem: '#article-list',
+                done: function(page, next) {
+                    var params = $.extend({}, searchParams, {page: page});
+                    $.ajax({
+                        url: '../../SelectPhoneArticleServlet',
+                        type: 'GET',
+                        data: params,
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.code === 0) {
+                                var data = res.data.filter(function(item) {
+                                    return item.release == 1;
+                                });
+                                
+                                var html = '';
+                                data.forEach(function(item) {
+                                    var link = "CurrentArticle.html?titleId=" + item.titleId;
+                                    html += '<div class="article-item">';
+                                    html += '<div class="article-title"><a href="' + link + '">' + item.topic + '</a></div>';
+                                    html += '<div class="article-meta">';
+                                    html += '<span>作者：' + item.name + '</span>';
+                                    html += '<span>机型：' + (item.model || '') + '</span>';
+                                    html += '<span>日期：' + item.uploadTime + '</span>';
+                                    html += '<span>浏览：' + item.views + '</span>';
+                                    html += '<span>点赞：' + item.likes + '</span>';
+                                    html += '</div>';
+                                    html += '</div>';
+                                });
+                                
+                                next(html, data.length < 10);
+                            }
+                        }
+                    });
+                }
+            });
+            
+            // 搜索提交
+            form.on('submit(demo-table-search)', function (data) {
+                searchParams = $.extend({}, data.field, {model: '手机'});
+                loadArticles(searchParams, false);
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

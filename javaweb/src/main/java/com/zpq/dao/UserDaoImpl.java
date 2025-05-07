@@ -324,4 +324,47 @@ public class UserDaoImpl implements UserDao {
 		return 0;
 	}
 
+	@Override
+	public List<Object> SelectMyLike(String userId) throws SQLException {
+		List<Object> myFavoriteList=new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM v_articleinfo where titleId in (SELECT titleId FROM c_useractions where userId=? and `like`=1)";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			Article article = new Article();
+			article.setTitleId(rs.getInt("titleId"));
+			article.setUserId(rs.getString("userId"));
+			article.setName(rs.getString("name"));
+			article.setTopic(rs.getString("topic"));
+			article.setModel(rs.getString("model"));
+			article.setUploadTime(rs.getString("uploadTime"));
+			article.setRelease(rs.getInt("release"));
+			article.setViews(rs.getInt("views"));
+			article.setLikes(rs.getInt("likes"));
+			article.setFavorites(rs.getInt("favorites"));
+			article.setData_html(rs.getString("data_html"));
+			article.setData_text(rs.getString("data_text"));
+			myFavoriteList.add(article);
+		}
+		return myFavoriteList;
+	}
+
+	@Override
+	public int CountMyLike(String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT count(*) as sum FROM c_useractions where userId=? and `like`=1";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		return 0;
+	}
+
 }

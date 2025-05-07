@@ -44,5 +44,11 @@ public interface UserDao {
 	
 	// 用户收藏文章数量
 	public int CountMyFavorite(String userId) throws SQLException;
+	
+	// 查询用户点赞文章
+	public List<Object> SelectMyLike(String userId) throws SQLException;
+	
+	// 用户点赞文章数量
+	public int CountMyLike(String userId) throws SQLException;
 
 }
