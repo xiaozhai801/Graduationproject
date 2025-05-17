@@ -13,8 +13,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="countModelArticle"/>
+		<item key="selection" value=".layui-table-link"/>
 		<list key="findhistory">
+			<item value=".layui-table-link"/>
+			<item value="color"/>
+			<item value="01aaed"/>
+			<item value="#01aaed"/>
+			<item value=".layui-table-link:hover"/>
 			<item value="countModelArticle"/>
 			<item value="loadArticles"/>
 			<item value="searchParams"/>
@@ -25,11 +30,6 @@
 			<item value="UploadArticleReview"/>
 			<item value="uploadArticle"/>
 			<item value="searchUserActionInfo"/>
-			<item value="field"/>
-			<item value="searchArticleInfo"/>
-			<item value="ID-table-demo-search"/>
-			<item value="deleteDraftArticle"/>
-			<item value="draftId"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
