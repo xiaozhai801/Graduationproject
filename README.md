@@ -23,7 +23,7 @@
 系统功能结构图
 
 
-![](javaweb\src\main\webapp\img\修复论坛组织结构图.png)
+![](javaweb/src/main/webapp/img/修复论坛组织结构图.png)
 
 
 搭建环境：
