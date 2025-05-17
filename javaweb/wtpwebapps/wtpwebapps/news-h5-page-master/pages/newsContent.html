@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>新闻标题</title>
+    <!-- <title>新闻查看</title> -->
+    <!-- 标题栏logo -->
+    <link rel="icon" href="../image/nLogo.jpg" type="image/x-icon">
+    <!-- 收藏夹里显示的logo -->
+    <link rel="shortcut icon" href="../image/nLogo.jpg" type="image/x-icon">
+    <!-- layui样式 -->
+    <link href="../layui/css/layui.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/iconfont.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery.min.js"></script>
+</head>
+<body style="background: #F0F0F0; height: 100vh">
+<!--导航栏-->
+<div class="layui-row layui-panel" style=" background: #222222;">
+    <div class="layui-col-md2" style="padding: 10px; text-align: center;">
+        <a href="../index.html" style="color: white; font-weight: bolder; font-size: x-large;">N站</a>
+    </div>
+    <ul class="layui-nav layui-col-md6" lay-filter="" style="background: #222222;">
+        <li class="layui-nav-item "><a href="../index.html">首页</a></li>
+        <li class="layui-nav-item"><a href="home/homeNews.html">发现</a></li>
+        <li class="layui-nav-item"><a href="home/homePublisher.html">新闻方</a></li>
+        <li class="layui-nav-item"><a href="home/homeNewsType.html">新闻专栏</a></li>
+        <li class="layui-nav-item"><a href="home/homeSubscribe.html">我的订阅</a></li>
+        <li class="layui-nav-item"><a href="">可能感兴趣</a></li>
+    </ul>
+    <ul class="layui-nav layui-col-md2" style=" background: #222222;">
+        <li class="layui-nav-item">
+            <a><img src="../image/avatar.jpg" class="layui-nav-img">peng_YuJun</a>
+            <dl class="layui-nav-child">
+                <dd style="color: white; text-align: center; background: orange">硬币：0</dd>
+                <dd><a href="self/selfData.html">个人中心</a></dd>
+                <dd><a href="publish/publishNews.html">新闻管理</a></dd>
+                <dd><a href="publish/publishRequest.html">申请成为新闻作者</a></dd>
+                <dd><a href="#">退出登录</a></dd>
+            </dl>
+        </li>
+    </ul>
+
+    <div class="layui-nav layui-col-md2" style=" background: #222222; display: flex;align-items: center; padding: 10px;">
+        <button class="layui-btn layui-btn-sm" lay-event="register">注册</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="login">登录</button>
+    </div>
+</div>
+
+<!-- <div style="display: flex;justify-content: center; margin-top: 10px;">
+    <div class="layui-panel layui-col-md6" style="display: flex; flex-direction: column; justify-content: center;align-items: center; margin: auto; padding: 30px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <p style="font-size:xx-large;">无法找到该新闻，作者可能已删除</p>
+            <img src="UserPort/image/undraw_Lost_re_xqjt.png" style="width: 400px;height: 320px;">
+        </div>
+    </div>
+</div> -->
+
+<!-- <div style="display: flex;justify-content: center; margin-top: 10px;">
+    <div class="layui-panel layui-col-md6" style="display: flex; flex-direction: column; justify-content: center;align-items: center; margin: auto; padding: 30px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <p style="font-size:xx-large;">新闻暂时无法阅读</p>
+            <img src="UserPort/image/undraw_text_field_htlv.png" style="width: 400px;height: 320px;">
+        </div>
+    </div>
+</div> -->
+
+<!--页面主体-->
+<div class="layui-fluid" style="height: 90vh; overflow-y: scroll;">
+    <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+        <div class="layui-col-md7" style="margin-right: 10px">
+            <div class="layui-panel" style="padding: 10px;">
+                <h1>新闻标题</h1>
+                <div class="layui-row" style="display: flex; margin-top: 8px;">
+                    <i class="layui-icon layui-icon-time layui-col-md3" style="font-size: 12px;"> 发布时间</i>
+                    <p  class="layui-col-md2" style="font-size: 12px;">阅读量：0</p>
+                    <i  class="layui-icon layui-icon-dialogue layui-col-md2" style="font-size: 12px;"> 评论数：0</i>
+                    <i class="layui-icon layui-icon-note layui-col-md2" style="font-size: 12px;" > 新闻类别名称</i>
+                    <!-- <p  class="layui-col-md2" style="font-size: 12px;">状态：待审核</p> -->
+                    <!-- <p  class="layui-col-md2" style="font-size: 12px;">状态：已发布</p> -->
+                    <p  class="layui-col-md2" style="font-size: 12px;">状态：草稿</p>
+                    <!-- <p  class="layui-col-md2" style="font-size: 12px;">状态：被封禁</p> -->
+                </div>
+            </div>
+            <div class="layui-panel" style="padding: 18px; min-height: 50vh;">
+                新闻内容
+            </div>
+            <div class="layui-panel" style="padding: 10px;">
+                <!-- 一键三连区域 -->
+                <div class="layui-row" style="display: flex;">
+                    <div class="icon">
+                        <i class="iconfont icon-dianzan"></i>
+                        <div class="shine">
+                            <!-- 这里是放射用的线段 -->
+                            <span style="--i:1"></span>
+                            <span style="--i:2"></span>
+                            <span style="--i:3"></span>
+                            <span style="--i:4"></span>
+                            <span style="--i:5"></span>
+                            <span style="--i:6"></span>
+                            <span style="--i:7"></span>
+                            <span style="--i:8"></span>
+                            <span style="--i:9"></span>
+                            <span style="--i:10"></span>
+                            <span style="--i:11"></span>
+                            <span style="--i:12"></span>
+                            <span style="--i:13"></span>
+                            <span style="--i:14"></span>
+                            <span style="--i:15"></span>
+                            <span style="--i:16"></span>
+                        </div>
+                    </div><span id="like" style="font-size: smaller;">0</span>
+                    <div class="icon" style="margin-left: 30px;">
+                        <i class="iconfont icon-toubi" id="addIcon"></i>
+                        <div class="shine">
+                            <span style="--i:1"></span>
+                            <span style="--i:2"></span>
+                            <span style="--i:3"></span>
+                            <span style="--i:4"></span>
+                            <span style="--i:5"></span>
+                            <span style="--i:6"></span>
+                            <span style="--i:7"></span>
+                            <span style="--i:8"></span>
+                            <span style="--i:9"></span>
+                            <span style="--i:10"></span>
+                            <span style="--i:11"></span>
+                            <span style="--i:12"></span>
+                            <span style="--i:13"></span>
+                            <span style="--i:14"></span>
+                            <span style="--i:15"></span>
+                            <span style="--i:16"></span>
+                        </div>
+                    </div><span id="coin" style="font-size: smaller;">0</span>
+                    <div class="icon" style="margin-left: 30px;">
+                        <i class="iconfont icon-shoucang"></i>
+                        <div class="shine">
+                            <span style="--i:1"></span>
+                            <span style="--i:2"></span>
+                            <span style="--i:3"></span>
+                            <span style="--i:4"></span>
+                            <span style="--i:5"></span>
+                            <span style="--i:6"></span>
+                            <span style="--i:7"></span>
+                            <span style="--i:8"></span>
+                            <span style="--i:9"></span>
+                            <span style="--i:10"></span>
+                            <span style="--i:11"></span>
+                            <span style="--i:12"></span>
+                            <span style="--i:13"></span>
+                            <span style="--i:14"></span>
+                            <span style="--i:15"></span>
+                            <span style="--i:16"></span>
+                        </div>
+                    </div><span id="collect" style="font-size: smaller;">0</span>
+                </div>
+            </div>
+            <div class="layui-panel" style="padding: 10px;  margin-top: 16px;">
+                <h2>用户评论</h2>
+            </div>
+            <div class="layui-panel layui-form" style="padding: 10px;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">评论框</label>
+                    <div class="layui-input-block">
+                        <textarea name="comm" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="text-align: right">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">发布评论</button>
+                </div>
+            </div>
+            <div class="layui-panel" style="padding: 10px;">
+                <div class="layui-panel" style="display: flex; padding: 10px;">
+                    <img src="../image/avatar.jpg" class="layui-nav-img" style="width: 50px; height: 50px; margin-right: 50px;">
+                    <div style="line-height: 24px">
+                        <p style="font-weight: bolder;"><i style="margin-right: 10px;">#楼层号</i>peng_YuJun<span style="font-weight: lighter; font-size: smaller; margin-left: 20px;">评论时间</span></p>
+                        <p style="margin: 10px 0;">评论内容</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-panel" style="padding: 10px;">
+                <div style="text-align: center;">
+                    <img src="../image/avatar.jpg" class="layui-nav-img" style="width: 100px; height: 100px;">
+                    <h2 style="margin: 10px;">peng_YuJun</h2>
+                </div>
+            </div>
+            <div class="layui-panel" style="padding: 10px;">
+                <p style="font-weight: bolder;">作者最近发布的新闻</p>
+                <hr class="layui-border-cyan">
+                <ul style="line-height: 24px;">
+                    <li style="overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;"><a href="#" target="_blank">新闻标题</a></li>
+                </ul>
+            </div>
+            <div class="layui-panel" style="padding: 10px; margin-top: 16px;">
+                <p style="font-weight: bolder;">该专栏的热点新闻</p>
+                <hr class="layui-border-cyan">
+                <ul style="line-height: 24px;">
+
+                    <li style="overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;"><a href="#" target="_blank">新闻标题</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['util', 'layer','form','element'], function(){
+        var element = layui.element
+            ,util = layui.util
+            ,form = layui.form;
+
+        util.event('lay-event',{
+            login : function (){
+                window.location.href = "user/userLogin.html";
+            },
+            register: function (){
+                window.location.href = "user/userRegister.html";
+            }
+        })
+        //触发事件
+        var active ={
+            setTop: function(){
+                var that = this;
+                //多窗口模式，层叠置顶
+                layer.open({
+                    type: 1 //此处以iframe举例
+                    ,title: '给新闻主投上硬币'
+                    ,area: ['320px', '350px']
+                    ,shade: 0
+                    ,maxmin: true
+                    ,offset: [0,0]
+                    ,content: '<div class="layui-panel" style="padding: 10px; text-align: center;"><img src="../image/投币.png"><div><button onclick="" class="layui-btn layui-btn-lg layui-btn-radius">投1枚硬币</button><button onclick="" class="layui-btn layui-btn-lg layui-btn-radius">投2枚硬币</button></div>'
+                    // ,btn: ['关闭预览页面'] //只是为了演示
+                    // ,yes: function(){
+                    //     layer.closeAll();
+                    // }
+                    ,zIndex: layer.zIndex //重点1
+                    ,success: function(layero, index){
+                        layer.setTop(layero); //重点2. 保持选中窗口置顶
+                        //记录索引，以便按 esc 键关闭。事件见代码最末尾处。
+                        layer.escIndex = layer.escIndex || [];
+                        layer.escIndex.unshift(index);
+                        //选中当前层时，将当前层索引放置在首位
+                        layero.on('mousedown', function(){
+                            var _index = layer.escIndex.indexOf(index);
+                            if(_index !== -1){
+                                layer.escIndex.splice(_index, 1); //删除原有索引
+                            }
+                            layer.escIndex.unshift(index); //将索引插入到数组首位
+                        });
+                    }
+                    ,end: function(){
+                        //更新索引
+                        if(typeof layer.escIndex === 'object'){
+                            layer.escIndex.splice(0, 1);
+                        }
+                    }
+                });
+            }
+        };
+
+        $('#addIcon').on('click', function(){
+            var othis = $(this), method = "setTop";
+            active[method] ? active[method].call(this, othis) : '';
+        });
+    });
+
+    // 开始写一键三连js脚本代码
+
+    // 定义两个计时器，分别控制按住过程中，另一个控制按住超过3秒钟
+    let timer_start = null;
+    let timer_end = null;
+    // 是否长按
+    let is_long = true;
+    // 鼠标按下的时间，统计计算鼠标弹起时的时间差来判断时长安还是点击
+    let mouse_down_start_time = 0;
+    // 鼠标弹起时的时间
+    let mouse_up_end_time = 0;
+    // 找到所有的icon
+    let icons = document.querySelectorAll('.icon');
+    // 增加绑定事件
+    icons.forEach((icon, index) => {
+        // 增加点击事件
+        icon.addEventListener('click', () => {
+            // 点击时增加样式点亮
+            // 这里我们切换样式
+            if (index == 0) {
+                // 第一个图标时不是长按时才会点亮
+                // 快速点击有效，长按失效
+                if (!is_long) {
+                    icon.classList.toggle('light');
+                }
+            } else {
+                icon.classList.toggle('light');
+            }
+        });
+    })
+    // 第一个图标增加按下事件
+    icons[0].addEventListener('mousedown', () => {
+        // 在这里我们需要控制一下放置于鼠标点击事件冲突
+        mouse_down_start_time = new Date().getTime();
+        // 鼠标按下 触发第一个计时器.5s后执行
+        timer_start = setTimeout(() => {
+            // 增加样式
+            icons.forEach((icon, index) => {
+                // 第一个不同
+                // 第一个增加抖动样式
+                // 其他增加加载样式
+                if (index == 0) {
+                    icon.classList.add('shake');
+                } else {
+                    icon.classList.add('loading');
+                }
+            });
+        }, 500);
+        // 移除加载样式增加爆炸和点亮样式
+        // 这里延迟3.5s等待加载动画完成
+        timer_end = setTimeout(() => {
+            icons.forEach((icon, index) => {
+                // 样式移除
+                icon.classList.remove('shake');
+                icon.classList.remove('loading');
+                // 增加爆炸效果和完成之后的点亮
+                icon.classList.add('bang');
+                icon.classList.add("light");
+            });
+            // 在增加一个计时器，让bang动画执行完成时清理掉样式
+            setTimeout(() => {
+                icons.forEach((icon, index) => {
+                    icon.classList.remove('bang');
+                });
+            }, 1000);
+        }, 3500);
+    });
+    // 第一个图标增加弹起事件
+    icons[0].addEventListener('mouseup', () => {
+        // 在这里我们需要控制一下放置于鼠标点击事件冲突
+        mouse_up_end_time = new Date().getTime();
+        // 时间差超过300毫秒则为长按
+        if (mouse_up_end_time - mouse_down_start_time > 300) {
+            is_long = true;
+        } else {
+            is_long = false;
+        }
+        //基本样式有了，我们需要通过判断时长，让没有完成3s以上的加载不触发完成和放射效果
+        if (timer_start) {
+            clearTimeout(timer_start);
+        }
+        // 先把样式移除，然后把计时器取消
+        // 300-3500毫秒之间时需要结束加载动画，然后取消掉完成样式计时器的
+        if (mouse_up_end_time - mouse_down_start_time < 3500) {
+            icons.forEach((icon, index) => {
+                icon.classList.remove('shake');
+                icon.classList.remove('loading');
+            });
+            if (timer_end) {
+                clearTimeout(timer_end);
+                timer_end = null;
+            }
+        }
+    });
+</script>
+</html>
