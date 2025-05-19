@@ -205,7 +205,12 @@
 						},
 						dataType : 'text',
 						success : function(res) {
-							if (res == "success") {
+							if(res == "exist"){
+								layer.close(loadIndex);
+								layer.msg('已审核,无需重复审核', {
+									icon : 2
+								});
+							}else if (res == "success") {
 								layer.close(loadIndex);
 								layer.msg('审核通过', {
 									icon : 1

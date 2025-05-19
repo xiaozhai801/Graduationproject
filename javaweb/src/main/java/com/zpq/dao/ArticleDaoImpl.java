@@ -596,9 +596,23 @@ public class ArticleDaoImpl implements ArticleDao {
 		// TODO Auto-generated method stub
 		// 创建数据库工具类实例
 		DBUtil dbUtil = new DBUtil();
+		
+		// 检查是否已存在
+		int exist = 0; 
+		String selectSqlString="SELECT count(*) as exist FROM c_actioncounts where titleId=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(selectSqlString);
+		ps.setInt(1, titleId);
+        ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			exist=rs.getInt("exist");
+		}
+		if (exist==1) {
+			return -1;
+		}
+		
 		// SQL新增语句
-		String sql = "INSERT into c_actioncounts (titleId) VALUES (?)";
-		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		String insertSql = "INSERT into c_actioncounts (titleId) VALUES (?)";
+		ps = dbUtil.getPreparedStatement(insertSql);
 		ps.setInt(1, titleId);
 		// 执行SQL新增操作，并获取受影响的行数
 		// 1 新增成功,0 新增失败

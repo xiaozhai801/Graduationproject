@@ -47,15 +47,19 @@ public class SelectPersonalInfoServlet extends HttpServlet {
 		Cookie[] cookies = request.getCookies();
 		String name = null;
 		String role = null;
-
+		
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if ("username".equals(cookie.getName())) {
 					name = cookie.getValue();
-				} else if ("role".equals(cookie.getName())) {
+				}
+				if ("role".equals(cookie.getName())) {
 					role = cookie.getValue();
 				}
 			}
+		}
+		if (role.equals("admin")) {
+			name="0";
 		}
 		
 		PersonalInfoDao personalInfoDao=new PersonalInfoDaoImpl();

@@ -43,14 +43,16 @@ public class ReviewArticleServlet extends HttpServlet {
 
 		ArticleDao articleDao = new ArticleDaoImpl();
 		try {
-			if (passCode == 1) { // 审核通过
-				//审核通过 && ID上传
-				if (articleDao.ReviewPassArticle(titleId) == 1 && articleDao.UploadTitleId(titleId) == 1) {
+			if (passCode == 1) { // 点击审核通过
+				if (articleDao.UploadTitleId(titleId)==-1) {	// 判断是否已审核
+					response.getWriter().write("exist");
+				}
+				else if (articleDao.ReviewPassArticle(titleId) == 1 && articleDao.UploadTitleId(titleId) == 1) {	//审核通过 && ID上传
 					response.getWriter().write("success");
 				} else {
 					response.getWriter().write("fail");
 				}
-			} else if (passCode == 2) { // 审核未通过
+			} else if (passCode == 2) { // 点击审核未通过
 				if (articleDao.ReviewNotPassArticle(titleId) == 1) {
 					response.getWriter().write("success");
 				} else {

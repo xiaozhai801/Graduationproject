@@ -105,9 +105,9 @@
 
 			// 发送 AJAX 请求获取后端数据
 			$.ajax({
-				type : 'GET', // 根据后端接口的要求选择请求方法，如 GET、POST 等
-				url : '../../SelectPersonalInfoServlet', // 替换为实际的后端 API 接口 URL
-				dataType : 'json', // 预期后端返回的数据类型为 JSON
+				type : 'GET',
+				url : '../../SelectPersonalInfoServlet',
+				dataType : 'json',
 				success : function(response) {
 					// 获取表单数据并填充
 					var userData = response.data[0];

@@ -54,13 +54,20 @@ public class UpdateUserActionServlet extends HttpServlet {
 		// 获取请求中的所有 Cookie
 		Cookie[] cookies = request.getCookies();
 		String name = null;
-
+		String role = null;
+		
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if ("username".equals(cookie.getName())) {
 					name = cookie.getValue();
 				}
+				if ("role".equals(cookie.getName())) {
+					role = cookie.getValue();
+				}
 			}
+		}
+		if (role.equals("admin")) {
+			name="0";
 		}
 
 		// 获取网页传值
