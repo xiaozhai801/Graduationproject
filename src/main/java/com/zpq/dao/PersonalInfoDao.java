@@ -1,0 +1,13 @@
+package com.zpq.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.zpq.pojo.User;
+//个人信息接口
+public interface PersonalInfoDao {
+	//显示个人信息
+	public List<Object> SelectPerSonalInfo(String name) throws SQLException;
+	//编辑个人信息
+	public int EditPersonalInfo(User user) throws SQLException;
+}
