@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>我的点赞</title>
+<title>我的评论</title>
 <link href="../../layui/css/layui.css" rel="stylesheet">
 <script src="../../layui/layui.js"></script>
 <script src="../../js/jquery-3.6.0.min.js"></script>
@@ -12,7 +12,7 @@
 .layui-nav.layui-nav-tree {
 	position: fixed;
 	left: 0;
-	top:  -1px;
+	top: -1px;
 	width: 200px;
 	overflow-y: auto;
 }
@@ -65,7 +65,7 @@
                 url: '../../SelectMyInteractionServlet',
                 method: 'GET',
                 data: {
-                    like: true
+                    comment: true
                 },
                 dataType: 'json',
                 success: function (response) {
@@ -80,23 +80,20 @@
                     if (response.data.length > 0) {
                         response.data.forEach(item => {
                             const card = $(`
-                                <div class="layui-card" style="margin-bottom: 20px;">
-                                    <div class="layui-card-header">
-                                        <h2 style="font-size: 20px; margin-bottom: 5px;"><a href="../Article/CurrentArticle.html?titleId=${item.titleId}">${item.topic || '无标题'}</a></h2>
-                                        <div style="color: #666; font-size: 12px;">
-                                            <span>作者：${item.name || '匿名'}</span>
-                                            <span style="margin-left: 15px;">发布于：${item.uploadTime || '未知时间'}</span>
+                                    <div class="layui-card" style="margin-bottom: 20px;">
+                                        <div class="layui-card-header">
+                                            <h2 style="font-size: 20px; margin-bottom: 5px;"><a href="../Article/CurrentArticle.html?titleId=${item.titleId}">${item.topic || '无标题'}</a></h2>
+                                            <div style="color: #666; font-size: 12px;">
+                                                <span style="margin-left;">发布于：${item.uploadTime || '未知时间'}</span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-card-body">
+                                            <div style="margin-top: 15px; font-size: 20px;">
+                                                <span style="margin-left;">${item.comment || '无评论内容'}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="layui-card-body">
-                                        <div style="margin-top: 15px; color: #888; font-size: 12px;">
-                                            <span>浏览：${item.views || 0}</span>
-                                            <span style="margin-left: 15px;">收藏：${item.favorites || 0}</span>
-                                            <span style="margin-left: 15px;">点赞：${item.likes || 0}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
+                                `);
                             favoriteList.append(card);
                         });
                     } else {

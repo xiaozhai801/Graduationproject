@@ -42,7 +42,7 @@ public class SearchElementDaoImpl implements SearchElementDao {
 	}
 
 	@Override
-	public Map<Integer, Article> searchArticleInfo(String element, String value) throws SQLException {
+	public Map<Integer, Article> searchArticleInfo(Object element, Object value) throws SQLException {
 		// TODO Auto-generated method stub
 		DBUtil dbUtil = new DBUtil();
 		Article article = new Article();
@@ -50,9 +50,10 @@ public class SearchElementDaoImpl implements SearchElementDao {
 		String sql = "SELECT * FROM v_articleinfo where " + element + "=?";
 		// 获取预编译的SQL语句对象
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
-		ps.setString(1, value);
+		ps.setObject(1, value);
 		// 执行SQL查询，并获取结果集
 		ResultSet rs = ps.executeQuery();
+
 		while (rs.next()) {
 			article.setTitleId(rs.getInt("titleId"));
 			article.setUserId(rs.getString("userId"));
@@ -171,6 +172,7 @@ public class SearchElementDaoImpl implements SearchElementDao {
 			userComment.setUserId(rs.getString("userId"));
 			userComment.setName(rs.getString("name"));
 			userComment.setTitleId(rs.getInt("titleId"));
+			userComment.setComment(rs.getString("topic"));
 			userComment.setComment(rs.getString("comment"));
 			userComment.setUploadTime(rs.getString("uploadTime"));
 			userCommentInfo.add(userComment);

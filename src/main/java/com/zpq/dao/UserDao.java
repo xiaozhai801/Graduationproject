@@ -39,16 +39,27 @@ public interface UserDao {
 	// 用户提交评论
 	public int SubmitComment(long id, String userId, int titleId, String comment) throws SQLException;
 
-	// 查询用户收藏文章
+	// 查询当前用户收藏文章
 	public List<Object> SelectMyFavorite(String userId) throws SQLException;
 	
-	// 用户收藏文章数量
+	// 当前用户收藏文章数量
 	public int CountMyFavorite(String userId) throws SQLException;
 	
-	// 查询用户点赞文章
+	// 查询当前用户点赞文章
 	public List<Object> SelectMyLike(String userId) throws SQLException;
 	
-	// 用户点赞文章数量
+	// 当前用户点赞文章数量
 	public int CountMyLike(String userId) throws SQLException;
 
+	// 当前用户评论信息
+	public List<Object> SelectMyComment(String userId) throws SQLException;
+
+	// 当前用户评论数量
+	public int CountMyComment(String userId) throws SQLException;
+
+	// 所有评论信息,带分页
+	public List<Object> SelectComment(int page, int limit) throws SQLException;
+	
+	// 所有评论数量
+	public int CountComment() throws SQLException;
 }

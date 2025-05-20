@@ -15,7 +15,7 @@ public interface SearchElementDao {
 	public Map<String, User> searchUserInfo(String element, String value) throws SQLException;
 
 	// 查询文章信息,titleId:Article
-	public Map<Integer, Article> searchArticleInfo(String element, String value) throws SQLException;
+	public Map<Integer, Article> searchArticleInfo(Object element, Object value) throws SQLException;
 
 	// 查询型号信息,typeId:Model
 	public Map<Integer, Model> searchModelInfo(String element, String value) throws SQLException;

@@ -8,6 +8,7 @@ public class UserComment {
 	private String userId;
 	private String name;
 	private int titleId;
+	private String topic;
 	private String comment;
 	private String uploadTime;
 	

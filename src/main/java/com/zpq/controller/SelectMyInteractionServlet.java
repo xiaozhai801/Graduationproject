@@ -1,5 +1,5 @@
 package com.zpq.controller;
-
+// 获取用户与文章互动信息
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -43,6 +43,7 @@ public class SelectMyInteractionServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String like = getParamValue(request, "like", "false");
 		String favorite = getParamValue(request, "favorite", "false");
+		String comment= getParamValue(request, "comment", "false");
 		
 		// 获取请求中的用户ID
 		Cookie[] cookies = request.getCookies();
@@ -73,6 +74,9 @@ public class SelectMyInteractionServlet extends HttpServlet {
 			}else if (favorite.equals("true")) {
 				myInteraction=userDao.SelectMyFavorite(name);
 				myInteractionCount=userDao.CountMyFavorite(name);
+			}else if (comment.equals("true")) {
+				myInteraction=userDao.SelectMyComment(name);
+				myInteractionCount=userDao.CountMyComment(name);
 			}
 
 			// 设置网页格式和编码

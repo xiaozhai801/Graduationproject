@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -12,8 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zpq.dao.UserDao;
 import com.zpq.dao.UserDaoImpl;
+import com.zpq.pojo.Vo;
 //提交评论
 /**
  * Servlet implementation class SubmitReviewServlet
@@ -36,7 +39,28 @@ public class CommentServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		doPost(request, response);
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=UTF-8");
+		
+		// 点击分页后网页提交的?后参数
+		int page = Integer.parseInt(request.getParameter("page"));
+		int limit = Integer.parseInt(request.getParameter("limit"));
+		
+		UserDao userDao=new UserDaoImpl();
+		try {
+			List<Object> resultList = new ArrayList<>();
+			resultList.add(userDao.SelectComment(page,limit));
+
+			Vo vo = new Vo();
+			vo.setCode(0);
+			vo.setMsg("success");
+			vo.setCount(userDao.CountComment());
+			vo.setData(resultList);
+			response.getWriter().write(JSONObject.toJSON(vo).toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

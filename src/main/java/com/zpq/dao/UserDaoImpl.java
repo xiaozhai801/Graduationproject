@@ -12,6 +12,7 @@ import java.util.List;
 import com.zpq.pojo.Admin;
 import com.zpq.pojo.Article;
 import com.zpq.pojo.User;
+import com.zpq.pojo.UserComment;
 import com.zpq.utils.DBUtil;
 
 public class UserDaoImpl implements UserDao {
@@ -265,16 +266,20 @@ public class UserDaoImpl implements UserDao {
 
 		SearchElementDao searchElementDao = new SearchElementDaoImpl();
 		User user = searchElementDao.searchUserInfo("userId", userId).get(userId);
-		String name = user.getName();
+		String name = user.getName();	// 获取用户名
+		
+		Article article=searchElementDao.searchArticleInfo("titleId", titleId).get(titleId);	// 获取文章信息
+		String topic= article.getTopic();
 
-		String sql = "INSERT INTO c_usercomment (id, userId, `name`, titleId, `comment`,uploadTime) VALUES (?,?,?,?,?,?);";
+		String sql = "INSERT INTO c_usercomment (id, userId, `name`, titleId, topic, `comment`,uploadTime) VALUES (?,?,?,?,?,?,?);";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setLong(1, id);
 		ps.setString(2, userId);
 		ps.setString(3, name);
 		ps.setInt(4, titleId);
-		ps.setString(5, comment);
-		ps.setTimestamp(6, uploadTime);
+		ps.setString(5, topic);
+		ps.setString(6, comment);
+		ps.setTimestamp(7, uploadTime);
 
 		int row = ps.executeUpdate();
 		return row;
@@ -359,6 +364,82 @@ public class UserDaoImpl implements UserDao {
 		String sql = "SELECT count(*) as sum FROM c_useractions where userId=? and `like`=1";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		return 0;
+	}
+
+	@Override
+	public List<Object> SelectMyComment(String userId) throws SQLException {
+		List<Object> myCommentList=new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM c_usercomment where userId=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			UserComment userComment = new UserComment();
+			userComment.setId(rs.getLong("id"));
+			userComment.setUserId(rs.getString("userId"));
+			userComment.setName(rs.getString("name"));
+			userComment.setTitleId(rs.getInt("titleId"));
+			userComment.setTopic(rs.getString("topic"));
+			userComment.setComment(rs.getString("comment"));
+			userComment.setUploadTime(rs.getString("uploadTime"));
+			myCommentList.add(userComment);
+		}
+		return myCommentList;
+	}
+
+	@Override
+	public int CountMyComment(String userId) throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT count(*) as sum FROM c_usercomment where userId=?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setString(1, userId);
+
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			return rs.getInt("sum");
+		}
+		return 0;
+	}
+
+	@Override
+	public List<Object> SelectComment(int page, int limit) throws SQLException {
+		List<Object> commentList=new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT * FROM c_usercomment LIMIT ?,?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setInt(1, (page - 1) * limit);
+		ps.setInt(2, limit);
+		
+		ResultSet rs=ps.executeQuery();
+		while (rs.next()) {
+			UserComment userComment = new UserComment();
+			userComment.setId(rs.getLong("id"));
+			userComment.setUserId(rs.getString("userId"));
+			userComment.setName(rs.getString("name"));
+			userComment.setTitleId(rs.getInt("titleId"));
+			userComment.setTopic(rs.getString("topic"));
+			userComment.setComment(rs.getString("comment"));
+			userComment.setUploadTime(rs.getString("uploadTime"));
+			commentList.add(userComment);
+		}
+		return commentList;
+	}
+
+	@Override
+	public int CountComment() throws SQLException {
+		// TODO Auto-generated method stub
+		DBUtil dbUtil = new DBUtil();
+		String sql = "SELECT count(*) as sum FROM c_usercomment";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 
 		ResultSet rs=ps.executeQuery();
 		while (rs.next()) {
