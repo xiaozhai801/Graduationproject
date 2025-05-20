@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>所有用户</title>
+<title>用户管理</title>
 <link href="../..//layui/css/layui.css" rel="stylesheet">
 <script src="../..//layui/layui.js"></script>
 <script src="../..//js/jquery-3.6.0.min.js"></script>
@@ -11,6 +11,10 @@
 html {
 	/* overflow-x: hidden; */
 	overflow: hidden;
+}
+body {
+  display: flex;
+  justify-content: center;
 }
 </style>
 </head>
@@ -30,7 +34,7 @@ html {
 		// 创建表格实例
 		table.render({
 			elem : '#ID-table-demo-editable',
-			url : '../../SelectAllUserServlet', // 此处为静态模拟数据，实际使用时需换成真实接口
+			url : '../../SelectAllUserServlet',
 			page : true,
 			//,editTrigger: 'dblclick' // 触发编辑的事件类型（默认 click ）。 v2.7.0 新增，之前版本固定为单击触发
 			css : [

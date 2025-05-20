@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>当前审核文章</title>
-<link href="../..//layui/css/layui.css" rel="stylesheet">
-<script src="../..//layui/layui.js"></script>
-<script src="../..//js/jquery-3.6.0.min.js"></script>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
 <style>
-/* 自定义样式 */
 .article-container {
 	padding: 20px;
 	max-width: 1200px;
@@ -27,6 +26,22 @@
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #eee;
+}
+
+.topic-container {
+	padding: 20px;
+	background: #f9f9f9;
+	border-radius: 2px;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+	margin-bottom: 20px;
+}
+.topic-container {
+    padding: 15px 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 </style>
 </head>
@@ -57,6 +72,7 @@
 				</div>
 			</div>
 			<div class="layui-card-body">
+				<div id="topic-container" class="topic-container"></div>
 				<div id="content" class="article-content"></div>
 			</div>
 		</div>
@@ -99,8 +115,8 @@
 							const article = data.data[0];
 							const topic = article.topic;
 							const dataHtml = article.data_html;
-
-							$('#title').text(topic);
+							
+							$('#topic-container').text(topic);
 							$('#content').html(dataHtml);
 						} else {
 							layer.alert("加载失败：" + data.msg, {

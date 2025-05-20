@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.zpq.dao.UserDao;
 import com.zpq.dao.UserDaoImpl;
 import com.zpq.pojo.User;
-
+// 修改密码
 /**
  * Servlet implementation class EditPersonalPassword
  */

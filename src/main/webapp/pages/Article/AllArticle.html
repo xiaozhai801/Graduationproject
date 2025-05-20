@@ -2,128 +2,68 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>所有文章</title>
-    <link href="../../layui/css/layui.css" rel="stylesheet">
-    <script src="../../layui/layui.js"></script>
-    <script src="../../js/jquery-3.6.0.min.js"></script>
-    <style>
-        html,
-        body {
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            background-color: #f9fafb;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>所有文章</title>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<style>
+html, body {
+	overflow: hidden;
+	font-family: 'Inter', sans-serif;
+	background-color: #f9fafb;
+}
 
-        .layui-form {
-            background-color: #fff;
-            padding: 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            margin-bottom: 16px;
-        } */
-
-        .layui-input {
-            border-radius: 4px;
-            border: 1px solid #d1d5db;
-            transition: border-color 0.3s ease;
-        }
-
-        .layui-input:hover {
-            border-color: #9ca3af;
-        }
-
-        .layui-btn {
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        #articleTable {
-            border-collapse: collapse;
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        #articleTable th,
-        #articleTable td {
-            border: none;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 12px 16px;
-            text-align: left;
-        }
-
-        #articleTable th {
-            background-color: #f3f4f6;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        #articleTable tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* 鼠标悬停效果 */
-        #articleTable tbody tr:hover {
-            background-color: #f9fafb;
-        }
-
-        /* 链接样式 */
-        .layui-table-link {
-            color: #2563eb;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .layui-table-link:hover {
-            color: #1d4ed8;
-        }
-
-        /* 下拉菜单样式 */
-        .layui-dropdown {
-            border-radius: 4px;
-        }
-    </style>
+.layui-form, #articleTable {
+	margin: 0 auto;
+	width: fit-content;
+}
+.layui-table-link:hover {
+	color: #333;
+}
+</style>
 </head>
 
 <body>
-    <!-- 搜索表单 -->
-    <form class="layui-form layui-row layui-col-space16">
-        <div class="layui-form-item">
-            <!-- 标题输入 -->
-            <div class="layui-input-inline">
-                <input type="text" name="topic" placeholder="标题" class="layui-input" style="width: 150px;">
-            </div>
-            <!-- 作者输入 -->
-            <div class="layui-input-inline">
-                <input type="text" name="name" placeholder="作者" class="layui-input" style="width: 150px;">
-            </div>
-            <!-- 机型下拉菜单 -->
-            <div class="layui-input-inline">
-                <div class="layui-btn-container">
-                    <button class="layui-btn" type="button" id="modelDropdown" style="width: 120px;">
-                        <span>机型</span>
-                        <i class="layui-icon layui-icon-down layui-font-12"></i>
-                    </button>
-                </div>
-                <!-- 隐藏字段保存机型值 -->
-                <input type="hidden" name="model" id="modelInput">
-            </div>
-            <!-- 搜索按钮 -->
-            <div class="layui-input-inline">
-                <button class="layui-btn" lay-submit lay-filter="searchBtn">
-                    <i class="layui-icon layui-icon-search"></i>
-                </button>
-            </div>
-        </div>
-    </form>
+	<!-- 搜索表单 -->
+	<form class="layui-form layui-row layui-col-space16">
+		<div class="layui-form-item">
+			<!-- 标题输入 -->
+			<div class="layui-input-inline">
+				<input type="text" name="topic" placeholder="标题" class="layui-input"
+					style="width: 150px;">
+			</div>
+			<!-- 作者输入 -->
+			<div class="layui-input-inline">
+				<input type="text" name="name" placeholder="作者" class="layui-input"
+					style="width: 150px;">
+			</div>
+			<!-- 机型下拉菜单 -->
+			<div class="layui-input-inline">
+				<div class="layui-btn-container">
+					<button class="layui-btn" type="button" id="modelDropdown"
+						style="width: 120px;">
+						<span>机型</span> <i
+							class="layui-icon layui-icon-down layui-font-12"></i>
+					</button>
+				</div>
+				<!-- 隐藏字段保存机型值 -->
+				<input type="hidden" name="model" id="modelInput">
+			</div>
+			<!-- 搜索按钮 -->
+			<div class="layui-input-inline">
+				<button class="layui-btn" lay-submit lay-filter="searchBtn">
+					<i class="layui-icon layui-icon-search"></i>搜索
+				</button>
+			</div>
+		</div>
+	</form>
 
-    <!-- 表格容器 -->
-    <table id="articleTable" lay-filter="articleTable"></table>
+	<!-- 表格容器 -->
+	<table id="articleTable" lay-filter="articleTable"></table>
 
-    <script>
+	<script>
         layui.use(['table', 'form', 'dropdown'], function () {
             var table = layui.table;
             var form = layui.form;
@@ -205,4 +145,4 @@
     </script>
 </body>
 
-</html>    
+</html>

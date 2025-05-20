@@ -49,6 +49,9 @@ public class SelectAllUserServlet extends HttpServlet {
             for (Object userObj : userList) {
                 if (userObj instanceof User) {
                     User user = (User) userObj;
+                    if(user.getName().equals("管理员")) {	// 排除管理员信息
+                    	continue;
+                    }
                     Map<String, Object> userMap = new HashMap<>();
                     userMap.put("userId", user.getUserId());
                     userMap.put("name", user.getName());

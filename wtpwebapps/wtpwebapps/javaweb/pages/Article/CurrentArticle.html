@@ -2,131 +2,137 @@
 <html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <title>当前文章</title>
-    <link href="../../layui/css/layui.css" rel="stylesheet">
-    <script src="../../layui/layui.js"></script>
-    <script src="../../js/jquery-3.6.0.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background-color: #f2f2f2;
-        }
+<meta charset="UTF-8">
+<title>当前文章</title>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+	background-color: #f2f2f2;
+}
 
-        .article-container {
-            padding: 15px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.article-container {
+	padding: 15px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
 
-        .article-content {
-            line-height: 1.8;
-            font-size: 16px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 2px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-            min-height: 400px;
-        }
+.article-content {
+	line-height: 1.8;
+	font-size: 16px;
+	padding: 20px;
+	background: #fff;
+	border-radius: 2px;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+	min-height: 400px;
+}
 
-        .article-title {
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 24px;
-        }
+.article-title {
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eee;
+	font-size: 24px;
+}
 
-        .comment-item {
-            margin: 10px 0;
-            padding: 15px;
-            background: #fff;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+.topic-container {
+	padding: 15px 20px;
+	border: 1px solid #e5e7eb;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	font-size: 1.25rem;
+	font-weight: 600;
+}
 
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 25px 0;
-        }
+.comment-item {
+	margin: 10px 0;
+	padding: 15px;
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-        .action-buttons .layui-col-md4 {
-            width: auto;
-            float: none;
-        }
+.action-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin: 25px 0;
+}
 
-        .text-right {
-            text-align: right;
-        }
+.action-buttons .layui-col-md4 {
+	width: auto;
+	float: none;
+}
 
-        .comment-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
+.text-right {
+	text-align: right;
+}
 
-        .comment-list {
-            margin-top: 20px;
-        }
-    </style>
+.comment-section {
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid #eee;
+}
+
+.comment-list {
+	margin-top: 20px;
+}
+</style>
 </head>
 
 <body>
-    <div class="layui-container article-container">
-        <div class="layui-card">
-            <div class="layui-card-header">
-                <div class="layui-row layui-col-space10">
-                    <div class="layui-col-md6">
-                        <h1 id="title" class="article-title"></h1>
-                    </div>
-                    <div class="layui-col-md6 text-right">
-                        <button class="layui-btn layui-btn-primary" id="btn-back">
-                            <i class="layui-icon layui-icon-return"></i>返回
-                        </button>
-                    </div>
-                </div>
-            </div>
+	<div class="layui-container article-container">
+		<div class="layui-card">
+			<div class="layui-card-header">
+				<div class="layui-col-md12" style="text-align: right;">
+					<button class="layui-btn layui-btn-primary" id="btn-back">
+						<i class="layui-icon layui-icon-return"></i>返回
+					</button>
+				</div>
+			</div>
 
-            <div class="layui-card-body">
-                <div id="content" class="article-content"></div>
+			<div class="layui-card-body">
+				<div id="topic-container" class="topic-container"></div>
+				<div id="content" class="article-content"></div>
 
-                <div class="action-buttons layui-row">
-                    <div class="layui-col-md4">
-                        <button class="layui-btn layui-btn-primary" id="btn-like">
-                            <i class="layui-icon"></i><span>点赞</span>
-                        </button>
-                    </div>
-                    <div class="layui-col-md4">
-                        <button class="layui-btn layui-btn-primary" id="btn-favorite">
-                            <i class="layui-icon"></i><span>收藏</span>
-                        </button>
-                    </div>
-                    <div class="layui-col-md4">
-                        <button class="layui-btn layui-btn-primary" id="btn-copylink">
-                            <i class="layui-icon layui-icon-link"></i>复制链接
-                        </button>
-                    </div>
-                </div>
+				<div class="action-buttons layui-row">
+					<div class="layui-col-md4">
+						<button class="layui-btn layui-btn-primary" id="btn-like">
+							<i class="layui-icon"></i><span>点赞</span>
+						</button>
+					</div>
+					<div class="layui-col-md4">
+						<button class="layui-btn layui-btn-primary" id="btn-favorite">
+							<i class="layui-icon"></i><span>收藏</span>
+						</button>
+					</div>
+					<div class="layui-col-md4">
+						<button class="layui-btn layui-btn-primary" id="btn-copylink">
+							<i class="layui-icon layui-icon-link"></i>复制链接
+						</button>
+					</div>
+				</div>
 
-                <div class="comment-section">
-                    <h3>评论 <span class="layui-badge">0</span></h3>
-                    <div class="layui-form">
-                        <textarea class="layui-textarea" placeholder="请输入你的评论" rows="5"></textarea>
-                        <button type="button" class="layui-btn layui-btn-normal" id="btn-comment" style="margin-top: 10px;">
-                            提交评论
-                        </button>
-                    </div>
-                    <div id="comment-list" class="comment-list"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+				<div class="comment-section">
+					<h3>
+						评论 <span class="layui-badge">0</span>
+					</h3>
+					<div class="layui-form">
+						<textarea class="layui-textarea" placeholder="请输入你的评论" rows="5"></textarea>
+						<button type="button" class="layui-btn layui-btn-normal"
+							id="btn-comment" style="margin-top: 10px;">提交评论</button>
+					</div>
+					<div id="comment-list" class="comment-list"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <script>
+	<script>
         const config = {
             urls: {
                 article: '../../ShowArticleServlet',
@@ -147,7 +153,7 @@
         };
 
         const dom = {
-            title: $('#title'),
+            title: $('#topic-container'),
             content: $('#content'),
             likeBtn: $('#btn-like'),
             favoriteBtn: $('#btn-favorite'),
