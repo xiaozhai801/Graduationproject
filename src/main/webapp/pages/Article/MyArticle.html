@@ -13,6 +13,13 @@ html, body {
 	/* overflow-x: hidden; */
 	overflow: hidden;
 }
+.layui-form, #articleTable {
+	margin: 0 auto;
+	width: fit-content;
+}
+.layui-table-link:hover {
+	color: #333;
+}
 </style>
 <body>
 	<form class="layui-form layui-row layui-col-space16">
@@ -117,7 +124,7 @@ html, body {
 					title : '点赞量',
 					width : 100
 				} ] ],
-				height : 'full-55'
+				height : 'full-120'
 			});
 			// 日期
 			laydate.render({

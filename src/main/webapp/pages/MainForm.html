@@ -50,7 +50,7 @@
 <body>
 	<div class="layui-layout layui-layout-admin">
 		<div class="layui-header">
-			<div class="layui-logo layui-hide-xs layui-bg-black">物品修复系统</div>
+			<div class="layui-logo layui-hide-xs layui-bg-black">物品修理文章系统</div>
 			<!-- 头部区域（可配合layui 已有的水平导航） -->
 			<ul class="layui-nav layui-layout-left">
 				<!-- 移动端显示 -->
@@ -133,40 +133,49 @@
 					}
 				});
 
-				// main 主 iframe 窗口链接点击事件
-				$(document).ready(function() {
-					$("dd>a, li.layui-nav-item a").not("#logout-link").click(function(e) {
-						e.preventDefault();
-						$('#main').attr("src", $(this).attr("href"));
-					});
-				});
+			    // 页面加载时恢复上次访问的页面
+			    $(document).ready(function() {
+			        var currentPage = sessionStorage.getItem('currentPage');
+			        if (currentPage) {
+			            $('#main').attr("src", currentPage);
+			        }
 
-				// 退出登录处理
-				$('#logout-link').click(function() {
-					layer.confirm('确定要退出登录吗？', {
-						icon: 3,
-						title: '提示'
-					}, function(index) {
-						$.ajax({
-							type: "POST",
-							url: "../LoginOutServlet",
-							success: function(data) {
-								if (data === "success") {
-									layer.msg('退出登录成功', { icon: 1, time: 2000 });
-									setTimeout(function() {
-										window.location.href = "../Login.html";
-									}, 2000);
-								} else {
-									layer.msg('退出登录失败', { icon: 2, time: 2000 });
-								}
-							},
-							error: function() {
-								layer.msg('请求出错', { icon: 2, time: 2000 });
-							}
-						});
-						layer.close(index);
-					});
-				});
+			        // 导航链接点击事件
+			        $("dd>a, li.layui-nav-item a").not("#logout-link").click(function(e) {
+			            e.preventDefault();
+			            var href = $(this).attr("href");
+			            $('#main').attr("src", href);
+			            sessionStorage.setItem('currentPage', href); // 记录当前页面
+			        });
+			    });
+
+			    // 退出登录时清除存储的页面信息
+			    $('#logout-link').click(function() {
+			        layer.confirm('确定要退出登录吗？', {
+			            icon: 3,
+			            title: '提示'
+			        }, function(index) {
+			            sessionStorage.removeItem('currentPage'); // 清除记录
+			            $.ajax({
+			                type: "POST",
+			                url: "../LoginOutServlet",
+			                success: function(data) {
+			                    if (data === "success") {
+			                        layer.msg('退出登录成功', { icon: 1, time: 2000 });
+			                        setTimeout(function() {
+			                            window.location.href = "../Login.html";
+			                        }, 2000);
+			                    } else {
+			                        layer.msg('退出登录失败', { icon: 2, time: 2000 });
+			                    }
+			                },
+			                error: function() {
+			                    layer.msg('请求出错', { icon: 2, time: 2000 });
+			                }
+			            });
+			            layer.close(index);
+			        });
+			    });
 			});
 		</script>
 </body>

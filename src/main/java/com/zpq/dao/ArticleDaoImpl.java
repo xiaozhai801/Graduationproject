@@ -18,21 +18,13 @@ public class ArticleDaoImpl implements ArticleDao {
 
 	@Override
 	public List<Object> selectArticle(int page, int limit) throws SQLException {
-		// 用于存储查询到的文章对象的列表
 		List<Object> articleList = new ArrayList<>();
-		// 创建数据库工具类实例，用于获取数据库连接和操作数据库
 		DBUtil dbUtil = new DBUtil();
-		// SQL语句，使用LIMIT进行分页查询，?为占位符
 		String sql = "SELECT * FROM v_articleinfo LIMIT ?,?";
-		// 获取预编译的SQL语句对象
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
-		// 设置LIMIT子句的第一个参数，即偏移量，(page - 1) * limit计算出从哪条数据开始查询
 		ps.setInt(1, (page - 1) * limit);
-		// 设置LIMIT子句的第二个参数，即每页显示的记录数
 		ps.setInt(2, limit);
-		// 执行SQL查询，并获取结果集
 		ResultSet rs = ps.executeQuery();
-		// 遍历结果集，将每一条记录封装成Article对象并添加到articleList中
 		while (rs.next()) {
 			Article article = new Article();
 			article.setTitleId(rs.getInt("titleId"));
@@ -56,17 +48,11 @@ public class ArticleDaoImpl implements ArticleDao {
 	// 获取所有文章数量的方法
 	@Override
 	public int countArticle() throws SQLException {
-		// 创建数据库工具类实例
 		DBUtil dbUtil = new DBUtil();
-		// SQL语句，统计v_articleinfo表中的记录数量，使用count(*)函数，并将结果命名为sum
 		String sql = "SELECT count(*) as sum FROM v_articleinfo";
-		// 获取数据库连接
 		Connection conn = dbUtil.getConnection();
-		// 因为SQL语句中没有占位符，所以使用Statement对象执行SQL语句
 		java.sql.Statement st = conn.createStatement();
-		// 执行SQL查询，并获取结果集
 		ResultSet rs = st.executeQuery(sql);
-		// 遍历结果集，获取统计的文章数量并返回
 		while (rs.next()) {
 			return rs.getInt("sum");
 		}
@@ -75,10 +61,34 @@ public class ArticleDaoImpl implements ArticleDao {
 	}
 
 	@Override
+	public int countArticle(String model) throws SQLException {
+	    DBUtil dbUtil = new DBUtil();
+	    String sql = "SELECT count(*) as sum FROM v_articleinfo";
+	    StringBuilder condition = new StringBuilder();
+	    List<Object> params = new ArrayList<>();
+
+	    if (model != null && !model.isEmpty()) {
+	        condition.append(" WHERE model = ?");
+	        params.add(model);
+	    }
+
+	    sql += condition.toString();
+	    PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+
+	    for (int i = 0; i < params.size(); i++) {
+	        ps.setObject(i + 1, params.get(i));
+	    }
+
+	    ResultSet rs = ps.executeQuery();
+	    while (rs.next()) {
+	        return rs.getInt("sum");
+	    }
+	    return 0; // 无结果返回0
+	}
+	
+	@Override
 	public List<Object> searchArticle(Article article, int page, int limit) throws SQLException {
-		// 用于存储搜索到的文章对象的列表
 		List<Object> searchArticleList = new ArrayList<>();
-		// 创建数据库工具类实例
 		DBUtil dbUtil = new DBUtil();
 		// 使用StringBuilder构建SQL查询语句，初始语句为查询所有记录的基础部分，并添加WHERE 1=1方便后续拼接条件
 		StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM v_articleinfo WHERE 1=1");
@@ -644,6 +654,4 @@ public class ArticleDaoImpl implements ArticleDao {
         }
         return count;
 	}
-
-
 }

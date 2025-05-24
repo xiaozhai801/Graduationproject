@@ -93,13 +93,18 @@ html, body {
                 [
                     {field: 'titleId', title: '文章ID', width: 150, sort: true, fixed: true},
                     {
+                    	field: 'comment',
+                    	title: '评论内容',
+                    	width: 320,
+                        templet: d => `<a href="../Article/CurrentArticle.html?titleId=${d.titleId}">${d.topic || '无标题'}</a>`
+                    },
+                    {field: 'name', title: '评论用户', width: 120, sort: true},
+                    {
                         field: 'topic', 
                         title: '标题', 
                         width: 520,
                         templet: d => `<a href="../Article/CurrentArticle.html?titleId=${d.titleId}">${d.topic || '无标题'}</a>`
                     },
-                    {field: 'name', title: '评论用户', width: 120, sort: true},
-                    {field: 'comment', title: '评论内容', width: 320, sort: true},
                     {field: 'uploadTime', title: '发布日期', width: 200, sort: true},
                     {
                         field: 'operate',
@@ -141,11 +146,11 @@ html, body {
                 model: $('#modelInput').val()
             };
 
-            // 重载表格（注意：搜索接口可能需要调整为实际接口）
+            // 重载表格
             table.reload('ID-table-demo-search', {
-                url: '', // 确保此 URL 正确指向搜索接口
+                url: '',
                 where: params,
-                page: {curr: 1} // 重置为第一页
+                page: {curr: 1}
             });
             
             return false;
