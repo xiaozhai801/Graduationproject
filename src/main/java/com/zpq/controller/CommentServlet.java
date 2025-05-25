@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,8 +47,10 @@ public class CommentServlet extends HttpServlet {
 		
 		UserDao userDao=new UserDaoImpl();
 		try {
-			List<Object> resultList = new ArrayList<>();
-			resultList.add(userDao.SelectComment(page,limit));
+//			List<Object> resultList = new ArrayList<>();
+//			resultList.add(userDao.SelectComment(page,limit));
+			
+			List<Object> resultList = userDao.SelectComment(page,limit);
 
 			Vo vo = new Vo();
 			vo.setCode(0);

@@ -64,9 +64,12 @@ public class SearchMyArticleServlet extends HttpServlet {
 		String titleIdStr = getParamValue(request, "titleId", "-1");
 		String topic = getParamValue(request, "topic", null);
 		String model = getParamValue(request, "model", null);
+		String releaseStr = getParamValue(request, "release", "-1");
+
 
 		// 将titleId的字符串值转换为整数
 		int titleId = Integer.parseInt(titleIdStr);
+		int release = Integer.parseInt(releaseStr);
 
 		// 创建Article对象并设置属性
 		Article article = new Article();
@@ -74,6 +77,7 @@ public class SearchMyArticleServlet extends HttpServlet {
 		article.setTopic(topic);
 		article.setUserId(name);
 		article.setModel(model);
+		article.setRelease(release);
 
 		// 创建ArticleDao实例
 		ArticleDao articleDao = new ArticleDaoImpl();
@@ -86,7 +90,7 @@ public class SearchMyArticleServlet extends HttpServlet {
 			Vo vo = new Vo();
 			vo.setCode(0);
 			vo.setMsg("success");
-			vo.setCount(articleDao.countMyArticle(name));
+			vo.setCount(articleDao.countMyArticle(article));
 			vo.setData(articleList);
 			// 将Vo对象转换为JSON字符串并返回给客户端
 			response.getWriter().write(JSONObject.toJSON(vo).toString());

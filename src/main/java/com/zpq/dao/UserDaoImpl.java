@@ -448,4 +448,104 @@ public class UserDaoImpl implements UserDao {
 		return 0;
 	}
 
+	@Override
+	public List<Object> SearchComment(UserComment userComment, int page, int limit) throws SQLException {
+		List<Object> searchCommentList = new ArrayList<>();
+		DBUtil dbUtil = new DBUtil();
+		// 使用StringBuilder构建SQL查询语句，初始语句为查询所有记录的基础部分，并添加WHERE 1=1方便后续拼接条件
+		StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM c_usercomment WHERE 1=1");
+		int titleId = userComment.getTitleId();
+		String topic = userComment.getTopic();
+		String name = userComment.getName();
+		List<Object> params = new ArrayList<>();
+
+		// 如果文章ID不为-1，说明有文章ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (titleId != -1) {
+			sqlBuilder.append(" AND CAST(titleId AS CHAR) LIKE ?");
+			params.add("%" + titleId + "%");
+		}
+		// 如果文章标题不为null，说明有文章标题的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (topic != null) {
+			sqlBuilder.append(" AND topic LIKE ?");
+			params.add("%" + topic + "%");
+		}
+		// 如果文章作者不为null，说明有文章作者的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (name != null) {
+			sqlBuilder.append(" AND name LIKE ?");
+			params.add("%" + name + "%");
+		}
+
+		// 添加分页查询的LIMIT子句到SQL语句中，并将分页参数值添加到params列表
+		sqlBuilder.append(" LIMIT ?,?");
+		params.add((page - 1) * limit);
+		params.add(limit);
+
+		// 将StringBuilder中的内容转换为完整的SQL语句字符串
+		String sql = sqlBuilder.toString();
+
+		// 获取预编译的SQL语句对象
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		// 遍历params列表，为预编译语句的占位符设置对应的参数值
+		for (int i = 0; i < params.size(); i++) {
+			ps.setObject(i + 1, params.get(i));
+		}
+
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			UserComment searchComment=new UserComment();
+			searchComment.setUserId(rs.getString("userId"));
+			searchComment.setName(rs.getString("name"));
+			searchComment.setTitleId(rs.getInt("titleId"));
+			searchComment.setTopic(rs.getString("topic"));
+			searchComment.setComment(rs.getString("comment"));
+			searchComment.setUploadTime(rs.getString("uploadTime"));
+			searchCommentList.add(searchComment);
+		}
+		return searchCommentList;
+	}
+
+	@Override
+	public int CountComment(UserComment userComment) throws SQLException {
+		int row=0;
+		DBUtil dbUtil = new DBUtil();
+		// 使用StringBuilder构建SQL查询语句，初始语句为查询所有记录的基础部分，并添加WHERE 1=1方便后续拼接条件
+		StringBuilder sqlBuilder = new StringBuilder("SELECT count(*) as sum FROM c_usercomment WHERE 1=1");
+		int titleId = userComment.getTitleId();
+		String topic = userComment.getTopic();
+		String name = userComment.getName();
+		List<Object> params = new ArrayList<>();
+
+		// 如果文章ID不为-1，说明有文章ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (titleId != -1) {
+			sqlBuilder.append(" AND CAST(titleId AS CHAR) LIKE ?");
+			params.add("%" + titleId + "%");
+		}
+		// 如果文章标题不为null，说明有文章标题的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (topic != null) {
+			sqlBuilder.append(" AND topic LIKE ?");
+			params.add("%" + topic + "%");
+		}
+		// 如果文章作者不为null，说明有文章作者的查询条件，添加到SQL语句中，并将参数值添加到params列表
+		if (name != null) {
+			sqlBuilder.append(" AND name LIKE ?");
+			params.add("%" + name + "%");
+		}
+
+		// 将StringBuilder中的内容转换为完整的SQL语句字符串
+		String sql = sqlBuilder.toString();
+
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		for (int i = 0; i < params.size(); i++) {
+			ps.setObject(i + 1, params.get(i));
+		}
+
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			row=rs.getInt("sum");
+		}
+		return row;
+	}
+
 }

@@ -11,31 +11,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zpq.dao.ArticleDao;
-import com.zpq.dao.ArticleDaoImpl;
-import com.zpq.pojo.Article;
+import com.zpq.dao.UserDao;
+import com.zpq.dao.UserDaoImpl;
+import com.zpq.pojo.UserComment;
 import com.zpq.pojo.Vo;
 
-//搜索文章
 /**
- * Servlet implementation class SearchArticleServlet
+ * Servlet implementation class SearchCommentServlet
  */
-@WebServlet("/SearchArticleServlet")
-public class SearchArticleServlet extends HttpServlet {
+@WebServlet("/SearchCommentServlet")
+public class SearchCommentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	public SearchArticleServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public SearchCommentServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	private String getParamValue(HttpServletRequest request, String paramName, String defaultValue) {
 		String value = request.getParameter(paramName);
 		return (value != null && !value.isEmpty()) ? value : defaultValue;
 	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		// 解析分页参数page
 		int page = Integer.parseInt(request.getParameter("page"));
 		// 解析分页参数limit
@@ -45,48 +50,38 @@ public class SearchArticleServlet extends HttpServlet {
 		String titleIdStr = getParamValue(request, "titleId", "-1");
 		String topic = getParamValue(request, "topic", null);
 		String name = getParamValue(request, "name", null);
-		String model = getParamValue(request, "model", null);
-		String releaseStr = getParamValue(request, "release", "-1");
-
+		
 		// 将字符串值转换为整数
 		int titleId = Integer.parseInt(titleIdStr);
-		int release = Integer.parseInt(releaseStr);
-
+		
 		// 创建Article对象并设置属性
-		Article article = new Article();
-		article.setTitleId(titleId);
-		article.setTopic(topic);
-		article.setName(name);
-		if (model != null && model.equals("全部")) {
-			article.setModel(null);
-		} else {
-			article.setModel(model);
-		}
-		article.setRelease(release);
-
+		UserComment userComment = new UserComment();
+		userComment.setTitleId(titleId);
+		userComment.setTopic(topic);
+		userComment.setName(name);
+		
 		// 创建ArticleDao实例
-		ArticleDao articleDao = new ArticleDaoImpl();
+		UserDao userDao = new UserDaoImpl();
 		try {
-			// 调用searchArticle方法获取文章列表
-			List<Object> articleList = articleDao.searchArticle(article, page, limit);
-			// 设置网页格式和编码
+			List<Object> userCommentList = userDao.SearchComment(userComment, page, limit);
 			response.setContentType("text/html;charset=UTF-8");
-			// 创建Vo对象并设置相关属性
 			Vo vo = new Vo();
 			vo.setCode(0);
 			vo.setMsg("success");
-			vo.setCount(articleDao.countArticle(article));
-			vo.setData(articleList);
-			// 将Vo对象转换为JSON字符串并返回给客户端
+			vo.setCount(userDao.CountComment(userComment));
+			vo.setData(userCommentList);
 			response.getWriter().write(JSONObject.toJSON(vo).toString());
 		} catch (SQLException e) {
-			// 捕获SQLException并打印堆栈跟踪信息
 			e.printStackTrace();
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+
 }

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import com.zpq.pojo.Admin;
 import com.zpq.pojo.User;
+import com.zpq.pojo.UserComment;
 
 public interface UserDao {
 	// 更新文章列表信息
@@ -41,13 +42,13 @@ public interface UserDao {
 
 	// 查询当前用户收藏文章
 	public List<Object> SelectMyFavorite(String userId) throws SQLException;
-	
+
 	// 当前用户收藏文章数量
 	public int CountMyFavorite(String userId) throws SQLException;
-	
+
 	// 查询当前用户点赞文章
 	public List<Object> SelectMyLike(String userId) throws SQLException;
-	
+
 	// 当前用户点赞文章数量
 	public int CountMyLike(String userId) throws SQLException;
 
@@ -59,7 +60,13 @@ public interface UserDao {
 
 	// 所有评论信息,带分页
 	public List<Object> SelectComment(int page, int limit) throws SQLException;
-	
+
 	// 所有评论数量
 	public int CountComment() throws SQLException;
+
+	// 搜索评论信息,带分页
+	public List<Object> SearchComment(UserComment userComment, int page, int limit) throws SQLException;
+	
+	// 搜索条件后所有评论数量
+	public int CountComment(UserComment userComment) throws SQLException;
 }

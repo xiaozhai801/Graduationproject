@@ -55,7 +55,7 @@ html, body {
 		</div>
 	</form>
 
-	<table class="layui-hide" id="ID-table-demo-search"></table>
+	<table class="layui-hide" id="commentTable"></table>
 
 
 	<script>
@@ -75,7 +75,7 @@ html, body {
                 $.post('', {titleId: titleId}, function(data) {
                     if (data.trim() === "success") {
                         layer.msg('删除成功', {icon: 1});
-                        setTimeout(() => table.reload('ID-table-demo-search'), 500);
+                        setTimeout(() => table.reload('commentTable'), 500);
                     } else {
                         layer.msg('删除失败: ' + data, {icon: 2});
                     }
@@ -84,9 +84,8 @@ html, body {
             });
         }
 
-        // 初始化表格（关键修改：新增 parseData 处理嵌套数据结构）
         table.render({
-            elem: '#ID-table-demo-search',
+            elem: '#commentTable',
             url: '../../CommentServlet',
             page: true,
             cols: [
@@ -122,7 +121,7 @@ html, body {
                     code: res.code,
                     msg: res.msg,
                     count: res.count,
-                    data: res.data[0] || []
+                    data: res.data || []
                 };
             },
             done: function(res, curr, count) {
@@ -142,13 +141,12 @@ html, body {
             const params = {
                 titleId: data.field.titleId,
                 topic: data.field.topic,
-                name: data.field.name,
-                model: $('#modelInput').val()
+                name: data.field.name
             };
 
             // 重载表格
-            table.reload('ID-table-demo-search', {
-                url: '',
+            table.reload('commentTable', {
+                url: '../../SearchCommentServlet',
                 where: params,
                 page: {curr: 1}
             });

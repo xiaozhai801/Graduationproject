@@ -61,31 +61,59 @@ public class ArticleDaoImpl implements ArticleDao {
 	}
 
 	@Override
-	public int countArticle(String model) throws SQLException {
-	    DBUtil dbUtil = new DBUtil();
-	    String sql = "SELECT count(*) as sum FROM v_articleinfo";
-	    StringBuilder condition = new StringBuilder();
-	    List<Object> params = new ArrayList<>();
+	public int countArticle(Article article) throws SQLException {
+		int row = 0;
+		DBUtil dbUtil = new DBUtil();
+		StringBuilder sqlBuilder = new StringBuilder("SELECT count(*) as sum FROM v_articleinfo WHERE 1=1");
+		int titleId = article.getTitleId();
+		String topic = article.getTopic();
+		String name = article.getName();
+		String model = article.getModel();
+		int release = article.getRelease();
 
-	    if (model != null && !model.isEmpty()) {
-	        condition.append(" WHERE model = ?");
-	        params.add(model);
-	    }
+		List<Object> params = new ArrayList<>();
 
-	    sql += condition.toString();
-	    PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		if (titleId != -1) {
+			sqlBuilder.append(" AND CAST(titleId AS CHAR) LIKE ?");
+			params.add("%" + titleId + "%");
+		}
 
-	    for (int i = 0; i < params.size(); i++) {
-	        ps.setObject(i + 1, params.get(i));
-	    }
+		if (topic != null) {
+			sqlBuilder.append(" AND topic LIKE ?");
+			params.add("%" + topic + "%");
+		}
 
-	    ResultSet rs = ps.executeQuery();
-	    while (rs.next()) {
-	        return rs.getInt("sum");
-	    }
-	    return 0; // 无结果返回0
+		if (name != null) {
+			sqlBuilder.append(" AND name LIKE ?");
+			params.add("%" + name + "%");
+		}
+
+		if (model != null) {
+			sqlBuilder.append(" AND model LIKE ?");
+			params.add("%" + model + "%");
+		}
+		
+		if (release != -1) {
+			sqlBuilder.append(" AND `release` = ?");
+			params.add(release);
+		}
+		
+		// 将StringBuilder中的内容转换为完整的SQL语句字符串
+		String sql = sqlBuilder.toString();
+
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		for (int i = 0; i < params.size(); i++) {
+			ps.setObject(i + 1, params.get(i));
+		}
+		
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			row = rs.getInt("sum");
+		}
+		return row;
 	}
-	
+
 	@Override
 	public List<Object> searchArticle(Article article, int page, int limit) throws SQLException {
 		List<Object> searchArticleList = new ArrayList<>();
@@ -214,6 +242,60 @@ public class ArticleDaoImpl implements ArticleDao {
 		// 如果没有查询到结果，返回0
 		return 0;
 	}
+	
+	@Override
+	public int countMyArticle(Article article) throws SQLException {
+		int row = 0;
+		DBUtil dbUtil = new DBUtil();
+		StringBuilder sqlBuilder = new StringBuilder("SELECT count(*) as sum FROM v_articleinfo WHERE 1=1");
+		int titleId = article.getTitleId();
+		String topic = article.getTopic();
+		String name = article.getName();
+		String model = article.getModel();
+		int release = article.getRelease();
+
+		List<Object> params = new ArrayList<>();
+
+		if (titleId != -1) {
+			sqlBuilder.append(" AND CAST(titleId AS CHAR) LIKE ?");
+			params.add("%" + titleId + "%");
+		}
+
+		if (topic != null) {
+			sqlBuilder.append(" AND topic LIKE ?");
+			params.add("%" + topic + "%");
+		}
+
+		if (name != null) {
+			sqlBuilder.append(" AND name LIKE ?");
+			params.add("%" + name + "%");
+		}
+
+		if (model != null) {
+			sqlBuilder.append(" AND model LIKE ?");
+			params.add("%" + model + "%");
+		}
+		
+		if (release != -1) {
+			sqlBuilder.append(" AND `release` = ?");
+			params.add(release);
+		}
+		
+		// 将StringBuilder中的内容转换为完整的SQL语句字符串
+		String sql = sqlBuilder.toString();
+
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		for (int i = 0; i < params.size(); i++) {
+			ps.setObject(i + 1, params.get(i));
+		}
+
+		// 执行SQL查询，并获取结果集
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			row = rs.getInt("sum");
+		}
+		return row;
+	}
 
 	@Override
 	public List<Object> searchMyArticle(Article article, int page, int limit) throws SQLException {
@@ -227,6 +309,7 @@ public class ArticleDaoImpl implements ArticleDao {
 		String topic = article.getTopic();
 		String userId = article.getUserId();
 		String model = article.getModel();
+		int release = article.getRelease();
 		List<Object> params = new ArrayList<>();
 
 		// 如果文章ID不为-1，说明有文章ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
@@ -234,18 +317,26 @@ public class ArticleDaoImpl implements ArticleDao {
 			sqlBuilder.append(" AND CAST(titleId AS CHAR) LIKE ?");
 			params.add("%" + titleId + "%");
 		}
+		
 		// 如果文章标题不为null，说明有文章标题的查询条件，添加到SQL语句中，并将参数值添加到params列表
 		if (topic != null) {
 			sqlBuilder.append(" AND topic LIKE ?");
 			params.add("%" + topic + "%");
 		}
+		
 		// 文章作者ID的查询条件，添加到SQL语句中，并将参数值添加到params列表
 		sqlBuilder.append(" AND userId = ?");
 		params.add(userId);
+		
 		// 如果文章机型不为null，说明有文章机型的查询条件，添加到SQL语句中，并将参数值添加到params列表
 		if (model != null) {
 			sqlBuilder.append(" AND model LIKE ?");
 			params.add("%" + model + "%");
+		}
+		
+		if (release != -1) {
+			sqlBuilder.append(" AND `release` = ?");
+			params.add(release);
 		}
 
 		// 添加分页查询的LIMIT子句到SQL语句中，并将分页参数值添加到params列表
@@ -606,21 +697,21 @@ public class ArticleDaoImpl implements ArticleDao {
 		// TODO Auto-generated method stub
 		// 创建数据库工具类实例
 		DBUtil dbUtil = new DBUtil();
-		
+
 		// 检查是否已审核
-		int exist = 0; 
-		String selectSqlString="SELECT COUNT(*) AS exist FROM c_actioncounts WHERE titleId = ? AND (SELECT `release` FROM v_articleinfo WHERE titleId = ?)=0;";
+		int exist = 0;
+		String selectSqlString = "SELECT COUNT(*) AS exist FROM c_actioncounts WHERE titleId = ? AND (SELECT `release` FROM v_articleinfo WHERE titleId = ?)=0;";
 		PreparedStatement ps = dbUtil.getPreparedStatement(selectSqlString);
 		ps.setInt(1, titleId);
 		ps.setInt(2, titleId);
-        ResultSet rs = ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			exist=rs.getInt("exist");
+			exist = rs.getInt("exist");
 		}
-		if (exist==1) {
+		if (exist == 1) {
 			return -1;
 		}
-		
+
 		// SQL新增语句
 		String insertSql = "INSERT INTO c_actioncounts (titleId) VALUES (?) ON DUPLICATE KEY UPDATE titleId = titleId;";
 		ps = dbUtil.getPreparedStatement(insertSql);
@@ -640,18 +731,17 @@ public class ArticleDaoImpl implements ArticleDao {
 		if (model.equals("all")) {
 			sql = "SELECT count(*) as sum FROM v_articleinfo";
 			ps = dbUtil.getPreparedStatement(sql);
-		}else {
+		} else {
 			sql = "SELECT count(*) as sum FROM v_articleinfo where model=?";
 			ps = dbUtil.getPreparedStatement(sql);
-	        ps.setString(1, model);
+			ps.setString(1, model);
 		}
-		
 
-        ResultSet rs = ps.executeQuery();
-        int count = 0;
-        if (rs.next()) {
-            count = rs.getInt("sum");
-        }
-        return count;
+		ResultSet rs = ps.executeQuery();
+		int count = 0;
+		if (rs.next()) {
+			count = rs.getInt("sum");
+		}
+		return count;
 	}
 }
