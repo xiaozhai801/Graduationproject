@@ -16,7 +16,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.zpq.dao.UserDao;
 import com.zpq.dao.UserDaoImpl;
 import com.zpq.pojo.Vo;
-//提交评论
+// 获取评论
+// 提交评论
 /**
  * Servlet implementation class SubmitReviewServlet
  */

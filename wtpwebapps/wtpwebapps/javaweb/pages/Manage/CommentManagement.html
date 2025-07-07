@@ -27,31 +27,24 @@ html, body {
 <body>
 	<form class="layui-form layui-row layui-col-space16">
 		<div class="layui-form-item">
-
 			<!-- 文章ID搜索 -->
 			<div class="layui-input-inline">
-				<input type="text" name="titleId" placeholder="文章ID"
-					class="layui-input" lay-affix="clear" style="width: 150px;">
+				<input type="text" name="titleId" placeholder="文章ID" class="layui-input" lay-affix="clear" style="width: 150px;">
 			</div>
 			<!-- 标题搜索 -->
 			<div class="layui-input-inline">
-				<input type="text" name="topic" placeholder="标题" lay-affix="clear"
-					class="layui-input" style="width: 150px;">
+				<input type="text" name="topic" placeholder="标题" lay-affix="clear" class="layui-input" style="width: 150px;">
 			</div>
-
 			<!-- 评论用户搜索 -->
 			<div class="layui-input-inline">
-				<input type="text" name="name" placeholder="评论用户" lay-affix="clear"
-					class="layui-input" style="width: 150px;">
+				<input type="text" name="name" placeholder="评论用户" lay-affix="clear" class="layui-input" style="width: 150px;">
 			</div>
-
 			<!-- 搜索按钮 -->
 			<div class="layui-input-inline">
 				<button class="layui-btn" lay-submit lay-filter="demo-table-search">
 					<i class="layui-icon layui-icon-search"></i> 搜索
 				</button>
 			</div>
-
 		</div>
 	</form>
 
@@ -59,26 +52,27 @@ html, body {
 
 
 	<script>
-    layui.use(['table', 'form', 'dropdown', 'layer'], function() {
+    layui.use(['table', 'form', 'layer'], function() {
         var table = layui.table;
         var form = layui.form;
-        var dropdown = layui.dropdown;
         var layer = layui.layer;
         var $ = layui.jquery;
 
-        // 删除文章函数
-        function deleteArticle(titleId) {
-            layer.confirm('确定要删除这篇文章吗？', {
+        // 删除评论函数
+        function deleteComment(id) {      
+            layer.confirm('确定要删除这条评论吗？', {
                 icon: 3,
                 title: '提示'
             }, function(index) {
-                $.post('', {titleId: titleId}, function(data) {
+                $.get('../../DeleteCommentServlet', {id: id}, function(data) {
                     if (data.trim() === "success") {
                         layer.msg('删除成功', {icon: 1});
-                        setTimeout(() => table.reload('commentTable'), 500);
+                        setTimeout(() => table.reload('commentTable'), 500); // 刷新表格
                     } else {
                         layer.msg('删除失败: ' + data, {icon: 2});
                     }
+                }).fail(function() {
+                    layer.msg('请求失败', {icon: 2});
                 });
                 layer.close(index);
             });
@@ -95,12 +89,12 @@ html, body {
                     	field: 'comment',
                     	title: '评论内容',
                     	width: 320,
-                        templet: d => `<a href="../Article/CurrentArticle.html?titleId=${d.titleId}">${d.topic || '无标题'}</a>`
+                        templet: d => d.comment || '无评论内容'
                     },
                     {field: 'name', title: '评论用户', width: 120, sort: true},
                     {
                         field: 'topic', 
-                        title: '标题', 
+                        title: '文章标题', 
                         width: 520,
                         templet: d => `<a href="../Article/CurrentArticle.html?titleId=${d.titleId}">${d.topic || '无标题'}</a>`
                     },
@@ -110,7 +104,7 @@ html, body {
                         title: '操作',
                         width: 70,
                         templet: d => `
-                            <button class="layui-btn layui-btn-xs layui-btn-danger" data-titleid="${d.titleId}">删除</button>
+                            <button class="layui-btn layui-btn-xs layui-btn-danger" data-id="${d.id}">删除</button>
                         `
                     }
                 ]
@@ -124,33 +118,23 @@ html, body {
                     data: res.data || []
                 };
             },
-            done: function(res, curr, count) {
-                // 事件委托绑定删除按钮
-                $(document).on('click', '.layui-btn-danger', function() {
-                    deleteArticle($(this).data('titleid'));
+            done: function() {
+                // 事件委托绑定删除按钮（避免重复绑定）
+                $(document).off('click', '.layui-btn-danger').on('click', '.layui-btn-danger', function() {
+                    var id = $(this).data('id'); // 获取data-id的值（即d.id）
+                    deleteComment(id);
                 });
             }
         });
 
         // 搜索功能
         form.on('submit(demo-table-search)', function(data) {
-            // 阻止表单默认提交
             event.preventDefault();
-            
-            // 收集搜索参数
-            const params = {
-                titleId: data.field.titleId,
-                topic: data.field.topic,
-                name: data.field.name
-            };
-
-            // 重载表格
             table.reload('commentTable', {
                 url: '../../SearchCommentServlet',
-                where: params,
+                where: data.field,
                 page: {curr: 1}
             });
-            
             return false;
         });
     });

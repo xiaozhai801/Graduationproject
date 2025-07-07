@@ -69,4 +69,7 @@ public interface UserDao {
 	
 	// 搜索条件后所有评论数量
 	public int CountComment(UserComment userComment) throws SQLException;
+	
+	// 管理员删除评论
+	public int deleteComment(Long id) throws SQLException;
 }

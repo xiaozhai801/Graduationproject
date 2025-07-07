@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class DBUtil {
 
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    // 添加时区设置以避免连接问题
+
     static final String DB_URL = "jdbc:mysql://localhost:3306/userdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
 
     static final String USER = "root";

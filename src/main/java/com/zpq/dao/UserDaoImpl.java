@@ -20,8 +20,8 @@ public class UserDaoImpl implements UserDao {
 	public void Updateinformation(int titleId) throws SQLException {
 		// TODO Auto-generated method stub
 		DBUtil dbUtil = new DBUtil();
-		Article article=new Article();
-		String selectSql="SELECT (SELECT COUNT(*) FROM c_useractions WHERE titleId =?) as views,likeCount as likes,favoriteCount as favorties FROM c_actioncounts WHERE titleId =?;";
+		Article article = new Article();
+		String selectSql = "SELECT (SELECT COUNT(*) FROM c_useractions WHERE titleId =?) as views,likeCount as likes,favoriteCount as favorties FROM c_actioncounts WHERE titleId =?;";
 		PreparedStatement ps = dbUtil.getPreparedStatement(selectSql);
 		ps.setInt(1, titleId);
 		ps.setInt(2, titleId);
@@ -31,7 +31,7 @@ public class UserDaoImpl implements UserDao {
 			article.setLikes(rs.getInt("likes"));
 			article.setFavorites(rs.getInt("favorties"));
 		}
-		
+
 		String updateSql = "UPDATE v_articleinfo set views=?,likes=?,favorites=? where titleId=?";
 		ps = dbUtil.getPreparedStatement(updateSql);
 		ps.setInt(1, article.getViews());
@@ -266,10 +266,10 @@ public class UserDaoImpl implements UserDao {
 
 		SearchElementDao searchElementDao = new SearchElementDaoImpl();
 		User user = searchElementDao.searchUserInfo("userId", userId).get(userId);
-		String name = user.getName();	// 获取用户名
-		
-		Article article=searchElementDao.searchArticleInfo("titleId", titleId).get(titleId);	// 获取文章信息
-		String topic= article.getTopic();
+		String name = user.getName(); // 获取用户名
+
+		Article article = searchElementDao.searchArticleInfo("titleId", titleId).get(titleId); // 获取文章信息
+		String topic = article.getTopic();
 
 		String sql = "INSERT INTO c_usercomment (id, userId, `name`, titleId, topic, `comment`,uploadTime) VALUES (?,?,?,?,?,?,?);";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
@@ -288,13 +288,13 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public List<Object> SelectMyFavorite(String userId) throws SQLException {
 		// TODO Auto-generated method stub
-		List<Object> myFavoriteList=new ArrayList<>();
+		List<Object> myFavoriteList = new ArrayList<>();
 		DBUtil dbUtil = new DBUtil();
 		String sql = "SELECT * FROM v_articleinfo where titleId in (SELECT titleId FROM c_useractions where userId=? and favorite=1)";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Article article = new Article();
 			article.setTitleId(rs.getInt("titleId"));
@@ -322,7 +322,7 @@ public class UserDaoImpl implements UserDao {
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			return rs.getInt("sum");
 		}
@@ -331,13 +331,13 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<Object> SelectMyLike(String userId) throws SQLException {
-		List<Object> myFavoriteList=new ArrayList<>();
+		List<Object> myFavoriteList = new ArrayList<>();
 		DBUtil dbUtil = new DBUtil();
 		String sql = "SELECT * FROM v_articleinfo where titleId in (SELECT titleId FROM c_useractions where userId=? and `like`=1)";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Article article = new Article();
 			article.setTitleId(rs.getInt("titleId"));
@@ -365,7 +365,7 @@ public class UserDaoImpl implements UserDao {
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			return rs.getInt("sum");
 		}
@@ -374,13 +374,13 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<Object> SelectMyComment(String userId) throws SQLException {
-		List<Object> myCommentList=new ArrayList<>();
+		List<Object> myCommentList = new ArrayList<>();
 		DBUtil dbUtil = new DBUtil();
 		String sql = "SELECT * FROM c_usercomment where userId=?";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			UserComment userComment = new UserComment();
 			userComment.setId(rs.getLong("id"));
@@ -403,7 +403,7 @@ public class UserDaoImpl implements UserDao {
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setString(1, userId);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			return rs.getInt("sum");
 		}
@@ -412,14 +412,14 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<Object> SelectComment(int page, int limit) throws SQLException {
-		List<Object> commentList=new ArrayList<>();
+		List<Object> commentList = new ArrayList<>();
 		DBUtil dbUtil = new DBUtil();
 		String sql = "SELECT * FROM c_usercomment LIMIT ?,?";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 		ps.setInt(1, (page - 1) * limit);
 		ps.setInt(2, limit);
-		
-		ResultSet rs=ps.executeQuery();
+
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			UserComment userComment = new UserComment();
 			userComment.setId(rs.getLong("id"));
@@ -441,7 +441,7 @@ public class UserDaoImpl implements UserDao {
 		String sql = "SELECT count(*) as sum FROM c_usercomment";
 		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
 
-		ResultSet rs=ps.executeQuery();
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			return rs.getInt("sum");
 		}
@@ -493,7 +493,7 @@ public class UserDaoImpl implements UserDao {
 		// 执行SQL查询，并获取结果集
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			UserComment searchComment=new UserComment();
+			UserComment searchComment = new UserComment();
 			searchComment.setUserId(rs.getString("userId"));
 			searchComment.setName(rs.getString("name"));
 			searchComment.setTitleId(rs.getInt("titleId"));
@@ -507,7 +507,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public int CountComment(UserComment userComment) throws SQLException {
-		int row=0;
+		int row = 0;
 		DBUtil dbUtil = new DBUtil();
 		// 使用StringBuilder构建SQL查询语句，初始语句为查询所有记录的基础部分，并添加WHERE 1=1方便后续拼接条件
 		StringBuilder sqlBuilder = new StringBuilder("SELECT count(*) as sum FROM c_usercomment WHERE 1=1");
@@ -543,9 +543,23 @@ public class UserDaoImpl implements UserDao {
 		// 执行SQL查询，并获取结果集
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			row=rs.getInt("sum");
+			row = rs.getInt("sum");
 		}
 		return row;
 	}
 
+	@Override
+	public int deleteComment(Long id) throws SQLException {
+		// TODO Auto-generated method stub
+		// 创建数据库工具类实例
+		DBUtil dbUtil = new DBUtil();
+		// SQL删除语句
+		String sql = "DELETE FROM c_usercomment WHERE id = ?";
+		PreparedStatement ps = dbUtil.getPreparedStatement(sql);
+		ps.setLong(1, id);
+		// 执行SQL删除操作，并获取受影响的行数
+		// 1 删除成功,0 删除失败
+		int row = ps.executeUpdate();
+		return row;
+	}
 }
