@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>上传文章</title>
+<link rel="stylesheet" href="../../layui/css/layui.css">
+<script src="../../layui/layui.js"></script>
+</head>
+<body>
+	<div class="layui-fluid">
+		<!--标题-->
+		<div class="layui-row"
+			style="display: flex; justify-content: center; align-items: center;">
+			<div class="layui-panel layui-col-md11"
+				style="font-size: x-large; font-weight: bolder; padding: 10px; margin-top: 10px; border-radius: 10px;">
+				<input type="text" name="topic" id="topic" required
+					lay-verify="required" placeholder="请输入标题" autocomplete="off"
+					class="layui-input">
+			</div>
+		</div>
+		<!--编辑器+侧栏-->
+		<div class="layui-row"
+			style="display: flex; justify-content: center; margin-top: 10px;">
+			<!--编辑器-->
+			<div class="layui-col-md8" style="padding-right: 10px;">
+				<!-- 加载编辑器的容器 -->
+				<textarea name="" id="edit">
+                    这里是<span style="color: #e03e2d;"><em>edit初始化</em></span>的内容
+                </textarea>
+			</div>
+			<!--侧栏-->
+			<div class="layui-col-md3">
+				<div class="layui-panel" style="padding: 10px;">
+					<div class="layui-form"
+						style="margin: 10px auto; border: 2px solid #F0F0F4; padding: 8px;">
+						<div class="layui-form-item" id="checks">
+							<input type="radio" name="radio" value="1" title="手机"> <input
+								type="radio" name="radio" value="2" title="笔记本电脑"> <input
+								type="radio" name="radio" value="3" title="游戏主机"> 
+						</div>
+					</div>
+					<div class="layui-form-item"
+						style="display: flex; justify-content: flex-end; margin: 10px 0;">
+						<button class="layui-btn" lay-event="unReady">保存文章</button>
+						<button class="layui-btn layui-btn-primary" data-method="setTop"
+							id="preSee">预览</button>
+						<button class="layui-btn layui-btn-primary" lay-event="allReady">发布</button>
+						<button class="layui-btn layui-btn-primary" id="btn-back">
+							<i class="layui-icon layui-icon-return"></i> 返回
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+        var typeId = null; // 用于记录所选的分类编号
+        var topic = null; // 用于记录输入的标题
+        var contentHtml = null; // 用于记录富文本形式
+        var contentText = null; // 用于记录纯文本形式
+        var articleId = null; // 编辑模式时的文章ID
+
+        // 从URL获取参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURIComponent(r[2]);
+            return null;
+        }
+
+        // 加载layui模块
+        layui.extend({
+            tinymce: '../../layui_exts/tinymce/tinymce'
+        }).use(['tinymce', 'util', 'layer', 'form'], function () {
+            var t = layui.tinymce
+                , util = layui.util
+                , layer = layui.layer
+                , $ = layui.$
+                , form = layui.form;
+
+            // 检查是否是编辑模式（从URL获取参数）
+            articleId = getUrlParam('articleId');
+            var initTopic = getUrlParam('topic');
+            var initContentHtml = getUrlParam('contentHtml');
+            var initTypeId = getUrlParam('typeId');
+
+            // 如果是编辑模式，填充表单数据
+            if (articleId) {
+                // 填充标题
+                if (initTopic) {
+                    $('#topic').val(initTopic);
+                }
+                
+                // 选中对应的分类
+                if (initTypeId && initTypeId != '0') {
+                    $('input[name="radio"][value="' + initTypeId + '"]').prop('checked', true);
+                    typeId = initTypeId; // 初始化typeId
+                    form.render('radio'); // 重新渲染单选框
+                }
+            }
+
+            // 初始化富文本编辑器
+            var edit = t.render({
+                elem: "#edit",
+                height: 800, // 编辑器高度
+                images_upload_url: '../../UploadImageServlet', // 设置图片上传接口地址
+                // 编辑模式时填充内容
+                init_instance_callback: function(editor) {
+                    if (articleId && initContentHtml) {
+                        editor.setContent(initContentHtml);
+                    }
+                }
+            });
+
+            // 监听单选框选择
+            form.on('radio', function (data) {
+                typeId = data.value;
+            });
+
+            // 保存文章
+            util.event('lay-event', {
+                unReady: function () {
+                	topic = $('#topic').val();
+                    contentHtml = t.get('#edit').getContent();
+                    if (!topic) {
+                        layer.msg('请输入标题');
+                        return;
+                    }
+                    if (!contentHtml) {
+                        layer.msg('请输入文章内容');
+                        return;
+                    }
+                    if (!typeId) {
+                        layer.msg('请选择文章分类');
+                        return;
+                    }
+                    $.ajax({
+                        url: '../../SaveArticleServlet', // 保存文章接口地址
+                        type: 'POST',
+                        data: {
+                            articleId: articleId || '',
+                        	topic: topic,
+                            contentHtml: contentHtml,
+                            typeId: typeId
+                        },
+                        success: function (res) {
+                            if (res.msg === "success") {
+                                layer.msg('保存文章成功', {
+                                    icon: 1,
+                                    time: 2000
+                                });
+                            } else {
+                                layer.msg('保存文章失败', {
+                                    icon: 2,
+                                    time: 2000
+                                });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('保存文章出错');
+                        }
+                    });
+                }
+            });
+
+            // 预览
+            $('#preSee').on('click', function () {
+            	topic = $('#topic').val();
+                contentHtml = t.get('#edit').getContent();
+                if (!topic) {
+                    layer.msg('请输入标题');
+                    return;
+                }
+                if (!contentHtml) {
+                    layer.msg('请输入文章内容');
+                    return;
+                }
+                // 弹出预览窗口
+                layer.open({
+                    type: 1,
+                    title: '文章预览',
+                    area: ['800px', '600px'],
+                    content: '<h2>' + topic + '</h2>' + contentHtml
+                });
+            });
+
+            // 发布文章
+            util.event('lay-event', {
+                allReady: function () {
+                	topic = $('#topic').val();
+                    contentHtml = t.get('#edit').getContent();
+                    contentText = t.get('#edit').getContent({ format: 'text' });
+                    if (!topic) {
+                        layer.msg('请输入标题');
+                        return;
+                    }
+                    if (!contentHtml) {
+                        layer.msg('请输入文章内容');
+                        return;
+                    }
+                    if (!typeId) {
+                        layer.msg('请选择文章分类');
+                        return;
+                    }
+                    $.ajax({
+                        url: '../../UploadArticleReviewServlet',
+                        type: 'POST',
+                        data: {
+                            articleId: articleId || '',
+                        	topic: topic,
+                            contentHtml: contentHtml,
+                            typeId: typeId,
+                            status: 1
+                        },
+    					dataType : 'json',
+                        success: function (res) {
+                            if (res.msg === "success") {
+                                layer.msg('发布文章成功,待管理员审核', {
+                                    icon: 1,
+                                    time: 2000
+                                });
+                                setTimeout(function() {
+                                    window.history.back();
+                                }, 2000);
+                            } else {
+                                layer.msg('发布文章失败', {
+                                    icon: 2,
+                                    time: 2000
+                                });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('文章发布出错');
+                        }
+                    });
+                }
+            });
+            
+            // 返回按钮点击事件
+            $('#btn-back').click(function(){
+                window.history.back();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文章审核</title>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<style>
+html, body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+}
+/* 统一表单样式 */
+.layui-form {
+    margin: 15px;
+    width: fit-content;
+    margin: 0 auto;
+}
+/* 优化表格链接交互 */
+.layui-table-link:hover {
+    color: #1E9FFF;
+    text-decoration: underline;
+}
+/* 统一输入框与按钮对齐方式 */
+.layui-input-inline {
+    vertical-align: middle;
+}
+/* 优化操作按钮间距 */
+.layui-table-cell .layui-btn {
+    margin-right: 5px;
+}
+/* 最后一个按钮去除右边距 */
+.layui-table-cell .layui-btn:last-child {
+    margin-right: 0;
+}
+</style>
+</head>
+<body>
+    <form class="layui-form layui-row layui-col-space16">
+        <div class="layui-form-item">
+            <!-- 文章ID搜索 -->
+            <div class="layui-input-inline">
+                <input type="text" name="articleId" placeholder="文章ID"
+                    class="layui-input" lay-affix="clear" style="width: 150px;">
+            </div>
+            
+            <!-- 标题搜索 -->
+            <div class="layui-input-inline">
+                <input type="text" name="topic" placeholder="标题" lay-affix="clear"
+                    class="layui-input" style="width: 150px;">
+            </div>
+
+            <!-- 作者搜索 -->
+            <div class="layui-input-inline">
+                <input type="text" name="name" placeholder="作者" lay-affix="clear"
+                    class="layui-input" style="width: 150px;">
+            </div>
+
+            <!-- 机型下拉菜单 -->
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn demo-dropdown-base" style="width: 120px;">
+                        <span>全部机型</span> 
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="typeName" id="typeNameInput" value="">
+            </div>
+
+            <!-- 审核状态下拉菜单 -->
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn demo-dropdown-status" style="width: 120px;">
+                        <span>全部状态</span> 
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="release" id="releaseStatusInput" value="">
+            </div>
+
+            <!-- 搜索按钮 -->
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="demo-table-search">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <table class="layui-hide" id="ID-table-demo-search"></table>
+
+    <script>
+    layui.use(['table', 'form', 'dropdown', 'layer'], function() {
+        var table = layui.table;
+        var form = layui.form;
+        var dropdown = layui.dropdown;
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        // 初始化机型下拉菜单
+        dropdown.render({
+            elem: '.demo-dropdown-base',
+            data: [
+                {title: '全部机型', value: ''},
+                {title: '手机', value: '手机'},
+                {title: '游戏主机', value: '游戏主机'},
+                {title: '笔记本电脑', value: '笔记本电脑'}
+            ],
+            click: function(obj) {
+                $('.demo-dropdown-base span').text(obj.title);
+                $('#typeNameInput').val(obj.value);
+            }
+        });
+
+        // 初始化审核状态下拉菜单
+        dropdown.render({
+            elem: '.demo-dropdown-status',
+            data: [
+                {title: '全部状态', value: ''},
+                {title: '未审核', value: '1'},
+                {title: '审核未通过', value: '2'},
+                {title: '审核通过', value: '3'}
+            ],
+            click: function(obj) {
+                $('.demo-dropdown-status span').text(obj.title);
+                $('#releaseStatusInput').val(obj.value);
+            }
+        });
+
+        // 删除文章函数
+        function deleteArticle(articleId) {
+            console.log('要删除的articleId：', articleId);
+            if (!articleId) {
+                layer.msg('文章ID不存在', {icon: 2});
+                return;
+            }
+            
+            layer.confirm('确定要删除这篇文章吗？', {
+                icon: 3,
+                title: '提示'
+            }, function(index) {
+                $.post('../../DeleteArticleServlet', {articleId: articleId}, function(data) {
+                    // 解析JSON响应
+                    var result = typeof data === 'string' ? JSON.parse(data) : data;
+                    
+                    if (result.msg === "success") {
+                        layer.msg('删除成功', {icon: 1});
+                        setTimeout(() => {
+                            table.reload('ID-table-demo-search');
+                        }, 500);
+                    } else {
+                        layer.msg('删除失败', {icon: 2});
+                    }
+                }).fail(function(xhr, status, error) {
+                    layer.msg('删除请求失败: ' + error, {icon: 2});
+                });
+                layer.close(index);
+            });
+        }
+
+        // 初始化表格
+        table.render({
+            elem: '#ID-table-demo-search',
+            url: '../../SelectAllArticleServlet',
+            page: true,
+            cols: [
+                [
+                    {field: 'articleId', title: '文章ID', width: 150, sort: true, fixed: true},
+                    {
+                        field: 'topic', 
+                        title: '标题', 
+                        width: 600,  // 统一宽度，避免溢出
+                        templet: d => {
+                            var title = d.topic || '无标题';
+                            return `<a class="layui-table-link" href="CurrentAuditArticle.html?articleId=${d.articleId}">${title}</a>`;
+                        }
+                    },
+                    {field: 'name', title: '作者', width: 120, sort: true},
+                    {field: 'uploadTime', title: '发布日期', width: 200, sort: true},
+                    {field: 'typeName', title: '机型', width: 100},
+                    {
+                        field: 'release',
+                        title: '审核状态',
+                        width: 130,
+                        templet: d => ({
+                            '1': '<span style="color:#ffb800">未审核</span>',
+                            '2': '<span style="color:#ff4444">审核未通过</span>',
+                            '3': '<span style="color:#009688">审核通过</span>'
+                        }[d.release] || '未知状态')
+                    },
+                    {
+                        field: 'operate',
+                        title: '操作',
+                        width: 150,
+                        templet: d => `
+                            <button class="layui-btn layui-btn-xs layui-btn-normal">
+                                <a href="CurrentAuditArticle.html?articleId=${d.articleId}" style="color:#fff">查看</a>
+                            </button>
+                            <button class="layui-btn layui-btn-xs layui-btn-danger delete-btn" data-article-id="${d.articleId}">删除</button>
+                        `
+                    }
+                ]
+            ],
+            height: 'full-130',  // 统一高度计算方式
+            error: function(res) {  // 新增错误处理
+                layer.msg('表格加载失败，请检查接口或网络', { icon: 2 });
+            },
+            done: function(res, curr, count) {
+                // 每次表格渲染完成后重新绑定删除按钮事件
+                $('.delete-btn').off('click').on('click', function() {
+                    var articleId = $(this).data('article-id');
+                    deleteArticle(articleId);
+                });
+            }
+        });
+
+        // 搜索功能
+        form.on('submit(demo-table-search)', function(data) {
+            // 收集搜索参数
+            const params = {
+                articleId: data.field.articleId,
+                topic: data.field.topic,
+                name: data.field.name,
+                typeName: $('#typeNameInput').val(),
+                release: $('#releaseStatusInput').val()
+            };
+
+            // 重载表格
+            table.reload('ID-table-demo-search', {
+                url: '../../SearchArticleServlet',
+                where: params,
+                page: {curr: 1}
+            });
+            
+            return false;
+        });
+    });
+    </script>
+</body>
+</html>

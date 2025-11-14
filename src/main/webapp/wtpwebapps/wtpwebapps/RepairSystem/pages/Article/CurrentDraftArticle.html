@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>当前草稿文章</title>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<style>
+/* 自定义样式 */
+.article-container {
+	padding: 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.article-content {
+	line-height: 1.8;
+	font-size: 16px;
+	padding: 20px;
+	background: #fff;
+	border-radius: 2px;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+}
+
+.article-title {
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+</style>
+</head>
+<body>
+	<!-- 使用 Layui 布局容器 -->
+	<div class="layui-container article-container">
+		<!-- 卡片面板 -->
+		<div class="layui-card">
+			<div class="layui-card-header">
+				<div class="layui-row">
+					<div class="layui-col-md6">
+						<h1 id="title" class="article-title"></h1>
+					</div>
+					<div class="layui-col-md6" style="text-align: right;">
+						<button class="layui-btn layui-btn-primary" id="btn-del">
+							<i class="layui-icon layui-icon-delete"></i> 删除
+						</button>
+						<button class="layui-btn layui-btn-primary" id="btn-edit">
+							<i class="layui-icon layui-icon-edit"></i>编辑
+						</button>
+						<button class="layui-btn layui-btn-primary" id="btn-upload">
+							<i class="layui-icon layui-icon-release"></i> 发布
+						</button>
+						<button class="layui-btn layui-btn-primary" id="btn-back">
+							<i class="layui-icon layui-icon-return"></i> 返回列表
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-card-body">
+				<div id="content" class="article-content"></div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		layui.use([ 'layer', 'element' ], function() {
+			var layer = layui.layer;
+			var element = layui.element;
+			// 从 URL 中解析 articleId
+			var urlParams = new URLSearchParams(window.location.search);
+			var articleId = urlParams.get('articleId');
+			// 存储文章完整信息
+			var articleData = null;
+
+			// 显示加载层
+			var loadIndex = layer.load(1, {
+				shade : 0.3
+			});
+
+			// 页面加载时执行
+			$(document).ready(function() {
+				if (!articleId) {
+					layer.alert("缺少文章ID参数", {
+						icon : 2
+					});
+					return;
+				}
+
+				$.ajax({
+					url : '../../ShowArticleServlet',
+					type : 'POST',
+					data : {
+						articleId : articleId
+					},
+					dataType : 'json',
+					success : function(data) {
+						layer.close(loadIndex); // 关闭加载层
+						if (data.code === 0 && data.data.length > 0) {
+							// 保存完整文章数据
+							articleData = data.data[0];
+					        $('#title').text(articleData.topic || "文章内容"); 
+					        $('#content').html(articleData.dataHtml);
+						} else {
+							layer.alert("加载失败：" + data.msg, {
+								icon : 2
+							});
+						}
+					},
+					error : function(xhr, status, error) {
+						layer.close(loadIndex);
+						console.log('AJAX 请求错误:', error);
+						layer.alert("请求失败：" + error, {
+							icon : 2
+						});
+					}
+				});
+			});
+
+			// 编辑按钮点击事件
+			$('#btn-edit').click(function() {
+				if (!articleData) {
+					layer.alert("文章数据未加载完成，请稍后再试", {icon: 2});
+					return;
+				}
+				
+				// 类型映射关系
+				var typeMap = {
+					"手机": 1,
+					"笔记本电脑": 2,
+					"游戏主机": 3
+				};
+				
+				// 构建跳转URL，包含文章数据
+				var editUrl = 'UploadArticle.html?' + 
+					'articleId=' + encodeURIComponent(articleData.articleId) +
+					'&topic=' + encodeURIComponent(articleData.topic || '') +
+					'&contentHtml=' + encodeURIComponent(articleData.dataHtml || '') +
+					'&typeId=' + encodeURIComponent(typeMap[articleData.typeName] || 0);
+				
+				window.location.href = editUrl;
+			});
+
+			$('#btn-del').click(function() {
+				layer.confirm('确定要删除这篇文章吗？', {
+					icon : 3,
+					title : '提示'
+				}, function(index) {
+					var loadIndex = layer.load(1);
+					$.ajax({
+						url : '../../DeleteArticleServlet',
+						type : 'GET',
+						data : {
+							articleId : articleId
+						},
+						dataType : 'json',
+						success : function(res) {
+							layer.close(loadIndex);
+							if (res.msg == "success") {
+								layer.msg('删除成功', {icon : 1});
+								window.history.back();
+							} else {
+								layer.msg('删除失败', {icon : 2});
+							}
+						},
+						error : function(xhr, status, error) {
+							layer.close(loadIndex);
+							console.log('删除请求错误:', error);
+							layer.alert("删除失败：" + error, {icon : 2});
+						}
+					})
+				})
+			});
+
+			$('#btn-upload').click(function() {
+				// 检查文章数据是否加载完成
+				if (!articleData) {
+					layer.alert("文章数据未加载完成，请稍后再试", {icon: 2});
+					return;
+				}
+
+				// 类型映射关系
+				var typeMap = {
+					"手机": 1,
+					"笔记本电脑": 2,
+					"游戏主机": 3
+				};
+
+				// 获取typeName并转换为typeId
+				var typeName = articleData.typeName || "";
+				var typeId = typeMap[typeName] || 0;
+
+				// 验证类型是否有效
+				if (typeId === 0) {
+					layer.alert("文章类型错误，无法发布", {icon: 2});
+					return;
+				}
+
+				layer.confirm('确定要上传这篇文章吗？', {
+					icon : 3,
+					title : '提示'
+				}, function(index) {
+					var loadIndex = layer.load(1);
+					// 发送包含所有参数的请求
+					$.ajax({
+						url : '../../UploadArticleReviewServlet',
+						type : 'POST',
+						data : {
+							articleId: articleId,
+							topic: articleData.topic || "",
+							dataHtml: articleData.content || "",
+							typeId: typeId,
+							status: 1
+						},
+						dataType : 'json',
+						success : function(res) {
+							layer.close(loadIndex);
+							if (res.msg === "success") {
+								layer.msg('上传成功', {icon : 1});
+								window.history.back();
+							} else {
+								layer.msg('上传失败：' + (res.msg || '未知错误'), {icon : 2});
+							}
+						},
+						error : function(xhr, status, error) {
+							layer.close(loadIndex);
+							console.log('上传请求错误:', error);
+							layer.alert("上传失败：" + error, {icon : 2});
+						}
+					})
+				})
+			});
+
+			// 返回按钮点击事件
+			$('#btn-back').click(function() {
+				window.history.back();
+			});
+		});
+	</script>
+</body>
+</html>

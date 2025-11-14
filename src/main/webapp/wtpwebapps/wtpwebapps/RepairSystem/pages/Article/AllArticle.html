@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>所有文章</title>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<style>
+/* 与“手机”页面样式统一 */
+.hide-dropdown {
+	display: none;
+}
+
+html, body {
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	font-family: 'Inter', sans-serif;
+	background-color: #f9fafb;
+}
+
+/* 卡片列表容器：固定高度+滚动 */
+#article-list {
+	height: calc(100vh - 100px);
+	overflow-y: auto;
+}
+
+/* 卡片样式：与“手机”页面完全一致 */
+.layui-card {
+	border: 1px solid #e6e6e6;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	max-width: 1300px;
+	margin: 0 auto 20px;
+}
+
+.layui-card-header {
+	padding: 15px;
+	border-bottom: 1px solid #e6e6e6;
+}
+
+.layui-card-body {
+	padding: 15px;
+}
+
+/* 搜索表单样式：微调居中与间距 */
+.layui-form {
+	display: flex;
+	justify-content: center;
+	padding: 20px;
+	margin: 0;
+	width: auto;
+}
+
+/* 输入框与按钮对齐 */
+.layui-input-inline {
+	vertical-align: middle;
+}
+
+</style>
+</head>
+<body>
+    <!-- 搜索表单：保留机型下拉，调整与卡片布局适配 -->
+    <form class="layui-form layui-row layui-col-space16">
+        <div class="layui-form-item">
+            <!-- 标题输入 -->
+            <div class="layui-input-inline">
+                <input type="text" name="topic" placeholder="标题" class="layui-input" 
+                       style="width: 150px;" lay-affix="clear">
+            </div>
+            <!-- 作者输入 -->
+            <div class="layui-input-inline">
+                <input type="text" name="name" placeholder="作者" class="layui-input" 
+                       style="width: 150px;" lay-affix="clear">
+            </div>
+            <!-- 机型下拉菜单 -->
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn" type="button" id="typeNameDropdown" style="width: 120px;">
+                        <span>全部</span> 
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="typeName" id="typeNameInput" value="">
+            </div>
+            <!-- 搜索按钮 -->
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="searchBtn">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 卡片列表容器（替换原表格） -->
+    <div id="article-list"></div>
+
+    <script>
+        layui.use(['form', 'dropdown', 'layer'], function () {
+            var form = layui.form;
+            var dropdown = layui.dropdown;
+            var layer = layui.layer;
+            var $ = layui.$;
+
+            // 机型下拉菜单初始化
+            dropdown.render({
+                elem: '#typeNameDropdown',
+                data: [
+                    { title: '全部', value: '' },
+                    { title: '手机', value: '手机' },
+                    { title: '笔记本电脑', value: '笔记本电脑' },
+                    { title: '游戏主机', value: '游戏主机' }
+                ],
+                click: function (obj) {
+                    $('#typeNameDropdown span').text(obj.title);
+                    $('#typeNameInput').val(obj.value);
+                }
+            });
+
+            // 列表加载核心参数
+            var page = 1;
+            var limit = 10;
+            var loading = false;
+            var hasMoreData = true;
+            // 初始搜索参数：默认无筛选（全部）
+            var searchParams = null;
+
+            function loadArticles(isSearch) {
+                if (loading ||!hasMoreData) return;
+                loading = true;
+
+                // 搜索时重置页码和列表
+                if (isSearch) {
+                    page = 1;
+                    $('#article-list').html('');
+                    hasMoreData = true;
+                }
+
+                // 请求参数：合并分页与筛选条件
+                var params = {
+                    page: page,
+                    limit: limit,
+                    release: 3,
+                   ...searchParams
+                };
+
+                $.ajax({
+                    url: '../../SearchArticleServlet',
+                    type: 'GET',
+                    data: params,
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code === 0) {
+                            var data = res.data;
+
+                            if (data.length === 0) {
+                                hasMoreData = false;
+                                if (page === 1) {
+                                    $('#article-list').html('<div style="text-align:center;padding:20px;">暂无相关文章</div>');
+                                }
+                            } else {
+                                // 拼接卡片HTML并插入列表
+                                data.forEach(function (item) {
+                                    var link = "CurrentArticle.html?articleId=" + (item.articleId || item.articleId); // 兼容不同ID字段
+                                    var articleHtml = `
+                                        <div class="layui-card" style="margin-bottom: 20px;">
+                                            <div class="layui-card-header">
+                                                <h2 style="font-size: 20px; margin-bottom: 5px;">
+                                                    <a href="${link}">${item.topic || '无标题'}</a>
+                                                </h2>
+                                                <div style="color: #666; font-size: 12px;">
+                                                    <span>作者：${item.name || '匿名'}</span>
+                                                    <span style="margin-left: 15px;">发布于：${item.uploadTime || '未知时间'}</span>
+                                                    <span style="margin-left: 15px;">类型：${item.typeName || '未分类'}</span>
+                                                </div>
+                                            </div>
+                                            <div class="layui-card-body">
+                                                <div style="margin-top: 15px; color: #888; font-size: 12px;">
+                                                    <span>浏览：${item.views || 0}</span>
+                                                    <span style="margin-left: 15px;">收藏：${item.favorites || 0}</span>
+                                                    <span style="margin-left: 15px;">点赞：${item.likes || 0}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                    $('#article-list').append(articleHtml);
+                                });
+                                page++; // 加载下一页
+                            }
+                        } else {
+                            layer.msg('获取数据失败：' + (res.msg || '未知错误'), { icon: 2 });
+                        }
+                        loading = false;
+                    },
+                    error: function () {
+                        layer.msg('请求接口失败，请检查网络', { icon: 2 });
+                        loading = false;
+                    }
+                });
+            }
+
+            // 4. 初始加载文章列表
+            loadArticles(false);
+
+            // 5. 滚动加载更多
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                    loadArticles(false);
+                }
+            });
+
+            // 6. 搜索提交事件
+            form.on('submit(searchBtn)', function (data) {
+                // 更新搜索参数（含机型筛选）
+                searchParams = {
+                    topic: data.field.topic || '',
+                    name: data.field.name || '',
+                    typeName: $('#typeNameInput').val() || ''
+                };
+                // 执行搜索
+                loadArticles(true);
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的文章</title>
+<link href="../../layui/css/layui.css" rel="stylesheet">
+<script src="../../layui/layui.js"></script>
+<script src="../../js/jquery-3.6.0.min.js"></script>
+<style>
+html, body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+}
+/* 统一表单样式 */
+.layui-form {
+    margin: 15px;
+    width: fit-content;
+    margin: 0 auto;
+}
+/* 优化表格链接交互 */
+.layui-table-link:hover {
+    color: #1E9FFF;
+    text-decoration: underline;
+}
+/* 统一输入框与按钮对齐方式 */
+.layui-input-inline {
+    vertical-align: middle;
+}
+/* 优化操作按钮间距 */
+.layui-table-cell .layui-btn {
+    margin-right: 5px;
+}
+/* 最后一个按钮去除右边距 */
+.layui-table-cell .layui-btn:last-child {
+    margin-right: 0;
+}
+/* 统一表格文本颜色 */
+.layui-table td {
+    color: #333;
+}
+</style>
+</head>
+<body>
+    <form class="layui-form layui-row layui-col-space16">
+        <input type="hidden" name="myarticle" value="true">
+        
+        <div class="layui-form-item">
+            <!-- 文章ID搜索 -->
+            <div class="layui-input-inline">
+                <input type="text" name="articleId" placeholder="文章ID"
+                    class="layui-input" lay-affix="clear" style="width: 150px;">
+            </div>
+            
+            <!-- 标题搜索 -->
+            <div class="layui-input-inline">
+                <input type="text" name="topic" placeholder="标题" lay-affix="clear"
+                    class="layui-input" style="width: 150px;">
+            </div>
+
+            <!-- 审核状态下拉菜单 -->
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn demo-dropdown-status" style="width: 120px;">
+                        <span>状态</span> 
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="release" id="statusInput" value="">
+            </div>
+
+            <!-- 机型下拉菜单 -->
+            <div class="layui-input-inline">
+                <div class="layui-btn-container">
+                    <button class="layui-btn demo-dropdown-base" style="width: 120px;">
+                        <span>机型</span> 
+                        <i class="layui-icon layui-icon-down layui-font-12"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="typeName" id="typeNameInput" value="">
+            </div>
+
+            <!-- 搜索按钮 -->
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="demo-table-search">
+                    <i class="layui-icon layui-icon-search"></i> 搜索
+                </button>
+            </div>
+
+            <!-- 创作中心按钮 -->
+            <div class="layui-input-inline">
+                <a href="UploadArticle.html" class="layui-btn layui-bg-red">前往创作中心</a>
+            </div>
+        </div>
+    </form>
+
+    <table class="layui-hide" id="ID-table-demo-search"></table>
+
+    <script>
+    layui.use(['table', 'form', 'dropdown', 'layer', 'laydate'], function() {
+        var table = layui.table;
+        var form = layui.form;
+        var dropdown = layui.dropdown;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var $ = layui.jquery;
+
+        // 初始化机型下拉菜单
+        dropdown.render({
+            elem: '.demo-dropdown-base',
+            data: [
+                {title: '全部机型', value: ''},
+                {title: '手机', value: '手机'},
+                {title: '游戏主机', value: '游戏主机'},
+                {title: '笔记本电脑', value: '笔记本电脑'}
+            ],
+            click: function(obj) {
+                $('.demo-dropdown-base span').text(obj.title);
+                $('#typeNameInput').val(obj.value);
+            }
+        });
+
+        // 初始化审核状态下拉菜单（颜色与审核页面保持一致）
+        dropdown.render({
+            elem: '.demo-dropdown-status',
+            data: [
+                {title: '全部状态', value: ''},
+                {title: '待发布审核', value: '0'},
+                {title: '发布待审核', value: '1'},
+                {title: '审核失败打回', value: '2'},
+                {title: '审核通过', value: '3'}
+            ],
+            click: function(obj) {
+                $('.demo-dropdown-status span').text(obj.title);
+                $('#statusInput').val(obj.value);
+            }
+        });
+
+        // 日期选择器
+        laydate.render({
+            elem: '.demo-table-search-date'
+        });
+
+        // 初始化表格（状态颜色统一规范）
+        table.render({
+            elem: '#ID-table-demo-search',
+            url: '../../SelectMyArticleServlet?myarticle=true',
+            page: true,
+            cols: [
+                [
+                    {field: 'articleId', title: '文章ID', width: 150, sort: true, fixed: true},
+                    {
+                        field: 'topic', 
+                        title: '标题', 
+                        width: 600,
+                        templet: d => {
+                            var title = d.topic || '无标题';
+                            const isPublished = d.release == 3;
+                            const url = isPublished ? 'CurrentArticle.html' : 'CurrentDraftArticle.html';
+                            return `<a class="layui-table-link" href="${url}?articleId=${d.articleId}">${title}</a>`;
+                        }
+                    },
+                    {field: 'uploadTime', title: '发布日期', width: 200, sort: true},
+                    {field: 'typeName', title: '机型', width: 100},
+                    {
+                        field: 'release',
+                        title: '发布状态',
+                        width: 130,
+                        sort: true,
+                        templet: d => ({
+                            '0': '<span style="color:#ffb800">待发布审核</span>',
+                            '1': '<span style="color:#5CCFFF">发布待审核</span>',
+                            '2': '<span style="color:#ff4444">审核失败打回</span>',
+                            '3': '<span style="color:#009688">审核通过</span>'
+                        }[d.release] || '未知状态')
+                    },
+                    {field: 'views', title: '浏览量', width: 100},
+                    {field: 'likes', title: '点赞量', width: 100},
+                    {field: 'favorites', title: '收藏量', width: 100}
+                ]
+            ],
+            height: 'full-130',
+            error: function(res) {
+                layer.msg('表格加载失败，请检查接口或网络', { icon: 2 });
+            }
+        });
+
+        // 搜索功能
+        form.on('submit(demo-table-search)', function(data) {
+            // 收集搜索参数
+            const params = {
+                articleId: data.field.articleId,
+                topic: data.field.topic,
+                typeName: $('#typeNameInput').val(),
+                release: $('#statusInput').val(),
+                myarticle: data.field.myarticle
+            };
+
+            // 重载表格
+            table.reload('ID-table-demo-search', {
+                url: '../../SearchMyArticleServlet',
+                where: params,
+                page: {curr: 1}
+            });
+            
+            return false;
+        });
+    });
+    </script>
+</body>
+</html>
